@@ -1,0 +1,180 @@
+{
+  "scene_id": "S1A_IW_GRDH_1SDV_20230322T081415_20230322T081446_047754_05BCA4_EBB5",
+  "case_id": "3679449",
+  "title": "SIMOM - Caso 3679449",
+  "t0_observado": "2023-03-22T08:14:15+00:00",
+  "alert_level": "sem_intersecao",
+  "forcing_date": "2023-03-22",
+  "forcantes_scope": "forcing_date_regional",
+  "forcantes_link_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1A_IW_GRDH_1SDV_20230322T081415_20230322T081446_047754_05BCA4_EBB5/cases/3679449/metadata/forcantes_link.json",
+  "scene_sar_link_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1A_IW_GRDH_1SDV_20230322T081415_20230322T081446_047754_05BCA4_EBB5/cases/3679449/metadata/scene_sar_link.json",
+  "forcantes_export_metadata_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1A_IW_GRDH_1SDV_20230322T081415_20230322T081446_047754_05BCA4_EBB5/cases/3679449/web_ready/forcantes_export_metadata.json",
+  "scene_id_from_scene_sar_link": "S1A_IW_GRDH_1SDV_20230322T081415_20230322T081446_047754_05BCA4_EBB5",
+  "classification": {
+    "review_level": "machine_only",
+    "source_context": "other",
+    "oil_status": "uncertain",
+    "machine_confidence": 0.645300567150116,
+    "source_score_raw": -0.179778389138845,
+    "slick_confidence": null,
+    "human_label": null,
+    "human_code": null,
+    "source_type_codes": [
+      "'1059166']",
+      "'311222000']",
+      "'545121'",
+      "'710000279'",
+      "'710003160'",
+      "'710005681'",
+      "['503022'",
+      "['503022', '545121', '1059166']",
+      "['710019330'",
+      "['710019330', '710000279', '710003160', '710005681', '311222000']"
+    ],
+    "aoi_type_codes": [
+      "[252]",
+      "[344]"
+    ],
+    "fields_used": {
+      "machine_confidence": "machine_confidence",
+      "source_score": "source_score",
+      "review_level": "review_level",
+      "source_context": "source_context",
+      "oil_status": "oil_status",
+      "source_type_codes": "source_type_1_ids",
+      "aoi_type_codes": "aoi_type_1_ids"
+    },
+    "raw_snapshot": {
+      "case_id": "3679449",
+      "cls": 5,
+      "hitl_cls": null,
+      "hitl_cls_name": null,
+      "machine_confidence": 0.645300567150116,
+      "max_source_collated_score": -0.179778389138845
+    },
+    "normalization_version": "classification_index_v2_web"
+  },
+  "classification_index": {
+    "evidence_level": "E2",
+    "evidence_band": "fraca",
+    "evidence_label": "Evidência fraca",
+    "evidence_explanation": "Evidência fraca: classificação=-1, contexto=0, morfologia=1, estrutura=2, com pesos 4-3-2-1 (total=0). Fatores dominantes: baixa confiança da máquina; morfologia compatível; estrutura geométrica consistente.",
+    "score_total": 0,
+    "weights": {
+      "classification_weight": 4,
+      "context_weight": 3,
+      "morphology_weight": 2,
+      "structure_weight": 1
+    },
+    "evidence_components": {
+      "classification_score": -1,
+      "context_score": 0,
+      "morphology_score": 1,
+      "structure_score": 2
+    },
+    "component_details": {
+      "classification": {
+        "classification_score": -1,
+        "reasons": [
+          "baixa confiança da máquina"
+        ]
+      },
+      "context": {
+        "context_score": 0,
+        "source_context": "other",
+        "source_type_codes": [
+          "'1059166']",
+          "'311222000']",
+          "'545121'",
+          "'710000279'",
+          "'710003160'",
+          "'710005681'",
+          "['503022'",
+          "['503022', '545121', '1059166']",
+          "['710019330'",
+          "['710019330', '710000279', '710003160', '710005681', '311222000']"
+        ],
+        "aoi_type_codes": [
+          "[252]",
+          "[344]"
+        ],
+        "reasons": []
+      },
+      "morphology": {
+        "area": 864920.6118146479,
+        "length": 10511.76360565,
+        "linearity": 4662.30038435799,
+        "aspect_ratio_factor": 0.5870524873949192,
+        "polsby_popper": 0.0274015212067868,
+        "fill_factor": 0.0512924958056128,
+        "morphology_score": 1
+      },
+      "structure": {
+        "has_geometry_json": true,
+        "has_geometry_raw": true,
+        "has_centerlines": true,
+        "has_slick_parts": true,
+        "structure_score": 2
+      }
+    }
+  },
+  "evidence_level": "E2",
+  "evidence_band": "fraca",
+  "evidence_label": "Evidência fraca",
+  "evidence_explanation": "Evidência fraca: classificação=-1, contexto=0, morfologia=1, estrutura=2, com pesos 4-3-2-1 (total=0). Fatores dominantes: baixa confiança da máquina; morfologia compatível; estrutura geométrica consistente.",
+  "score_total": 0,
+  "evidence_components": {
+    "classification_score": -1,
+    "context_score": 0,
+    "morphology_score": 1,
+    "structure_score": 2
+  },
+  "review_level": "machine_only",
+  "source_context": "other",
+  "oil_status": "uncertain",
+  "human_label": null,
+  "layers": {
+    "sar_png": "sar/t0.png",
+    "sar_bounds": "sar/t0_bounds.json",
+    "slick_t0": "slick/slick_t0.geojson",
+    "slick_t0_parts": "slick/slick_t0_parts.geojson",
+    "openoil_points": "openoil/openoil_frames_points.json",
+    "openoil_probability_frames": "openoil/probability_frames.json",
+    "trajectory_t0_tk": "openoil/trajectory_t0_tk.geojson",
+    "trajectory_full": "openoil/trajectory_full.geojson",
+    "gfs_wind": "meteo/gfs_wind_frames.json",
+    "gfs_wind_frames": "meteo/gfs_wind_frames.json",
+    "hycom_currents": "ocean/hycom_currents_frames.json",
+    "hycom_currents_frames": "ocean/hycom_currents_frames.json",
+    "amps": "amps/amps_all.geojson",
+    "amps_hit": null,
+    "case_summary": "alerts/case_summary_web.json",
+    "alert_payload": "alerts/alert_payload.json"
+  },
+  "case_isolation": {
+    "expected_case_id": "3679449",
+    "initial_condition_case_ids": [
+      "3679449"
+    ],
+    "slick_case_ids": [
+      "3679449"
+    ],
+    "slick_parts_case_ids": [
+      "3679449"
+    ],
+    "amp_hit_case_ids": [],
+    "web_meta_case_ids": [
+      "3679449"
+    ],
+    "case_summary_case_ids": [
+      "3679449"
+    ],
+    "alert_payload_case_ids": [
+      "3679449"
+    ],
+    "nc_case_ids": [
+      "3679449"
+    ]
+  },
+  "nota_metodologica": "A simulação parte do instante inicial de observação da mancha por satélite, não necessariamente do instante real de liberação do óleo."
+}

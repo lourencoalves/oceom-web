@@ -1,0 +1,184 @@
+{
+  "scene_id": "S1B_IW_GRDH_1SDV_20211203T081443_20211203T081508_029858_03907A_A3F5",
+  "case_id": "4264978",
+  "title": "SIMOM - Caso 4264978",
+  "t0_observado": "2021-12-03T08:14:43+00:00",
+  "alert_level": "sem_intersecao",
+  "forcing_date": "2021-12-03",
+  "forcantes_scope": "forcing_date_regional",
+  "forcantes_link_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1B_IW_GRDH_1SDV_20211203T081443_20211203T081508_029858_03907A_A3F5/cases/4264978/metadata/forcantes_link.json",
+  "scene_sar_link_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1B_IW_GRDH_1SDV_20211203T081443_20211203T081508_029858_03907A_A3F5/cases/4264978/metadata/scene_sar_link.json",
+  "forcantes_export_metadata_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1B_IW_GRDH_1SDV_20211203T081443_20211203T081508_029858_03907A_A3F5/cases/4264978/web_ready/forcantes_export_metadata.json",
+  "scene_id_from_scene_sar_link": "S1B_IW_GRDH_1SDV_20211203T081443_20211203T081508_029858_03907A_A3F5",
+  "classification": {
+    "review_level": "human_reviewed",
+    "source_context": "vessel",
+    "oil_status": "likely_oil",
+    "machine_confidence": 0.9692927598953248,
+    "source_score_raw": 0.4984078317773763,
+    "slick_confidence": null,
+    "human_label": "Vessel, recent",
+    "human_code": 7.0,
+    "source_type_codes": [
+      "'258842000']",
+      "'311014200'",
+      "'352857000'",
+      "'355866000'",
+      "'710002880'",
+      "'D30.912252000000002']",
+      "['241235000'",
+      "['241235000', '311014200', '352857000', '355866000', '710002880', '258842000']",
+      "['D171.00023000000002'",
+      "['D171.00023000000002', 'D30.912252000000002']"
+    ],
+    "aoi_type_codes": [
+      "[252]",
+      "[344]"
+    ],
+    "fields_used": {
+      "machine_confidence": "machine_confidence",
+      "source_score": "source_score",
+      "human_label": "human_label",
+      "human_code": "human_code",
+      "review_level": "review_level",
+      "source_context": "source_context",
+      "oil_status": "oil_status",
+      "source_type_codes": "source_type_1_ids",
+      "aoi_type_codes": "aoi_type_1_ids"
+    },
+    "raw_snapshot": {
+      "case_id": "4264978",
+      "cls": 5,
+      "hitl_cls": 7.0,
+      "hitl_cls_name": "Vessel, recent",
+      "machine_confidence": 0.9692927598953248,
+      "max_source_collated_score": 0.4984078317773763
+    },
+    "normalization_version": "classification_index_v2_web"
+  },
+  "classification_index": {
+    "evidence_level": "E5",
+    "evidence_band": "muito_forte",
+    "evidence_label": "Evidência muito forte",
+    "evidence_explanation": "Evidência muito forte: classificação=2, contexto=1, morfologia=2, estrutura=2, com pesos 4-3-2-1 (total=17). Fatores dominantes: revisão humana favorável; contexto antrópico associado; morfologia compatível; estrutura geométrica consistente.",
+    "score_total": 17,
+    "weights": {
+      "classification_weight": 4,
+      "context_weight": 3,
+      "morphology_weight": 2,
+      "structure_weight": 1
+    },
+    "evidence_components": {
+      "classification_score": 2,
+      "context_score": 1,
+      "morphology_score": 2,
+      "structure_score": 2
+    },
+    "component_details": {
+      "classification": {
+        "classification_score": 2,
+        "reasons": [
+          "revisão humana favorável"
+        ]
+      },
+      "context": {
+        "context_score": 1,
+        "source_context": "vessel",
+        "source_type_codes": [
+          "'258842000']",
+          "'311014200'",
+          "'352857000'",
+          "'355866000'",
+          "'710002880'",
+          "'D30.912252000000002']",
+          "['241235000'",
+          "['241235000', '311014200', '352857000', '355866000', '710002880', '258842000']",
+          "['D171.00023000000002'",
+          "['D171.00023000000002', 'D30.912252000000002']"
+        ],
+        "aoi_type_codes": [
+          "[252]",
+          "[344]"
+        ],
+        "reasons": [
+          "contexto antrópico associado"
+        ]
+      },
+      "morphology": {
+        "area": 1860005.330931068,
+        "length": 4444.52069954,
+        "linearity": 67.86643135656392,
+        "aspect_ratio_factor": 0.3834477952852368,
+        "polsby_popper": 0.1564878645969571,
+        "fill_factor": 0.3475958412402777,
+        "morphology_score": 2
+      },
+      "structure": {
+        "has_geometry_json": true,
+        "has_geometry_raw": true,
+        "has_centerlines": true,
+        "has_slick_parts": true,
+        "structure_score": 2
+      }
+    }
+  },
+  "evidence_level": "E5",
+  "evidence_band": "muito_forte",
+  "evidence_label": "Evidência muito forte",
+  "evidence_explanation": "Evidência muito forte: classificação=2, contexto=1, morfologia=2, estrutura=2, com pesos 4-3-2-1 (total=17). Fatores dominantes: revisão humana favorável; contexto antrópico associado; morfologia compatível; estrutura geométrica consistente.",
+  "score_total": 17,
+  "evidence_components": {
+    "classification_score": 2,
+    "context_score": 1,
+    "morphology_score": 2,
+    "structure_score": 2
+  },
+  "review_level": "human_reviewed",
+  "source_context": "vessel",
+  "oil_status": "likely_oil",
+  "human_label": "Vessel, recent",
+  "layers": {
+    "sar_png": "sar/t0.png",
+    "sar_bounds": "sar/t0_bounds.json",
+    "slick_t0": "slick/slick_t0.geojson",
+    "slick_t0_parts": "slick/slick_t0_parts.geojson",
+    "openoil_points": "openoil/openoil_frames_points.json",
+    "openoil_probability_frames": "openoil/probability_frames.json",
+    "trajectory_t0_tk": "openoil/trajectory_t0_tk.geojson",
+    "trajectory_full": "openoil/trajectory_full.geojson",
+    "gfs_wind": "meteo/gfs_wind_frames.json",
+    "gfs_wind_frames": "meteo/gfs_wind_frames.json",
+    "hycom_currents": "ocean/hycom_currents_frames.json",
+    "hycom_currents_frames": "ocean/hycom_currents_frames.json",
+    "amps": "amps/amps_all.geojson",
+    "amps_hit": null,
+    "case_summary": "alerts/case_summary_web.json",
+    "alert_payload": "alerts/alert_payload.json"
+  },
+  "case_isolation": {
+    "expected_case_id": "4264978",
+    "initial_condition_case_ids": [
+      "4264978"
+    ],
+    "slick_case_ids": [
+      "4264978"
+    ],
+    "slick_parts_case_ids": [
+      "4264978"
+    ],
+    "amp_hit_case_ids": [],
+    "web_meta_case_ids": [
+      "4264978"
+    ],
+    "case_summary_case_ids": [
+      "4264978"
+    ],
+    "alert_payload_case_ids": [
+      "4264978"
+    ],
+    "nc_case_ids": [
+      "4264978"
+    ]
+  },
+  "nota_metodologica": "A simulação parte do instante inicial de observação da mancha por satélite, não necessariamente do instante real de liberação do óleo."
+}

@@ -1,0 +1,158 @@
+{
+  "scene_id": "S1A_IW_GRDH_1SDV_20220306T083955_20220306T084023_042198_05076A_2ECB",
+  "case_id": "4254738",
+  "title": "SIMOM - Caso 4254738",
+  "t0_observado": "2022-03-06T08:39:55+00:00",
+  "alert_level": "interseccao_alta",
+  "forcing_date": "2022-03-06",
+  "forcantes_scope": "forcing_date_regional",
+  "forcantes_link_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1A_IW_GRDH_1SDV_20220306T083955_20220306T084023_042198_05076A_2ECB/cases/4254738/metadata/forcantes_link.json",
+  "scene_sar_link_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1A_IW_GRDH_1SDV_20220306T083955_20220306T084023_042198_05076A_2ECB/cases/4254738/metadata/scene_sar_link.json",
+  "forcantes_export_metadata_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1A_IW_GRDH_1SDV_20220306T083955_20220306T084023_042198_05076A_2ECB/cases/4254738/web_ready/forcantes_export_metadata.json",
+  "scene_id_from_scene_sar_link": "S1A_IW_GRDH_1SDV_20220306T083955_20220306T084023_042198_05076A_2ECB",
+  "classification": {
+    "review_level": "machine_only",
+    "source_context": "unknown",
+    "oil_status": "likely_oil",
+    "machine_confidence": 0.9387506246566772,
+    "source_score_raw": null,
+    "slick_confidence": null,
+    "human_label": null,
+    "human_code": null,
+    "source_type_codes": [],
+    "aoi_type_codes": [
+      "[12768]",
+      "[252]",
+      "[344]"
+    ],
+    "fields_used": {
+      "machine_confidence": "machine_confidence",
+      "review_level": "review_level",
+      "source_context": "source_context",
+      "oil_status": "oil_status",
+      "aoi_type_codes": "aoi_type_1_ids"
+    },
+    "raw_snapshot": {
+      "case_id": "4254738",
+      "cls": 5,
+      "hitl_cls": null,
+      "hitl_cls_name": null,
+      "machine_confidence": 0.9387506246566772,
+      "max_source_collated_score": null
+    },
+    "normalization_version": "classification_index_v2_web"
+  },
+  "classification_index": {
+    "evidence_level": "E5",
+    "evidence_band": "muito_forte",
+    "evidence_label": "Evidência muito forte",
+    "evidence_explanation": "Evidência muito forte: classificação=1, contexto=0, morfologia=2, estrutura=2, com pesos 4-3-2-1 (total=10). Fatores dominantes: alta confiança da máquina; morfologia compatível; estrutura geométrica consistente.",
+    "score_total": 10,
+    "weights": {
+      "classification_weight": 4,
+      "context_weight": 3,
+      "morphology_weight": 2,
+      "structure_weight": 1
+    },
+    "evidence_components": {
+      "classification_score": 1,
+      "context_score": 0,
+      "morphology_score": 2,
+      "structure_score": 2
+    },
+    "component_details": {
+      "classification": {
+        "classification_score": 1,
+        "reasons": [
+          "alta confiança da máquina"
+        ]
+      },
+      "context": {
+        "context_score": 0,
+        "source_context": "unknown",
+        "source_type_codes": [],
+        "aoi_type_codes": [
+          "[12768]",
+          "[252]",
+          "[344]"
+        ],
+        "reasons": []
+      },
+      "morphology": {
+        "area": 3310206.963167727,
+        "length": 3692.90669188,
+        "linearity": 26.479921733266075,
+        "aspect_ratio_factor": 0.1956980959203702,
+        "polsby_popper": 0.1555839610299976,
+        "fill_factor": 0.2570767674271336,
+        "morphology_score": 2
+      },
+      "structure": {
+        "has_geometry_json": true,
+        "has_geometry_raw": true,
+        "has_centerlines": true,
+        "has_slick_parts": true,
+        "structure_score": 2
+      }
+    }
+  },
+  "evidence_level": "E5",
+  "evidence_band": "muito_forte",
+  "evidence_label": "Evidência muito forte",
+  "evidence_explanation": "Evidência muito forte: classificação=1, contexto=0, morfologia=2, estrutura=2, com pesos 4-3-2-1 (total=10). Fatores dominantes: alta confiança da máquina; morfologia compatível; estrutura geométrica consistente.",
+  "score_total": 10,
+  "evidence_components": {
+    "classification_score": 1,
+    "context_score": 0,
+    "morphology_score": 2,
+    "structure_score": 2
+  },
+  "review_level": "machine_only",
+  "source_context": "unknown",
+  "oil_status": "likely_oil",
+  "human_label": null,
+  "layers": {
+    "sar_png": "sar/t0.png",
+    "sar_bounds": "sar/t0_bounds.json",
+    "slick_t0": "slick/slick_t0.geojson",
+    "slick_t0_parts": "slick/slick_t0_parts.geojson",
+    "openoil_points": "openoil/openoil_frames_points.json",
+    "openoil_probability_frames": "openoil/probability_frames.json",
+    "trajectory_t0_tk": "openoil/trajectory_t0_tk.geojson",
+    "trajectory_full": "openoil/trajectory_full.geojson",
+    "gfs_wind": "meteo/gfs_wind_frames.json",
+    "gfs_wind_frames": "meteo/gfs_wind_frames.json",
+    "hycom_currents": "ocean/hycom_currents_frames.json",
+    "hycom_currents_frames": "ocean/hycom_currents_frames.json",
+    "amps": "amps/amps_all.geojson",
+    "amps_hit": "amps/amps_hit.geojson",
+    "case_summary": "alerts/case_summary_web.json",
+    "alert_payload": "alerts/alert_payload.json"
+  },
+  "case_isolation": {
+    "expected_case_id": "4254738",
+    "initial_condition_case_ids": [
+      "4254738"
+    ],
+    "slick_case_ids": [
+      "4254738"
+    ],
+    "slick_parts_case_ids": [
+      "4254738"
+    ],
+    "amp_hit_case_ids": [],
+    "web_meta_case_ids": [
+      "4254738"
+    ],
+    "case_summary_case_ids": [
+      "4254738"
+    ],
+    "alert_payload_case_ids": [
+      "4254738"
+    ],
+    "nc_case_ids": [
+      "4254738"
+    ]
+  },
+  "nota_metodologica": "A simulação parte do instante inicial de observação da mancha por satélite, não necessariamente do instante real de liberação do óleo."
+}

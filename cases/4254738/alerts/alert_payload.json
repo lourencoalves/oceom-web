@@ -1,0 +1,155 @@
+{
+  "scene_id": "S1A_IW_GRDH_1SDV_20220306T083955_20220306T084023_042198_05076A_2ECB",
+  "case_id": "4254738",
+  "forcing_date": "2022-03-06",
+  "forcantes_scope": "forcing_date_regional",
+  "classification": {
+    "review_level": "machine_only",
+    "source_context": "unknown",
+    "oil_status": "likely_oil",
+    "machine_confidence": 0.9387506246566772,
+    "source_score_raw": null,
+    "slick_confidence": null,
+    "human_label": null,
+    "human_code": null,
+    "source_type_codes": [],
+    "aoi_type_codes": [
+      "[12768]",
+      "[252]",
+      "[344]"
+    ],
+    "fields_used": {
+      "machine_confidence": "machine_confidence",
+      "review_level": "review_level",
+      "source_context": "source_context",
+      "oil_status": "oil_status",
+      "aoi_type_codes": "aoi_type_1_ids"
+    },
+    "raw_snapshot": {
+      "case_id": "4254738",
+      "cls": 5,
+      "hitl_cls": null,
+      "hitl_cls_name": null,
+      "machine_confidence": 0.9387506246566772,
+      "max_source_collated_score": null
+    },
+    "normalization_version": "classification_index_v2_web"
+  },
+  "classification_index": {
+    "evidence_level": "E5",
+    "evidence_band": "muito_forte",
+    "evidence_label": "Evidência muito forte",
+    "evidence_explanation": "Evidência muito forte: classificação=1, contexto=0, morfologia=2, estrutura=2, com pesos 4-3-2-1 (total=10). Fatores dominantes: alta confiança da máquina; morfologia compatível; estrutura geométrica consistente.",
+    "score_total": 10,
+    "weights": {
+      "classification_weight": 4,
+      "context_weight": 3,
+      "morphology_weight": 2,
+      "structure_weight": 1
+    },
+    "evidence_components": {
+      "classification_score": 1,
+      "context_score": 0,
+      "morphology_score": 2,
+      "structure_score": 2
+    },
+    "component_details": {
+      "classification": {
+        "classification_score": 1,
+        "reasons": [
+          "alta confiança da máquina"
+        ]
+      },
+      "context": {
+        "context_score": 0,
+        "source_context": "unknown",
+        "source_type_codes": [],
+        "aoi_type_codes": [
+          "[12768]",
+          "[252]",
+          "[344]"
+        ],
+        "reasons": []
+      },
+      "morphology": {
+        "area": 3310206.963167727,
+        "length": 3692.90669188,
+        "linearity": 26.479921733266075,
+        "aspect_ratio_factor": 0.1956980959203702,
+        "polsby_popper": 0.1555839610299976,
+        "fill_factor": 0.2570767674271336,
+        "morphology_score": 2
+      },
+      "structure": {
+        "has_geometry_json": true,
+        "has_geometry_raw": true,
+        "has_centerlines": true,
+        "has_slick_parts": true,
+        "structure_score": 2
+      }
+    }
+  },
+  "evidence_level": "E5",
+  "evidence_band": "muito_forte",
+  "evidence_label": "Evidência muito forte",
+  "evidence_explanation": "Evidência muito forte: classificação=1, contexto=0, morfologia=2, estrutura=2, com pesos 4-3-2-1 (total=10). Fatores dominantes: alta confiança da máquina; morfologia compatível; estrutura geométrica consistente.",
+  "review_level": "machine_only",
+  "source_context": "unknown",
+  "oil_status": "likely_oil",
+  "human_label": null,
+  "alert_level": "interseccao_alta",
+  "alert_title": "Interseção alta com AMPs",
+  "alert_message": "A simulação indicou interseção alta com 3 AMP(s). primeira interseção em 0.0 h | IUCN mais sensível: IA | critérios: 3 AMPs intersectadas; primeira interseção em 0.0 h; categoria IUCN sensível (IA); sem presença em AMP no t0.",
+  "amp_intersecta": true,
+  "n_amps_intersectadas": 3,
+  "primeira_interseccao_utc": "2022-03-06T08:39:55+00:00",
+  "detected_in_amp_at_t0": false,
+  "first_amp_hit_iucn": "IA",
+  "all_iucn_categories": [
+    "II",
+    "Ia",
+    "V"
+  ],
+  "time_to_first_intersection_hours": 0.0,
+  "alert_level_details": {
+    "method": "multi_criteria_amp_alert_v2",
+    "score_total": 8,
+    "components": {
+      "n_amps": 2,
+      "time_to_first_intersection": 3,
+      "iucn": 3,
+      "detected_in_amp_at_t0": 0
+    },
+    "drivers": [
+      "3 AMPs intersectadas",
+      "primeira interseção em 0.0 h",
+      "categoria IUCN sensível (IA)",
+      "sem presença em AMP no t0"
+    ],
+    "first_amp_hit_iucn_used": "IA",
+    "time_to_first_intersection_hours": 0.0,
+    "detected_in_amp_at_t0": false
+  },
+  "requires_attention": true,
+  "tempo_base_referencia": "t0_observado",
+  "nota_metodologica": "A simulação parte do instante inicial de observação da mancha por satélite, e não necessariamente do instante real de liberação do óleo.",
+  "case_isolation": {
+    "expected_case_id": "4254738",
+    "initial_condition_case_ids": [
+      "4254738"
+    ],
+    "slick_case_ids": [
+      "4254738"
+    ],
+    "slick_parts_case_ids": [
+      "4254738"
+    ],
+    "amp_hit_case_ids": [],
+    "nc_case_ids": [
+      "4254738"
+    ],
+    "status": "ok",
+    "trajectory_dim": "trajectory",
+    "n_trajectories_total": 500
+  }
+}

@@ -1,0 +1,830 @@
+[
+  {
+    "case_isolation": {
+      "expected_case_id": "3679449",
+      "initial_condition_case_ids": [
+        "3679449"
+      ],
+      "slick_case_ids": [
+        "3679449"
+      ],
+      "slick_parts_case_ids": [
+        "3679449"
+      ],
+      "amp_hit_case_ids": [],
+      "web_meta_case_ids": [
+        "3679449"
+      ],
+      "case_summary_case_ids": [
+        "3679449"
+      ],
+      "alert_payload_case_ids": [
+        "3679449"
+      ],
+      "nc_case_ids": [
+        "3679449"
+      ]
+    },
+    "scene_id": "S1A_IW_GRDH_1SDV_20230322T081415_20230322T081446_047754_05BCA4_EBB5",
+    "case_id": "3679449",
+    "title": "SIMOM - Caso 3679449",
+    "manifest": "cases/3679449/manifest.json",
+    "t0_observado": "2023-03-22T08:14:15+00:00",
+    "alert_level": "sem_intersecao",
+    "forcing_date": "2023-03-22",
+    "forcantes_scope": "forcing_date_regional",
+    "forcantes_link_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1A_IW_GRDH_1SDV_20230322T081415_20230322T081446_047754_05BCA4_EBB5/cases/3679449/metadata/forcantes_link.json",
+    "scene_sar_link_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1A_IW_GRDH_1SDV_20230322T081415_20230322T081446_047754_05BCA4_EBB5/cases/3679449/metadata/scene_sar_link.json",
+    "forcantes_export_metadata_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1A_IW_GRDH_1SDV_20230322T081415_20230322T081446_047754_05BCA4_EBB5/cases/3679449/web_ready/forcantes_export_metadata.json",
+    "scene_id_from_scene_sar_link": "S1A_IW_GRDH_1SDV_20230322T081415_20230322T081446_047754_05BCA4_EBB5",
+    "alert_title": "Caso monitorado sem interseção com AMP",
+    "amp_intersecta": false,
+    "n_amps_intersectadas": 0,
+    "has_probability_frames": true,
+    "classification": {
+      "review_level": "machine_only",
+      "source_context": "other",
+      "oil_status": "uncertain",
+      "machine_confidence": 0.645300567150116,
+      "source_score_raw": -0.179778389138845,
+      "slick_confidence": null,
+      "human_label": null,
+      "human_code": null,
+      "source_type_codes": [
+        "'1059166']",
+        "'311222000']",
+        "'545121'",
+        "'710000279'",
+        "'710003160'",
+        "'710005681'",
+        "['503022'",
+        "['503022', '545121', '1059166']",
+        "['710019330'",
+        "['710019330', '710000279', '710003160', '710005681', '311222000']"
+      ],
+      "aoi_type_codes": [
+        "[252]",
+        "[344]"
+      ],
+      "fields_used": {
+        "machine_confidence": "machine_confidence",
+        "source_score": "source_score",
+        "review_level": "review_level",
+        "source_context": "source_context",
+        "oil_status": "oil_status",
+        "source_type_codes": "source_type_1_ids",
+        "aoi_type_codes": "aoi_type_1_ids"
+      },
+      "raw_snapshot": {
+        "case_id": "3679449",
+        "cls": 5,
+        "hitl_cls": null,
+        "hitl_cls_name": null,
+        "machine_confidence": 0.645300567150116,
+        "max_source_collated_score": -0.179778389138845
+      },
+      "normalization_version": "classification_index_v2_web"
+    },
+    "classification_index": {
+      "evidence_level": "E2",
+      "evidence_band": "fraca",
+      "evidence_label": "Evidência fraca",
+      "evidence_explanation": "Evidência fraca: classificação=-1, contexto=0, morfologia=1, estrutura=2, com pesos 4-3-2-1 (total=0). Fatores dominantes: baixa confiança da máquina; morfologia compatível; estrutura geométrica consistente.",
+      "score_total": 0,
+      "weights": {
+        "classification_weight": 4,
+        "context_weight": 3,
+        "morphology_weight": 2,
+        "structure_weight": 1
+      },
+      "evidence_components": {
+        "classification_score": -1,
+        "context_score": 0,
+        "morphology_score": 1,
+        "structure_score": 2
+      },
+      "component_details": {
+        "classification": {
+          "classification_score": -1,
+          "reasons": [
+            "baixa confiança da máquina"
+          ]
+        },
+        "context": {
+          "context_score": 0,
+          "source_context": "other",
+          "source_type_codes": [
+            "'1059166']",
+            "'311222000']",
+            "'545121'",
+            "'710000279'",
+            "'710003160'",
+            "'710005681'",
+            "['503022'",
+            "['503022', '545121', '1059166']",
+            "['710019330'",
+            "['710019330', '710000279', '710003160', '710005681', '311222000']"
+          ],
+          "aoi_type_codes": [
+            "[252]",
+            "[344]"
+          ],
+          "reasons": []
+        },
+        "morphology": {
+          "area": 864920.6118146479,
+          "length": 10511.76360565,
+          "linearity": 4662.30038435799,
+          "aspect_ratio_factor": 0.5870524873949192,
+          "polsby_popper": 0.0274015212067868,
+          "fill_factor": 0.0512924958056128,
+          "morphology_score": 1
+        },
+        "structure": {
+          "has_geometry_json": true,
+          "has_geometry_raw": true,
+          "has_centerlines": true,
+          "has_slick_parts": true,
+          "structure_score": 2
+        }
+      }
+    },
+    "evidence_level": "E2",
+    "evidence_band": "fraca",
+    "evidence_label": "Evidência fraca",
+    "evidence_explanation": "Evidência fraca: classificação=-1, contexto=0, morfologia=1, estrutura=2, com pesos 4-3-2-1 (total=0). Fatores dominantes: baixa confiança da máquina; morfologia compatível; estrutura geométrica consistente.",
+    "score_total": 0,
+    "evidence_components": {
+      "classification_score": -1,
+      "context_score": 0,
+      "morphology_score": 1,
+      "structure_score": 2
+    },
+    "review_level": "machine_only",
+    "source_context": "other",
+    "oil_status": "uncertain",
+    "human_label": null,
+    "machine_confidence": 0.645300567150116,
+    "source_score_raw": -0.179778389138845,
+    "slick_confidence": null
+  },
+  {
+    "case_isolation": {
+      "expected_case_id": "4253412",
+      "initial_condition_case_ids": [
+        "4253412"
+      ],
+      "slick_case_ids": [
+        "4253412"
+      ],
+      "slick_parts_case_ids": [
+        "4253412"
+      ],
+      "amp_hit_case_ids": [],
+      "web_meta_case_ids": [
+        "4253412"
+      ],
+      "case_summary_case_ids": [
+        "4253412"
+      ],
+      "alert_payload_case_ids": [
+        "4253412"
+      ],
+      "nc_case_ids": [
+        "4253412"
+      ]
+    },
+    "scene_id": "S1A_IW_GRDH_1SDV_20221122T081419_20221122T081451_046004_05816E_D067",
+    "case_id": "4253412",
+    "title": "SIMOM - Caso 4253412",
+    "manifest": "cases/4253412/manifest.json",
+    "t0_observado": "2022-11-22T08:14:19+00:00",
+    "alert_level": "sem_intersecao",
+    "forcing_date": "2022-11-22",
+    "forcantes_scope": "forcing_date_regional",
+    "forcantes_link_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1A_IW_GRDH_1SDV_20221122T081419_20221122T081451_046004_05816E_D067/cases/4253412/metadata/forcantes_link.json",
+    "scene_sar_link_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1A_IW_GRDH_1SDV_20221122T081419_20221122T081451_046004_05816E_D067/cases/4253412/metadata/scene_sar_link.json",
+    "forcantes_export_metadata_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1A_IW_GRDH_1SDV_20221122T081419_20221122T081451_046004_05816E_D067/cases/4253412/web_ready/forcantes_export_metadata.json",
+    "scene_id_from_scene_sar_link": "S1A_IW_GRDH_1SDV_20221122T081419_20221122T081451_046004_05816E_D067",
+    "alert_title": "Caso monitorado sem interseção com AMP",
+    "amp_intersecta": false,
+    "n_amps_intersectadas": 0,
+    "has_probability_frames": true,
+    "classification": {
+      "review_level": "human_reviewed",
+      "source_context": "vessel",
+      "oil_status": "likely_oil",
+      "machine_confidence": 0.9524294137954712,
+      "source_score_raw": -0.1087948773999615,
+      "slick_confidence": null,
+      "human_label": "Vessel, recent",
+      "human_code": 7.0,
+      "source_type_codes": [
+        "'710000245'",
+        "'71001439']",
+        "'71001448'",
+        "'710027240'",
+        "['710029550'",
+        "['710029550', '710000245', '710027240', '71001448', '71001439']"
+      ],
+      "aoi_type_codes": [
+        "[252]",
+        "[344]"
+      ],
+      "fields_used": {
+        "machine_confidence": "machine_confidence",
+        "source_score": "source_score",
+        "human_label": "human_label",
+        "human_code": "human_code",
+        "review_level": "review_level",
+        "source_context": "source_context",
+        "oil_status": "oil_status",
+        "source_type_codes": "source_type_1_ids",
+        "aoi_type_codes": "aoi_type_1_ids"
+      },
+      "raw_snapshot": {
+        "case_id": "4253412",
+        "cls": 5,
+        "hitl_cls": 7.0,
+        "hitl_cls_name": "Vessel, recent",
+        "machine_confidence": 0.9524294137954712,
+        "max_source_collated_score": -0.1087948773999615
+      },
+      "normalization_version": "classification_index_v2_web"
+    },
+    "classification_index": {
+      "evidence_level": "E5",
+      "evidence_band": "muito_forte",
+      "evidence_label": "Evidência muito forte",
+      "evidence_explanation": "Evidência muito forte: classificação=2, contexto=1, morfologia=2, estrutura=2, com pesos 4-3-2-1 (total=17). Fatores dominantes: revisão humana favorável; contexto antrópico associado; morfologia compatível; estrutura geométrica consistente.",
+      "score_total": 17,
+      "weights": {
+        "classification_weight": 4,
+        "context_weight": 3,
+        "morphology_weight": 2,
+        "structure_weight": 1
+      },
+      "evidence_components": {
+        "classification_score": 2,
+        "context_score": 1,
+        "morphology_score": 2,
+        "structure_score": 2
+      },
+      "component_details": {
+        "classification": {
+          "classification_score": 2,
+          "reasons": [
+            "revisão humana favorável"
+          ]
+        },
+        "context": {
+          "context_score": 1,
+          "source_context": "vessel",
+          "source_type_codes": [
+            "'710000245'",
+            "'71001439']",
+            "'71001448'",
+            "'710027240'",
+            "['710029550'",
+            "['710029550', '710000245', '710027240', '71001448', '71001439']"
+          ],
+          "aoi_type_codes": [
+            "[252]",
+            "[344]"
+          ],
+          "reasons": [
+            "contexto antrópico associado"
+          ]
+        },
+        "morphology": {
+          "area": 1518680.582823664,
+          "length": 6096.49523525,
+          "linearity": 317.3325544402882,
+          "aspect_ratio_factor": 0.693920538874109,
+          "polsby_popper": 0.0771221999334309,
+          "fill_factor": 0.5121216520063474,
+          "morphology_score": 2
+        },
+        "structure": {
+          "has_geometry_json": true,
+          "has_geometry_raw": true,
+          "has_centerlines": true,
+          "has_slick_parts": true,
+          "structure_score": 2
+        }
+      }
+    },
+    "evidence_level": "E5",
+    "evidence_band": "muito_forte",
+    "evidence_label": "Evidência muito forte",
+    "evidence_explanation": "Evidência muito forte: classificação=2, contexto=1, morfologia=2, estrutura=2, com pesos 4-3-2-1 (total=17). Fatores dominantes: revisão humana favorável; contexto antrópico associado; morfologia compatível; estrutura geométrica consistente.",
+    "score_total": 17,
+    "evidence_components": {
+      "classification_score": 2,
+      "context_score": 1,
+      "morphology_score": 2,
+      "structure_score": 2
+    },
+    "review_level": "human_reviewed",
+    "source_context": "vessel",
+    "oil_status": "likely_oil",
+    "human_label": "Vessel, recent",
+    "machine_confidence": 0.9524294137954712,
+    "source_score_raw": -0.1087948773999615,
+    "slick_confidence": null
+  },
+  {
+    "case_isolation": {
+      "expected_case_id": "4254738",
+      "initial_condition_case_ids": [
+        "4254738"
+      ],
+      "slick_case_ids": [
+        "4254738"
+      ],
+      "slick_parts_case_ids": [
+        "4254738"
+      ],
+      "amp_hit_case_ids": [],
+      "web_meta_case_ids": [
+        "4254738"
+      ],
+      "case_summary_case_ids": [
+        "4254738"
+      ],
+      "alert_payload_case_ids": [
+        "4254738"
+      ],
+      "nc_case_ids": [
+        "4254738"
+      ]
+    },
+    "scene_id": "S1A_IW_GRDH_1SDV_20220306T083955_20220306T084023_042198_05076A_2ECB",
+    "case_id": "4254738",
+    "title": "SIMOM - Caso 4254738",
+    "manifest": "cases/4254738/manifest.json",
+    "t0_observado": "2022-03-06T08:39:55+00:00",
+    "alert_level": "interseccao_alta",
+    "forcing_date": "2022-03-06",
+    "forcantes_scope": "forcing_date_regional",
+    "forcantes_link_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1A_IW_GRDH_1SDV_20220306T083955_20220306T084023_042198_05076A_2ECB/cases/4254738/metadata/forcantes_link.json",
+    "scene_sar_link_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1A_IW_GRDH_1SDV_20220306T083955_20220306T084023_042198_05076A_2ECB/cases/4254738/metadata/scene_sar_link.json",
+    "forcantes_export_metadata_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1A_IW_GRDH_1SDV_20220306T083955_20220306T084023_042198_05076A_2ECB/cases/4254738/web_ready/forcantes_export_metadata.json",
+    "scene_id_from_scene_sar_link": "S1A_IW_GRDH_1SDV_20220306T083955_20220306T084023_042198_05076A_2ECB",
+    "alert_title": "Interseção alta com AMPs",
+    "amp_intersecta": true,
+    "n_amps_intersectadas": 3,
+    "has_probability_frames": true,
+    "classification": {
+      "review_level": "machine_only",
+      "source_context": "unknown",
+      "oil_status": "likely_oil",
+      "machine_confidence": 0.9387506246566772,
+      "source_score_raw": null,
+      "slick_confidence": null,
+      "human_label": null,
+      "human_code": null,
+      "source_type_codes": [],
+      "aoi_type_codes": [
+        "[12768]",
+        "[252]",
+        "[344]"
+      ],
+      "fields_used": {
+        "machine_confidence": "machine_confidence",
+        "review_level": "review_level",
+        "source_context": "source_context",
+        "oil_status": "oil_status",
+        "aoi_type_codes": "aoi_type_1_ids"
+      },
+      "raw_snapshot": {
+        "case_id": "4254738",
+        "cls": 5,
+        "hitl_cls": null,
+        "hitl_cls_name": null,
+        "machine_confidence": 0.9387506246566772,
+        "max_source_collated_score": null
+      },
+      "normalization_version": "classification_index_v2_web"
+    },
+    "classification_index": {
+      "evidence_level": "E5",
+      "evidence_band": "muito_forte",
+      "evidence_label": "Evidência muito forte",
+      "evidence_explanation": "Evidência muito forte: classificação=1, contexto=0, morfologia=2, estrutura=2, com pesos 4-3-2-1 (total=10). Fatores dominantes: alta confiança da máquina; morfologia compatível; estrutura geométrica consistente.",
+      "score_total": 10,
+      "weights": {
+        "classification_weight": 4,
+        "context_weight": 3,
+        "morphology_weight": 2,
+        "structure_weight": 1
+      },
+      "evidence_components": {
+        "classification_score": 1,
+        "context_score": 0,
+        "morphology_score": 2,
+        "structure_score": 2
+      },
+      "component_details": {
+        "classification": {
+          "classification_score": 1,
+          "reasons": [
+            "alta confiança da máquina"
+          ]
+        },
+        "context": {
+          "context_score": 0,
+          "source_context": "unknown",
+          "source_type_codes": [],
+          "aoi_type_codes": [
+            "[12768]",
+            "[252]",
+            "[344]"
+          ],
+          "reasons": []
+        },
+        "morphology": {
+          "area": 3310206.963167727,
+          "length": 3692.90669188,
+          "linearity": 26.479921733266075,
+          "aspect_ratio_factor": 0.1956980959203702,
+          "polsby_popper": 0.1555839610299976,
+          "fill_factor": 0.2570767674271336,
+          "morphology_score": 2
+        },
+        "structure": {
+          "has_geometry_json": true,
+          "has_geometry_raw": true,
+          "has_centerlines": true,
+          "has_slick_parts": true,
+          "structure_score": 2
+        }
+      }
+    },
+    "evidence_level": "E5",
+    "evidence_band": "muito_forte",
+    "evidence_label": "Evidência muito forte",
+    "evidence_explanation": "Evidência muito forte: classificação=1, contexto=0, morfologia=2, estrutura=2, com pesos 4-3-2-1 (total=10). Fatores dominantes: alta confiança da máquina; morfologia compatível; estrutura geométrica consistente.",
+    "score_total": 10,
+    "evidence_components": {
+      "classification_score": 1,
+      "context_score": 0,
+      "morphology_score": 2,
+      "structure_score": 2
+    },
+    "review_level": "machine_only",
+    "source_context": "unknown",
+    "oil_status": "likely_oil",
+    "human_label": null,
+    "machine_confidence": 0.9387506246566772,
+    "source_score_raw": null,
+    "slick_confidence": null
+  },
+  {
+    "case_isolation": {
+      "expected_case_id": "4264978",
+      "initial_condition_case_ids": [
+        "4264978"
+      ],
+      "slick_case_ids": [
+        "4264978"
+      ],
+      "slick_parts_case_ids": [
+        "4264978"
+      ],
+      "amp_hit_case_ids": [],
+      "web_meta_case_ids": [
+        "4264978"
+      ],
+      "case_summary_case_ids": [
+        "4264978"
+      ],
+      "alert_payload_case_ids": [
+        "4264978"
+      ],
+      "nc_case_ids": [
+        "4264978"
+      ]
+    },
+    "scene_id": "S1B_IW_GRDH_1SDV_20211203T081443_20211203T081508_029858_03907A_A3F5",
+    "case_id": "4264978",
+    "title": "SIMOM - Caso 4264978",
+    "manifest": "cases/4264978/manifest.json",
+    "t0_observado": "2021-12-03T08:14:43+00:00",
+    "alert_level": "sem_intersecao",
+    "forcing_date": "2021-12-03",
+    "forcantes_scope": "forcing_date_regional",
+    "forcantes_link_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1B_IW_GRDH_1SDV_20211203T081443_20211203T081508_029858_03907A_A3F5/cases/4264978/metadata/forcantes_link.json",
+    "scene_sar_link_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1B_IW_GRDH_1SDV_20211203T081443_20211203T081508_029858_03907A_A3F5/cases/4264978/metadata/scene_sar_link.json",
+    "forcantes_export_metadata_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1B_IW_GRDH_1SDV_20211203T081443_20211203T081508_029858_03907A_A3F5/cases/4264978/web_ready/forcantes_export_metadata.json",
+    "scene_id_from_scene_sar_link": "S1B_IW_GRDH_1SDV_20211203T081443_20211203T081508_029858_03907A_A3F5",
+    "alert_title": "Caso monitorado sem interseção com AMP",
+    "amp_intersecta": false,
+    "n_amps_intersectadas": 0,
+    "has_probability_frames": true,
+    "classification": {
+      "review_level": "human_reviewed",
+      "source_context": "vessel",
+      "oil_status": "likely_oil",
+      "machine_confidence": 0.9692927598953248,
+      "source_score_raw": 0.4984078317773763,
+      "slick_confidence": null,
+      "human_label": "Vessel, recent",
+      "human_code": 7.0,
+      "source_type_codes": [
+        "'258842000']",
+        "'311014200'",
+        "'352857000'",
+        "'355866000'",
+        "'710002880'",
+        "'D30.912252000000002']",
+        "['241235000'",
+        "['241235000', '311014200', '352857000', '355866000', '710002880', '258842000']",
+        "['D171.00023000000002'",
+        "['D171.00023000000002', 'D30.912252000000002']"
+      ],
+      "aoi_type_codes": [
+        "[252]",
+        "[344]"
+      ],
+      "fields_used": {
+        "machine_confidence": "machine_confidence",
+        "source_score": "source_score",
+        "human_label": "human_label",
+        "human_code": "human_code",
+        "review_level": "review_level",
+        "source_context": "source_context",
+        "oil_status": "oil_status",
+        "source_type_codes": "source_type_1_ids",
+        "aoi_type_codes": "aoi_type_1_ids"
+      },
+      "raw_snapshot": {
+        "case_id": "4264978",
+        "cls": 5,
+        "hitl_cls": 7.0,
+        "hitl_cls_name": "Vessel, recent",
+        "machine_confidence": 0.9692927598953248,
+        "max_source_collated_score": 0.4984078317773763
+      },
+      "normalization_version": "classification_index_v2_web"
+    },
+    "classification_index": {
+      "evidence_level": "E5",
+      "evidence_band": "muito_forte",
+      "evidence_label": "Evidência muito forte",
+      "evidence_explanation": "Evidência muito forte: classificação=2, contexto=1, morfologia=2, estrutura=2, com pesos 4-3-2-1 (total=17). Fatores dominantes: revisão humana favorável; contexto antrópico associado; morfologia compatível; estrutura geométrica consistente.",
+      "score_total": 17,
+      "weights": {
+        "classification_weight": 4,
+        "context_weight": 3,
+        "morphology_weight": 2,
+        "structure_weight": 1
+      },
+      "evidence_components": {
+        "classification_score": 2,
+        "context_score": 1,
+        "morphology_score": 2,
+        "structure_score": 2
+      },
+      "component_details": {
+        "classification": {
+          "classification_score": 2,
+          "reasons": [
+            "revisão humana favorável"
+          ]
+        },
+        "context": {
+          "context_score": 1,
+          "source_context": "vessel",
+          "source_type_codes": [
+            "'258842000']",
+            "'311014200'",
+            "'352857000'",
+            "'355866000'",
+            "'710002880'",
+            "'D30.912252000000002']",
+            "['241235000'",
+            "['241235000', '311014200', '352857000', '355866000', '710002880', '258842000']",
+            "['D171.00023000000002'",
+            "['D171.00023000000002', 'D30.912252000000002']"
+          ],
+          "aoi_type_codes": [
+            "[252]",
+            "[344]"
+          ],
+          "reasons": [
+            "contexto antrópico associado"
+          ]
+        },
+        "morphology": {
+          "area": 1860005.330931068,
+          "length": 4444.52069954,
+          "linearity": 67.86643135656392,
+          "aspect_ratio_factor": 0.3834477952852368,
+          "polsby_popper": 0.1564878645969571,
+          "fill_factor": 0.3475958412402777,
+          "morphology_score": 2
+        },
+        "structure": {
+          "has_geometry_json": true,
+          "has_geometry_raw": true,
+          "has_centerlines": true,
+          "has_slick_parts": true,
+          "structure_score": 2
+        }
+      }
+    },
+    "evidence_level": "E5",
+    "evidence_band": "muito_forte",
+    "evidence_label": "Evidência muito forte",
+    "evidence_explanation": "Evidência muito forte: classificação=2, contexto=1, morfologia=2, estrutura=2, com pesos 4-3-2-1 (total=17). Fatores dominantes: revisão humana favorável; contexto antrópico associado; morfologia compatível; estrutura geométrica consistente.",
+    "score_total": 17,
+    "evidence_components": {
+      "classification_score": 2,
+      "context_score": 1,
+      "morphology_score": 2,
+      "structure_score": 2
+    },
+    "review_level": "human_reviewed",
+    "source_context": "vessel",
+    "oil_status": "likely_oil",
+    "human_label": "Vessel, recent",
+    "machine_confidence": 0.9692927598953248,
+    "source_score_raw": 0.4984078317773763,
+    "slick_confidence": null
+  },
+  {
+    "case_isolation": {
+      "expected_case_id": "4261998",
+      "initial_condition_case_ids": [
+        "4261998"
+      ],
+      "slick_case_ids": [
+        "4261998"
+      ],
+      "slick_parts_case_ids": [
+        "4261998"
+      ],
+      "amp_hit_case_ids": [],
+      "web_meta_case_ids": [
+        "4261998"
+      ],
+      "case_summary_case_ids": [
+        "4261998"
+      ],
+      "alert_payload_case_ids": [
+        "4261998"
+      ],
+      "nc_case_ids": [
+        "4261998"
+      ]
+    },
+    "scene_id": "S1B_IW_GRDH_1SDV_20211104T080537_20211104T080602_029435_038345_2C34",
+    "case_id": "4261998",
+    "title": "SIMOM - Caso 4261998",
+    "manifest": "cases/4261998/manifest.json",
+    "t0_observado": "2021-11-04T08:05:37+00:00",
+    "alert_level": "sem_intersecao",
+    "forcing_date": "2021-11-04",
+    "forcantes_scope": "forcing_date_regional",
+    "forcantes_link_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1B_IW_GRDH_1SDV_20211104T080537_20211104T080602_029435_038345_2C34/cases/4261998/metadata/forcantes_link.json",
+    "scene_sar_link_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1B_IW_GRDH_1SDV_20211104T080537_20211104T080602_029435_038345_2C34/cases/4261998/metadata/scene_sar_link.json",
+    "forcantes_export_metadata_json": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1B_IW_GRDH_1SDV_20211104T080537_20211104T080602_029435_038345_2C34/cases/4261998/web_ready/forcantes_export_metadata.json",
+    "scene_id_from_scene_sar_link": "S1B_IW_GRDH_1SDV_20211104T080537_20211104T080602_029435_038345_2C34",
+    "alert_title": "Caso monitorado sem interseção com AMP",
+    "amp_intersecta": false,
+    "n_amps_intersectadas": 0,
+    "has_probability_frames": true,
+    "classification": {
+      "review_level": "human_reviewed",
+      "source_context": "vessel",
+      "oil_status": "likely_oil",
+      "machine_confidence": 0.9618278741836548,
+      "source_score_raw": -0.8168242035604907,
+      "slick_confidence": null,
+      "human_label": "Vessel, old",
+      "human_code": 6.0,
+      "source_type_codes": [
+        "'235101697'",
+        "'538003541'",
+        "'566383000']",
+        "'710000490'",
+        "'D423.8343200683594']",
+        "['530684']",
+        "['636020342'",
+        "['636020342', '710000490', '538003541', '235101697', '566383000']",
+        "['D373.2941589355469'",
+        "['D373.2941589355469', 'D423.8343200683594']"
+      ],
+      "aoi_type_codes": [
+        "[252]",
+        "[344]"
+      ],
+      "fields_used": {
+        "machine_confidence": "machine_confidence",
+        "source_score": "source_score",
+        "human_label": "human_label",
+        "human_code": "human_code",
+        "review_level": "review_level",
+        "source_context": "source_context",
+        "oil_status": "oil_status",
+        "source_type_codes": "source_type_1_ids",
+        "aoi_type_codes": "aoi_type_1_ids"
+      },
+      "raw_snapshot": {
+        "case_id": "4261998",
+        "cls": 5,
+        "hitl_cls": 6.0,
+        "hitl_cls_name": "Vessel, old",
+        "machine_confidence": 0.9618278741836548,
+        "max_source_collated_score": -0.8168242035604907
+      },
+      "normalization_version": "classification_index_v2_web"
+    },
+    "classification_index": {
+      "evidence_level": "E5",
+      "evidence_band": "muito_forte",
+      "evidence_label": "Evidência muito forte",
+      "evidence_explanation": "Evidência muito forte: classificação=2, contexto=0, morfologia=2, estrutura=2, com pesos 4-3-2-1 (total=14). Fatores dominantes: revisão humana favorável; score contextual desfavorável; contexto antrópico associado; morfologia compatível.",
+      "score_total": 14,
+      "weights": {
+        "classification_weight": 4,
+        "context_weight": 3,
+        "morphology_weight": 2,
+        "structure_weight": 1
+      },
+      "evidence_components": {
+        "classification_score": 2,
+        "context_score": 0,
+        "morphology_score": 2,
+        "structure_score": 2
+      },
+      "component_details": {
+        "classification": {
+          "classification_score": 2,
+          "reasons": [
+            "revisão humana favorável"
+          ]
+        },
+        "context": {
+          "context_score": 0,
+          "source_context": "vessel",
+          "source_type_codes": [
+            "'235101697'",
+            "'538003541'",
+            "'566383000']",
+            "'710000490'",
+            "'D423.8343200683594']",
+            "['530684']",
+            "['636020342'",
+            "['636020342', '710000490', '538003541', '235101697', '566383000']",
+            "['D373.2941589355469'",
+            "['D373.2941589355469', 'D423.8343200683594']"
+          ],
+          "aoi_type_codes": [
+            "[252]",
+            "[344]"
+          ],
+          "reasons": [
+            "score contextual desfavorável",
+            "contexto antrópico associado"
+          ]
+        },
+        "morphology": {
+          "area": 2810175.8008721173,
+          "length": 6397.11142266,
+          "linearity": 138.52222203063263,
+          "aspect_ratio_factor": 0.5100792134184957,
+          "polsby_popper": 0.1051271501040829,
+          "fill_factor": 0.437260056021649,
+          "morphology_score": 2
+        },
+        "structure": {
+          "has_geometry_json": true,
+          "has_geometry_raw": true,
+          "has_centerlines": true,
+          "has_slick_parts": true,
+          "structure_score": 2
+        }
+      }
+    },
+    "evidence_level": "E5",
+    "evidence_band": "muito_forte",
+    "evidence_label": "Evidência muito forte",
+    "evidence_explanation": "Evidência muito forte: classificação=2, contexto=0, morfologia=2, estrutura=2, com pesos 4-3-2-1 (total=14). Fatores dominantes: revisão humana favorável; score contextual desfavorável; contexto antrópico associado; morfologia compatível.",
+    "score_total": 14,
+    "evidence_components": {
+      "classification_score": 2,
+      "context_score": 0,
+      "morphology_score": 2,
+      "structure_score": 2
+    },
+    "review_level": "human_reviewed",
+    "source_context": "vessel",
+    "oil_status": "likely_oil",
+    "human_label": "Vessel, old",
+    "machine_confidence": 0.9618278741836548,
+    "source_score_raw": -0.8168242035604907,
+    "slick_confidence": null
+  }
+]

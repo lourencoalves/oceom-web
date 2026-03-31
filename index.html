@@ -1,0 +1,4619 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>OCEOM — Observação Computacional de Eventos de Óleo no Mar</title>
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+  />
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+  ></script>
+
+  <style>
+    :root {
+      --bg-body: #0b1220;
+      --bg-app: #0f172a;
+      --bg-map: #111827;
+      --bg-panel: #111827;
+      --bg-card: #1e293b;
+      --bg-card-soft: #0f172a;
+
+      --border: #334155;
+      --border-soft: #475569;
+
+      --text-main: #e5e7eb;
+      --text-soft: #94a3b8;
+      --text-strong: #f8fafc;
+
+      --input-bg: #0f172a;
+      --input-border: #475569;
+      --code-bg: #0f172a;
+
+      --alert-neutral-bg: #1e293b;
+      --alert-neutral-border: #334155;
+      --alert-neutral-text: #e2e8f0;
+
+      --alert-low-bg: #3b2a14;
+      --alert-low-border: #c2410c;
+      --alert-low-text: #fdba74;
+
+      --alert-mod-bg: #3a2f0f;
+      --alert-mod-border: #d97706;
+      --alert-mod-text: #fcd34d;
+
+      --alert-high-bg: #3a1616;
+      --alert-high-border: #dc2626;
+      --alert-high-text: #fca5a5;
+    }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg-body);
+      color: var(--text-main);
+    }
+
+    #app {
+      height: 100%;
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      background: var(--bg-app);
+    }
+
+    #map {
+      height: 100%;
+      width: 100%;
+      background: var(--bg-map);
+    }
+
+
+    #map-wrap {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    #map {
+      position: relative;
+      z-index: 1;
+    }
+
+    #ampInfoPanel {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      z-index: 700;
+      width: min(360px, calc(100% - 36px));
+      background: rgba(15, 23, 42, 0.94);
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      border-radius: 14px;
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.32);
+      backdrop-filter: blur(8px);
+      overflow: hidden;
+      display: none;
+      user-select: none;
+    }
+
+    #ampInfoPanel.visible {
+      display: block;
+    }
+
+    #ampInfoHandle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      background: linear-gradient(180deg, rgba(239,68,68,0.22), rgba(127,29,29,0.18));
+      border-bottom: 1px solid rgba(239, 68, 68, 0.25);
+      cursor: grab;
+    }
+
+    #ampInfoHandle:active {
+      cursor: grabbing;
+    }
+
+    #ampInfoTitle {
+      font-size: 14px;
+      font-weight: 800;
+      color: #fecaca;
+      letter-spacing: 0.01em;
+    }
+
+    #ampInfoToggle {
+      appearance: none;
+      border: 0;
+      background: transparent;
+      color: #fecaca;
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1;
+      cursor: pointer;
+      padding: 0 2px;
+    }
+
+    #ampInfoPanel.minimized {
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    #ampInfoPanel.minimized #ampInfoContent {
+      display: none;
+    }
+
+    #ampInfoPanel.minimized #ampInfoHandle {
+      height: 100%;
+      padding: 0;
+      border-bottom: 0;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    #ampInfoPanel.minimized #ampInfoTitle {
+      display: none;
+    }
+
+    #ampInfoPanel.minimized #ampInfoToggle {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      font-size: 24px;
+    }
+
+    #ampInfoContent {
+      padding: 10px 12px 12px;
+    }
+
+    #ampInfoTable {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      color: #e5e7eb;
+    }
+
+    #ampInfoTable th,
+    #ampInfoTable td {
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+      vertical-align: top;
+    }
+
+    #ampInfoTable th {
+      width: 112px;
+      color: #fca5a5;
+      font-weight: 800;
+      background: rgba(239, 68, 68, 0.06);
+    }
+
+    #ampInfoTable tr:last-child th,
+    #ampInfoTable tr:last-child td {
+      border-bottom: 0;
+    }
+
+    @media (max-width: 900px) {
+      #ampInfoPanel {
+        top: 12px;
+        left: 12px;
+        width: min(320px, calc(100% - 24px));
+      }
+    }
+
+    #panel {
+      height: 100%;
+      box-sizing: border-box;
+      padding: 14px;
+      border-left: 1px solid var(--border);
+      background: var(--bg-panel);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .title {
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--text-strong);
+    }
+
+    .sub {
+      opacity: 0.9;
+      color: var(--text-soft);
+      font-size: 13px;
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      background: var(--bg-card);
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+        linear-gradient(135deg, rgba(89,168,255,0.10), rgba(89,168,255,0.02));
+      color: var(--text-strong);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.18s ease;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        0 8px 18px rgba(0,0,0,0.22);
+      height: 42px;
+      box-sizing: border-box;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(89, 168, 255, 0.38);
+    }
+
+    .btn.small {
+      padding: 8px 12px;
+      font-size: 12px;
+      border-radius: 12px;
+      height: 38px;
+    }
+
+    .btn.primary {
+      color: #ffffff;
+      border-color: rgba(89, 168, 255, 0.48);
+      background:
+        linear-gradient(180deg, rgba(126,189,255,0.38), rgba(59,130,246,0.22)),
+        linear-gradient(135deg, rgba(89,168,255,0.35), rgba(89,168,255,0.10));
+    }
+
+    .btn.ghost {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)),
+        rgba(255,255,255,0.01);
+      color: var(--text-main);
+    }
+
+    .play-icon {
+      color: #f59e0b;
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .control-buttons {
+      display: flex;
+      gap: 10px;
+      align-items: stretch;
+      flex-wrap: wrap;
+    }
+
+    #temporalFloatingPanel {
+      position: absolute;
+      left: 18px;
+      right: auto;
+      bottom: 18px;
+      top: auto;
+      z-index: 650;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(6, 18, 46, 0.92);
+      border: 1px solid rgba(124, 155, 220, 0.24);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.24);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      pointer-events: auto;
+      width: 272px;
+      max-width: calc(100% - 36px);
+      min-width: 272px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    #temporalFloatingPanel.dragging {
+      cursor: move;
+      box-shadow: 0 22px 42px rgba(0,0,0,0.34);
+    }
+
+    #temporalFloatingPanel .floating-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #c8dbff;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0;
+      cursor: move;
+      user-select: none;
+      -webkit-user-select: none;
+      text-shadow: 0 1px 0 rgba(0,0,0,0.25);
+    }
+
+    #temporalFloatingPanel .floating-row {
+      display: flex;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    #temporalFloatingPanel .floating-row-top,
+    #temporalFloatingPanel .floating-row-slider {
+      width: 100%;
+      max-width: 246px;
+    }
+
+    #temporalFloatingPanel .floating-row-top {
+      align-items: end;
+      gap: 6px;
+      flex-wrap: nowrap;
+      justify-content: flex-start;
+    }
+
+    #temporalFloatingPanel .floating-row-top .btn {
+      flex: 0 0 72px;
+      height: 30px;
+      min-height: 30px;
+      padding: 4px 10px;
+      font-size: 11px;
+      box-sizing: border-box;
+      white-space: nowrap;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)),
+        linear-gradient(135deg, rgba(89,168,255,0.16), rgba(89,168,255,0.04));
+      color: #f8fbff;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 8px 18px rgba(0,0,0,0.24);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    }
+
+    #temporalFloatingPanel .floating-row-top .btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(120, 190, 255, 0.35);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        0 10px 20px rgba(0,0,0,0.28),
+        0 0 0 3px rgba(96,165,250,0.10);
+      filter: brightness(1.04);
+    }
+
+    #temporalFloatingPanel .floating-row-top .btn:active {
+      transform: translateY(0);
+      box-shadow:
+        inset 0 2px 4px rgba(0,0,0,0.18),
+        0 4px 10px rgba(0,0,0,0.18);
+    }
+
+    #temporalFloatingPanel .floating-row-top .btn.primary {
+      background:
+        linear-gradient(180deg, rgba(126,189,255,0.42), rgba(59,130,246,0.22)),
+        linear-gradient(135deg, rgba(89,168,255,0.34), rgba(56,189,248,0.12));
+      border-color: rgba(89, 168, 255, 0.42);
+      color: #ffffff;
+    }
+
+    #temporalFloatingPanel .floating-row-top .btn.ghost {
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.015)),
+        linear-gradient(135deg, rgba(148,163,184,0.10), rgba(148,163,184,0.03));
+      border-color: rgba(148,163,184,0.22);
+      color: #e5eefc;
+    }
+
+    #temporalFloatingPanel .floating-row-top .btn .tf-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px;
+      height: 14px;
+      font-size: 13px;
+      line-height: 1;
+      opacity: 0.98;
+      flex: 0 0 14px;
+    }
+
+    #temporalFloatingPanel .floating-speed-inline {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      min-width: 84px;
+      flex: 0 0 84px;
+    }
+
+    #temporalFloatingPanel .floating-speed-inline span {
+      font-size: 10px;
+      color: var(--text-soft);
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    #temporalFloatingPanel .floating-speed-inline select {
+      height: 30px;
+      width: 100%;
+      border-radius: 999px;
+      font-size: 11px;
+      padding: 2px 24px 2px 10px;
+      box-sizing: border-box;
+      border: 1px solid rgba(255,255,255,0.12);
+      background-color: rgba(15, 23, 42, 0.98);
+      background-image:
+        linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.015)),
+        linear-gradient(135deg, rgba(89,168,255,0.12), rgba(89,168,255,0.03)),
+        linear-gradient(45deg, transparent 50%, #bfd7ff 50%),
+        linear-gradient(135deg, #bfd7ff 50%, transparent 50%);
+      background-position:
+        0 0,
+        0 0,
+        calc(100% - 13px) calc(50% - 1px),
+        calc(100% - 8px) calc(50% - 1px);
+      background-size:
+        100% 100%,
+        100% 100%,
+        5px 5px,
+        5px 5px;
+      background-repeat: no-repeat;
+      color: #eef4ff;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.06),
+        0 8px 18px rgba(0,0,0,0.20);
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      outline: none;
+    }
+
+    #temporalFloatingPanel .floating-speed-inline select:hover {
+      border-color: rgba(120, 190, 255, 0.35);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 10px 20px rgba(0,0,0,0.24),
+        0 0 0 3px rgba(96,165,250,0.10);
+    }
+
+    #temporalFloatingPanel .floating-speed-inline select option {
+      background: #0f172a;
+      color: #eef4ff;
+    }
+
+    #temporalFloatingPanel .floating-row-slider {
+      align-items: center;
+    }
+
+    #temporalFloatingPanel #timeSliderFloating {
+      width: 100%;
+      max-width: 246px;
+      margin: 0;
+      transform: scaleY(0.85);
+      transform-origin: center;
+      box-sizing: border-box;
+    }
+
+    #temporalFloatingPanel .floating-row-ts {
+      align-items: stretch;
+      width: 100%;
+      max-width: 246px;
+    }
+
+    #temporalFloatingPanel .floating-ts-box .k {
+      font-size: 10px;
+    }
+
+    #temporalFloatingPanel .floating-ts-box .v {
+      font-size: 11px;
+    }
+
+    #temporalFloatingPanel .floating-ts-box {
+      width: 100%;
+      margin: 0;
+      min-height: 32px;
+      padding: 6px 8px;
+    }
+
+    @media (max-width: 980px) {
+      #temporalFloatingPanel {
+        left: 12px;
+        bottom: 12px;
+        width: calc(100% - 24px);
+        min-width: 0;
+        max-width: calc(100% - 24px);
+        padding: 10px 10px 12px;
+      }
+
+      #temporalFloatingPanel .floating-row-top {
+        flex-wrap: wrap;
+      }
+
+      #temporalFloatingPanel .floating-row-top .btn,
+      #temporalFloatingPanel .floating-speed-inline {
+        flex: 1 1 calc(33.333% - 7px);
+        min-width: 72px;
+      }
+
+      #temporalFloatingPanel .floating-row-top,
+      #temporalFloatingPanel .floating-row-slider,
+      #temporalFloatingPanel .floating-row-ts,
+      #temporalFloatingPanel #timeSliderFloating {
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      #temporalFloatingPanel {
+        border-radius: 16px;
+      }
+
+      #temporalFloatingPanel .floating-row-top .btn,
+      #temporalFloatingPanel .floating-speed-inline {
+        flex: 1 1 100%;
+      }
+    }
+
+    .control-buttons .btn,
+    .control-buttons .speed-wrap select {
+      width: 110px;
+      min-width: 110px;
+      max-width: 110px;
+      height: 42px;
+      box-sizing: border-box;
+    }
+
+    .speed-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .speed-wrap span {
+      font-size: 12px;
+      color: var(--text-soft);
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .row.zoom-actions {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      width: 100%;
+    }
+
+    .lbl {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 13px;
+      color: var(--text-main);
+    }
+
+    select,
+    input[type="range"] {
+      width: 100%;
+    }
+
+    select {
+      background: var(--input-bg);
+      color: var(--text-main);
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      box-sizing: border-box;
+    }
+
+    input[type="range"] {
+      accent-color: #60a5fa;
+    }
+
+    .toggles {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      padding-top: 6px;
+      width: 100%;
+      color: var(--text-main);
+    }
+
+    .ios-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.34) 0%, rgba(15, 23, 42, 0.26) 100%);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      box-sizing: border-box;
+      cursor: pointer;
+      transition: background 0.22s ease, border-color 0.22s ease, transform 0.18s ease, box-shadow 0.22s ease;
+      user-select: none;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.03),
+        0 6px 18px rgba(2, 6, 23, 0.14);
+    }
+
+    .ios-toggle:hover {
+      border-color: rgba(34, 211, 238, 0.22);
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.40) 0%, rgba(15, 23, 42, 0.30) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.035),
+        0 8px 22px rgba(2, 6, 23, 0.18);
+    }
+
+    .ios-toggle:active {
+      transform: scale(0.995);
+    }
+
+    .ios-toggle input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .ios-toggle-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .ios-toggle-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.18;
+      letter-spacing: 0.01em;
+    }
+
+    .ios-toggle-subtitle {
+      font-size: 10.5px;
+      color: var(--text-soft);
+      line-height: 1.16;
+    }
+
+    .ios-toggle-switch {
+      position: relative;
+      width: 52px;
+      height: 20px;
+      flex: 0 0 52px;
+      border-radius: 999px;
+      display: inline-block;
+      margin: 0;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: linear-gradient(180deg, #313440 0%, #20232c 100%);
+      transition: all .22s ease;
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,0.05),
+        inset 0 -1px 1px rgba(0,0,0,0.18),
+        0 2px 8px rgba(15, 23, 42, 0.22);
+    }
+
+    .ios-toggle-switch::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 2px;
+      width: 14px;
+      height: 14px;
+      transform: translateY(-50%);
+      border-radius: 50%;
+      background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%);
+      box-shadow:
+        0 1px 2px rgba(15, 23, 42, 0.16),
+        0 3px 8px rgba(15, 23, 42, 0.12),
+        inset 0 1px 0 rgba(255,255,255,0.92);
+      transition: left .24s cubic-bezier(.34,1.2,.64,1), box-shadow .2s ease, transform .2s ease;
+    }
+
+    .ios-toggle-switch::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.02),
+        inset 0 10px 14px rgba(255,255,255,0.02);
+    }
+
+    .ios-toggle input[type="checkbox"]:checked + .ios-toggle-text + .ios-toggle-switch {
+      border-color: rgba(34, 211, 238, 0.28);
+      background: linear-gradient(90deg, #1e40af 0%, #0891b2 55%, #22d3ee 100%);
+      box-shadow:
+        inset 0 1px 1px rgba(255,255,255,0.09),
+        inset 0 -1px 1px rgba(0,0,0,0.12),
+        0 2px 10px rgba(6, 182, 212, 0.24);
+    }
+
+    .ios-toggle input[type="checkbox"]:checked + .ios-toggle-text + .ios-toggle-switch::before {
+      left: calc(100% - 16px);
+      transform: translateY(-50%);
+      box-shadow:
+        0 1px 2px rgba(15, 23, 42, 0.14),
+        0 4px 10px rgba(6, 182, 212, 0.14),
+        inset 0 1px 0 rgba(255,255,255,0.96);
+    }
+
+    .ts {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 8px;
+      width: 100%;
+      font-size: 13px;
+    }
+
+    .ts .k {
+      color: var(--text-soft);
+    }
+
+    .ts .v {
+      font-weight: 600;
+      color: var(--text-main);
+      word-break: break-word;
+    }
+
+    .foot {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    #status {
+      font-size: 13px;
+      color: var(--text-main);
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    code {
+      background: var(--code-bg);
+      color: #cbd5e1;
+      padding: 2px 5px;
+      border-radius: 6px;
+    }
+
+    #ampsInfo {
+      font-size: 12px;
+      margin: 2px 0 0 0;
+      width: 100%;
+      color: var(--text-soft);
+    }
+
+    .alert-box {
+      border-radius: 12px;
+      padding: 12px;
+      border: 1px solid var(--alert-neutral-border);
+      background: var(--alert-neutral-bg);
+    }
+
+    .alert-box h3 {
+      margin: 0 0 6px 0;
+      font-size: 15px;
+    }
+
+    .alert-box p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .level-sem_intersecao {
+      background: var(--alert-neutral-bg);
+      border-color: var(--alert-neutral-border);
+      color: var(--alert-neutral-text);
+    }
+
+    .level-interseccao_baixa {
+      background: var(--alert-low-bg);
+      border-color: var(--alert-low-border);
+      color: var(--alert-low-text);
+    }
+
+    .level-interseccao_moderada {
+      background: var(--alert-mod-bg);
+      border-color: var(--alert-mod-border);
+      color: var(--alert-mod-text);
+    }
+
+    .level-interseccao_alta,
+    .level-interseccao_critica {
+      background: var(--alert-high-bg);
+      border-color: var(--alert-high-border);
+      color: var(--alert-high-text);
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+    }
+
+    #probLegend {
+      margin: 2px 0 0 0;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    .prob-leg-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .prob-leg-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      border: 1px solid rgba(226, 232, 240, 0.25);
+      flex: 0 0 14px;
+    }
+
+    .combined-hover-popup,
+    .combined-hover-popup .leaflet-popup-content-wrapper,
+    .combined-hover-popup .leaflet-popup-content,
+    .combined-hover-popup .leaflet-popup-tip {
+      pointer-events: none;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .leaflet-control-layers,
+    .leaflet-bar,
+    .leaflet-control-zoom a {
+      background: #0f172a !important;
+      color: #e5e7eb !important;
+      border-color: #475569 !important;
+    }
+
+    .leaflet-control-zoom a:hover {
+      background: #1e293b !important;
+      color: #ffffff !important;
+    }
+
+    .leaflet-control-attribution {
+      background: rgba(15, 23, 42, 0.82) !important;
+      color: #cbd5e1 !important;
+    }
+
+    .leaflet-control-attribution a {
+      color: #93c5fd !important;
+    }
+
+    .leaflet-popup-content-wrapper,
+    .leaflet-popup-tip {
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+
+    @media (max-width: 980px) {
+      #app {
+        grid-template-columns: 1fr;
+        grid-template-rows: 55% 45%;
+      }
+
+      #panel {
+        border-left: none;
+        border-top: 1px solid var(--border);
+      }
+
+      .row.zoom-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .control-buttons .btn,
+      .control-buttons .speed-wrap select {
+        width: 100%;
+        min-width: 0;
+        max-width: none;
+      }
+    }
+  
+
+    .date-calendar-wrap {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+    }
+
+    .date-calendar-card {
+      border: 1px solid var(--border);
+      background: var(--bg-card-soft);
+      border-radius: 12px;
+      padding: 12px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .date-calendar-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .date-calendar-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-strong);
+      text-transform: capitalize;
+    }
+
+    .calendar-nav-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-card);
+      color: var(--text-main);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .calendar-nav-btn:hover { filter: brightness(1.08); }
+
+    .calendar-weekdays,
+    .calendar-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .calendar-weekdays {
+      margin-bottom: 6px;
+    }
+
+    .calendar-weekday {
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-soft);
+      font-weight: 600;
+      padding: 2px 0;
+    }
+
+    .calendar-day-btn,
+    .calendar-day-empty {
+      aspect-ratio: 1 / 1;
+      min-height: 34px;
+      border-radius: 10px;
+    }
+
+    .calendar-day-empty {
+      border: 1px dashed rgba(71,85,105,0.25);
+      opacity: 0.30;
+    }
+
+    .calendar-day-btn {
+      border: 1px solid transparent;
+      color: #f8fafc;
+      cursor: pointer;
+      position: relative;
+      font-weight: 700;
+      font-size: 12px;
+      transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .calendar-day-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.25);
+    }
+
+    .calendar-day-btn.selected {
+      border-color: #ffffff;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.18) inset;
+    }
+
+    .calendar-day-btn.no-data {
+      background: #0f172a;
+      color: var(--text-soft);
+      border-color: rgba(71,85,105,0.35);
+      cursor: default;
+    }
+
+    .calendar-day-btn.bucket-1 { background: #2563eb; }
+    .calendar-day-btn.bucket-2 { background: #0f766e; }
+    .calendar-day-btn.bucket-3 { background: #d97706; }
+    .calendar-day-btn.bucket-4 { background: #dc2626; }
+
+    .calendar-day-btn .day-number {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+
+    .calendar-day-btn .day-meta-dot {
+      position: absolute;
+      right: 6px;
+      bottom: 5px;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.85);
+      z-index: 2;
+    }
+
+    .calendar-selected-info {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-soft);
+      line-height: 1.45;
+      min-height: 18px;
+    }
+
+    
+    .calendar-legend-collapsible {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .calendar-legend-summary {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      padding: 10px 12px;
+      user-select: none;
+    }
+
+    .calendar-legend-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .calendar-legend-summary:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .calendar-legend-chevron {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.18);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1;
+      transition: transform .18s ease;
+      flex: 0 0 24px;
+    }
+
+    .calendar-legend-collapsible[open] .calendar-legend-chevron {
+      transform: rotate(0deg);
+    }
+
+    .calendar-legend-collapsible:not([open]) .calendar-legend-chevron {
+      transform: rotate(-90deg);
+    }
+
+    .calendar-legend-body {
+      padding: 0 12px 10px;
+    }
+
+.calendar-legend {
+      border: 1px solid var(--border);
+      background: var(--bg-card-soft);
+      border-radius: 12px;
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 16px;
+    }
+
+    .calendar-legend-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-strong);
+      margin-bottom: 8px;
+    }
+
+    .calendar-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-main);
+      margin-bottom: 7px;
+    }
+
+    .calendar-legend-swatch {
+      width: 16px;
+      height: 16px;
+      border-radius: 5px;
+      flex: 0 0 16px;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .calendar-legend-note {
+      margin-top: 8px;
+      font-size: 11px;
+      color: var(--text-soft);
+      line-height: 1.4;
+    }
+
+    #dateSelect {
+      display: none;
+    }
+
+    @media (max-width: 980px) {
+      .date-calendar-wrap {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
+
+    .date-cases-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .date-cases-empty {
+      font-size: 12px;
+      color: var(--text-soft);
+      line-height: 1.5;
+      padding: 2px 2px 0;
+    }
+
+    .date-case-btn {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.16);
+      background: linear-gradient(180deg, rgba(15,23,42,0.36) 0%, rgba(15,23,42,0.28) 100%);
+      box-sizing: border-box;
+      cursor: pointer;
+      color: var(--text-main);
+      text-align: left;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease, background .18s ease;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.03),
+        0 8px 20px rgba(2, 6, 23, 0.14);
+    }
+
+    .date-case-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(96,165,250,0.24);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.04),
+        0 10px 24px rgba(2, 6, 23, 0.18);
+    }
+
+    .date-case-btn.active {
+      border-color: rgba(255,255,255,0.22);
+      outline: 1px solid rgba(255,255,255,0.05);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.05),
+        0 12px 28px rgba(2, 6, 23, 0.22);
+    }
+
+    .date-case-btn.e1 { border-left: 4px solid #ef4444; }
+    .date-case-btn.e2 { border-left: 4px solid #f59e0b; }
+    .date-case-btn.e3 { border-left: 4px solid #facc15; }
+    .date-case-btn.e4 { border-left: 4px solid #22c55e; }
+    .date-case-btn.e5 { border-left: 4px solid #06b6d4; }
+
+    .date-case-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .date-case-id {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--text-strong);
+      letter-spacing: 0.01em;
+    }
+
+    .date-case-evidence {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #f8fafc;
+    }
+
+    .date-case-evidence.e1 { background: linear-gradient(180deg, rgba(239,68,68,0.30), rgba(127,29,29,0.22)); }
+    .date-case-evidence.e2 { background: linear-gradient(180deg, rgba(245,158,11,0.30), rgba(120,53,15,0.22)); }
+    .date-case-evidence.e3 { background: linear-gradient(180deg, rgba(250,204,21,0.28), rgba(113,63,18,0.20)); }
+    .date-case-evidence.e4 { background: linear-gradient(180deg, rgba(34,197,94,0.30), rgba(20,83,45,0.22)); }
+    .date-case-evidence.e5 { background: linear-gradient(180deg, rgba(6,182,212,0.30), rgba(8,47,73,0.22)); }
+
+    .date-case-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .date-case-pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.10);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .date-case-sub {
+      font-size: 11px;
+      line-height: 1.4;
+      color: var(--text-soft);
+    }
+
+    .classification-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      background: linear-gradient(180deg, rgba(30,41,59,0.98), rgba(15,23,42,0.98));
+    }
+
+    .classification-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .classification-score-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .classification-score {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--text-strong);
+      line-height: 1;
+      letter-spacing: 0.02em;
+    }
+
+    .classification-band {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.04);
+      color: #dbeafe;
+    }
+
+    .evidence-scale {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .evidence-step {
+      position: relative;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.18);
+      background: rgba(255,255,255,0.03);
+      min-height: 38px;
+      padding: 7px 6px 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease, opacity .18s ease;
+      opacity: 0.5;
+    }
+
+    .evidence-step .e-code {
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1;
+      color: #f8fafc;
+    }
+
+    .evidence-step .e-label {
+      font-size: 9px;
+      margin-top: 4px;
+      line-height: 1.1;
+      text-align: center;
+      color: #cbd5e1;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .evidence-step.active {
+      opacity: 1;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(2, 6, 23, 0.18);
+    }
+
+    .evidence-step.level-e1.active { background: linear-gradient(180deg, rgba(239,68,68,0.26), rgba(127,29,29,0.18)); border-color: rgba(239,68,68,0.45); }
+    .evidence-step.level-e2.active { background: linear-gradient(180deg, rgba(245,158,11,0.24), rgba(120,53,15,0.16)); border-color: rgba(245,158,11,0.40); }
+    .evidence-step.level-e3.active { background: linear-gradient(180deg, rgba(250,204,21,0.22), rgba(113,63,18,0.14)); border-color: rgba(250,204,21,0.35); }
+    .evidence-step.level-e4.active { background: linear-gradient(180deg, rgba(34,197,94,0.22), rgba(20,83,45,0.14)); border-color: rgba(34,197,94,0.35); }
+    .evidence-step.level-e5.active { background: linear-gradient(180deg, rgba(6,182,212,0.26), rgba(8,47,73,0.16)); border-color: rgba(34,211,238,0.40); }
+
+    .classification-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .classification-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: var(--text-main);
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .classification-pill strong {
+      color: var(--text-strong);
+      font-weight: 800;
+    }
+
+    .classification-note {
+      font-size: 12px;
+      color: var(--text-soft);
+      line-height: 1.5;
+      margin-top: 6px;
+    }
+
+    .evidence-list-wrap {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(148,163,184,0.14);
+    }
+
+    .evidence-list-title {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+    }
+
+    .evidence-list {
+      margin: 0;
+      padding-left: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      color: var(--text-main);
+    }
+
+    .evidence-list li {
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .evidence-list li::marker {
+      color: #38bdf8;
+    }
+
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div id="map-wrap">
+      <div id="map"></div>
+      <div id="ampInfoPanel" aria-live="polite">
+        <div id="ampInfoHandle">
+          <div id="ampInfoTitle">AMPs atingidas</div>
+          <button id="ampInfoToggle" type="button" aria-label="Minimizar painel" title="Minimizar painel">−</button>
+        </div>
+        <div id="ampInfoContent">
+          <table id="ampInfoTable">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Categoria IUCN</th>
+                <th>Designação</th>
+                <th>Primeiro contato na simulação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="4">Nenhuma AMP atingida no momento.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="temporalFloatingPanel" aria-label="Controles da animação temporal">
+        <div class="floating-title" id="temporalFloatingHandle" title="Arraste para mover">Animação temporal</div>
+
+        <div class="floating-row floating-row-top">
+          <button id="btnPlayFloating" class="btn primary" type="button">
+            <span class="tf-icon">▶</span><span>Play</span>
+          </button>
+          <button id="btnPauseFloating" class="btn ghost" type="button">
+            <span class="tf-icon">⏸</span><span>Pause</span>
+          </button>
+          <label class="floating-speed-inline">
+            <span>Velocidade</span>
+            <select id="speedFloating">
+              <option value="1">x1</option>
+              <option value="2">x2</option>
+              <option value="4">x4</option>
+              <option value="8">x8</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="floating-row floating-row-slider">
+          <input id="timeSliderFloating" type="range" min="0" max="0" value="0" step="1" />
+        </div>
+
+        <div class="floating-row floating-row-ts">
+          <div class="ts floating-ts-box">
+            <div class="k">Tempo:</div>
+            <div class="v" id="tsLabelFloating">—</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div id="panel">
+      <div class="row">
+        <div class="title">OCEOM — Observação Computacional de Eventos de Óleo no Mar</div>
+        <div class="sub">Caso <span id="caseIdLabel">—</span></div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Seleção</div>
+        <select id="dateSelect" aria-label="Selecionar data"></select>
+
+        <div class="date-calendar-wrap" style="margin-top:10px;">
+          <div class="date-calendar-card">
+            <div class="date-calendar-toolbar">
+              <button id="calendarPrevBtn" class="calendar-nav-btn" type="button" aria-label="Mês anterior">&#8249;</button>
+              <div id="calendarMonthLabel" class="date-calendar-title">—</div>
+              <button id="calendarNextBtn" class="calendar-nav-btn" type="button" aria-label="Próximo mês">&#8250;</button>
+            </div>
+            <div class="calendar-weekdays" id="calendarWeekdays"></div>
+            <div class="calendar-days-grid" id="calendarDaysGrid"></div>
+            <div id="calendarSelectedInfo" class="calendar-selected-info"></div>
+          </div>
+
+          <details class="calendar-legend calendar-legend-collapsible">
+            <summary class="calendar-legend-summary">
+              <span class="calendar-legend-title" style="margin-bottom:0;">Legenda de cores do calendário</span>
+              <span class="calendar-legend-chevron" aria-hidden="false">⌄</span>
+            </summary>
+            <div class="calendar-legend-body">
+              <div class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:#2563eb;"></span><span>1 a 3 casos por cena</span></div>
+              <div class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:#0f766e;"></span><span>4 a 6 casos por cena</span></div>
+              <div class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:#d97706;"></span><span>7 a 9 casos por cena</span></div>
+              <div class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:#dc2626;"></span><span>10 ou mais</span></div>
+              <div class="calendar-legend-note">A cor do dia usa a maior concentração de casos observada em uma única cena daquela data.</div>
+            </div>
+          </details>
+        </div>
+
+        <div class="row" style="display:none;">
+          <label class="lbl" style="width:100%;">
+            <span style="min-width:48px;">Cena</span>
+            <select id="sceneSelect"></select>
+          </label>
+        </div>
+        <div class="row" style="display:none;">
+          <label class="lbl" style="width:100%;">
+            <span style="min-width:48px;">Caso</span>
+            <select id="caseSelect"></select>
+          </label>
+        </div>
+
+        <div class="card" id="dateCasesCard">
+          <div class="section-title">Casos da data selecionada</div>
+          <div class="date-cases-list" id="dateCasesList">
+            <div class="date-cases-empty">Selecione uma data no calendário para ver os casos disponíveis.</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="alertBox" class="alert-box level-sem_intersecao">
+        <h3 id="alertTitle">Carregando alerta…</h3>
+        <p id="alertMessage">Aguardando dados do caso.</p>
+      </div>
+
+      <div class="classification-card">
+        <div class="section-title">Classificação do caso</div>
+        <div class="classification-top">
+          <div class="classification-score-wrap">
+            <div class="classification-score" id="clsDisplayConfidence">—</div>
+            <div class="classification-band" id="clsConfidenceBand">—</div>
+          </div>
+        </div>
+
+        <div class="evidence-scale" id="clsEvidenceScale" aria-label="Escala de evidência E1 a E5">
+          <div class="evidence-step level-e1" data-level="E1"><div class="e-code">E1</div><div class="e-label">Muito fraca</div></div>
+          <div class="evidence-step level-e2" data-level="E2"><div class="e-code">E2</div><div class="e-label">Fraca</div></div>
+          <div class="evidence-step level-e3" data-level="E3"><div class="e-code">E3</div><div class="e-label">Moderada</div></div>
+          <div class="evidence-step level-e4" data-level="E4"><div class="e-code">E4</div><div class="e-label">Forte</div></div>
+          <div class="evidence-step level-e5" data-level="E5"><div class="e-code">E5</div><div class="e-label">Muito forte</div></div>
+        </div>
+
+        <div class="classification-badges">
+          <div class="classification-pill"><span>Revisão</span><strong id="clsReviewLevel">—</strong></div>
+          <div class="classification-pill"><span>Contexto</span><strong id="clsSourceContext">—</strong></div>
+          <div class="classification-pill"><span>Status</span><strong id="clsOilStatus">—</strong></div>
+          <div class="classification-pill"><span>Rótulo humano</span><strong id="clsHumanLabel">—</strong></div>
+        </div>
+        <div class="ts"><div class="k">Confiança da máquina:</div><div class="v" id="clsMachineConfidence">—</div></div>
+        <div class="ts"><div class="k">Score de fonte:</div><div class="v" id="clsSourceScore">—</div></div>
+        <div class="ts"><div class="k">Slick confidence:</div><div class="v" id="clsSlickConfidence">—</div></div>
+        <div class="classification-note" id="clsConfidenceExplanation">Selecione um caso para visualizar a interpretação da classificação.</div>
+
+        <div class="evidence-list-wrap">
+          <div class="evidence-list-title">Evidências do caso</div>
+          <ul class="evidence-list" id="clsEvidenceList">
+            <li>Selecione um caso para visualizar as evidências disponíveis.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Camadas do mapa</div>
+
+        <div class="row zoom-actions">
+          <button id="btnZoomSar" class="btn small ghost" type="button">Zoom SAR</button>
+          <button id="btnZoomAmps" class="btn small ghost" type="button">Zoom AMPs</button>
+          <button id="btnZoomSlick" class="btn small ghost" type="button">Zoom Slick</button>
+        </div>
+
+        <div class="toggles">
+          <label class="ios-toggle">
+            <input type="checkbox" id="tgSar" checked />
+            <span class="ios-toggle-text">
+              <span class="ios-toggle-title">SAR (t0)</span>
+              <span class="ios-toggle-subtitle">Exibe a imagem SAR de referência</span>
+            </span>
+            <span class="ios-toggle-switch" aria-hidden="true"></span>
+          </label>
+
+          <div style="margin-left:18px; width: calc(100% - 18px);">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
+              <label for="sarOpacity" style="font-size:12px; color:var(--text-soft);">Opacidade SAR</label>
+              <span id="sarOpacityLabel" style="font-size:12px; color:var(--text-main);">85%</span>
+            </div>
+            <input id="sarOpacity" type="range" min="0" max="100" step="1" value="85" />
+          </div>
+
+          <label class="ios-toggle">
+            <input type="checkbox" id="tgSlick" checked />
+            <span class="ios-toggle-text">
+              <span class="ios-toggle-title">Slick observado</span>
+              <span class="ios-toggle-subtitle">Mostra o polígono observado em t0</span>
+            </span>
+            <span class="ios-toggle-switch" aria-hidden="true"></span>
+          </label>
+          <label class="ios-toggle">
+            <input type="checkbox" id="tgSlickParts" checked />
+            <span class="ios-toggle-text">
+              <span class="ios-toggle-title">Partes do slick</span>
+              <span class="ios-toggle-subtitle">Detalha as múltiplas partes da detecção</span>
+            </span>
+            <span class="ios-toggle-switch" aria-hidden="true"></span>
+          </label>
+
+          <label class="ios-toggle">
+            <input type="checkbox" id="tgAmps" checked />
+            <span class="ios-toggle-text">
+              <span class="ios-toggle-title">AMPs</span>
+              <span class="ios-toggle-subtitle">Mostra as áreas marinhas protegidas</span>
+            </span>
+            <span class="ios-toggle-switch" aria-hidden="true"></span>
+          </label>
+          <div id="ampsInfo">AMPs: —</div>
+
+          <label class="ios-toggle">
+            <input type="checkbox" id="tgOilPts" checked />
+            <span class="ios-toggle-text">
+              <span class="ios-toggle-title">OpenOil pontos</span>
+              <span class="ios-toggle-subtitle">Exibe as partículas da simulação</span>
+            </span>
+            <span class="ios-toggle-switch" aria-hidden="true"></span>
+          </label>
+          <label class="ios-toggle">
+            <input type="checkbox" id="tgTrajFull" checked />
+            <span class="ios-toggle-text">
+              <span class="ios-toggle-title">OpenOil trajetórias</span>
+              <span class="ios-toggle-subtitle">Mostra o histórico completo das trajetórias</span>
+            </span>
+            <span class="ios-toggle-switch" aria-hidden="true"></span>
+          </label>
+
+          <label id="probToggleWrap" class="ios-toggle">
+            <input type="checkbox" id="tgProb" checked />
+            <span class="ios-toggle-text">
+              <span class="ios-toggle-title">Mancha probabilística</span>
+              <span class="ios-toggle-subtitle">Exibe o envelope probabilístico da simulação</span>
+            </span>
+            <span class="ios-toggle-switch" aria-hidden="true"></span>
+          </label>
+          <div id="probLegend">
+            <div class="prob-leg-item">
+              <span class="prob-leg-swatch" style="background: rgba(220, 38, 38, 0.60);"></span>
+              <span>0.90 — núcleo mais provável</span>
+            </div>
+            <div class="prob-leg-item">
+              <span class="prob-leg-swatch" style="background: rgba(245, 158, 11, 0.45);"></span>
+              <span>0.75 — probabilidade intermediária</span>
+            </div>
+            <div class="prob-leg-item">
+              <span class="prob-leg-swatch" style="background: rgba(59, 130, 246, 0.28);"></span>
+              <span>0.50 — envelope mais amplo</span>
+            </div>
+          </div>
+
+          <label class="ios-toggle">
+            <input type="checkbox" id="tgWind" />
+            <span class="ios-toggle-text">
+              <span class="ios-toggle-title">Vento (GFS)</span>
+              <span class="ios-toggle-subtitle">Ativa a camada de vento de superfície</span>
+            </span>
+            <span class="ios-toggle-switch" aria-hidden="true"></span>
+          </label>
+          <label class="ios-toggle">
+            <input type="checkbox" id="tgCurr" />
+            <span class="ios-toggle-text">
+              <span class="ios-toggle-title">Correntes (HYCOM)</span>
+              <span class="ios-toggle-subtitle">Ativa a camada de correntes oceânicas</span>
+            </span>
+            <span class="ios-toggle-switch" aria-hidden="true"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Resumo do caso</div>
+        <div class="ts"><div class="k">Status:</div><div class="v" id="sumStatus">—</div></div>
+        <div class="ts"><div class="k">t0 observado:</div><div class="v mono" id="sumT0">—</div></div>
+        <div class="ts"><div class="k">t final:</div><div class="v mono" id="sumTf">—</div></div>
+        <div class="ts"><div class="k">AMP intersecta:</div><div class="v" id="sumAmpHit">—</div></div>
+        <div class="ts"><div class="k">Nº AMPs:</div><div class="v" id="sumNAmp">—</div></div>
+        <div class="ts"><div class="k">Primeira interseção:</div><div class="v mono" id="sumFirstHit">—</div></div>
+      </div>
+
+      <div class="row foot">
+        <div id="status">Carregando dados…</div>
+        <div class="hint">
+          Rode via servidor local: <code>cd SIMOM/web && python -m http.server 8000</code>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DEFAULT_CASE_ID = null;
+    const GLOBAL_AMPS_PATH = "./assets/geo/amps_brasil_costa.geojson";
+
+    function qs(name, fallback = null) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name) ?? fallback;
+    }
+
+    function setStatus(msg) {
+      const el = document.getElementById("status");
+      if (el) el.textContent = msg;
+    }
+
+    async function fetchJSON(path) {
+      const r = await fetch(path, { cache: "no-store" });
+      if (!r.ok) throw new Error(`Falha ao carregar ${path} (HTTP ${r.status})`);
+      return await r.json();
+    }
+
+    function parseBoundsFromT0BoundsJson(bboxRaw) {
+      const isNum = (v) => typeof v === "number" && Number.isFinite(v);
+      const asNum = (v) => (typeof v === "string" ? Number(v) : v);
+
+      const ok = (w, s, e, n) =>
+        [w, s, e, n].every(isNum) &&
+        w < e && s < n &&
+        w >= -180 && e <= 180 &&
+        s >= -90 && n <= 90;
+
+      if (bboxRaw?.bounds_leaflet && Array.isArray(bboxRaw.bounds_leaflet) && bboxRaw.bounds_leaflet.length === 2) {
+        const sw = bboxRaw.bounds_leaflet[0];
+        const ne = bboxRaw.bounds_leaflet[1];
+        if (Array.isArray(sw) && Array.isArray(ne) && sw.length === 2 && ne.length === 2) {
+          const south = asNum(sw[0]);
+          const west = asNum(sw[1]);
+          const north = asNum(ne[0]);
+          const east = asNum(ne[1]);
+          if (ok(west, south, east, north)) return { west, south, east, north };
+        }
+      }
+
+      if (bboxRaw?.bounds && typeof bboxRaw.bounds === "object") {
+        const b = bboxRaw.bounds;
+        const west = asNum(b.west ?? b.minx ?? b.xmin ?? b.left);
+        const south = asNum(b.south ?? b.miny ?? b.ymin ?? b.bottom);
+        const east = asNum(b.east ?? b.maxx ?? b.xmax ?? b.right);
+        const north = asNum(b.north ?? b.maxy ?? b.ymax ?? b.top);
+        if (ok(west, south, east, north)) return { west, south, east, north };
+      }
+
+      const west = asNum(bboxRaw?.west ?? bboxRaw?.minx ?? bboxRaw?.xmin ?? bboxRaw?.left);
+      const south = asNum(bboxRaw?.south ?? bboxRaw?.miny ?? bboxRaw?.ymin ?? bboxRaw?.bottom);
+      const east = asNum(bboxRaw?.east ?? bboxRaw?.maxx ?? bboxRaw?.xmax ?? bboxRaw?.right);
+      const north = asNum(bboxRaw?.north ?? bboxRaw?.maxy ?? bboxRaw?.ymax ?? bboxRaw?.top);
+      if (ok(west, south, east, north)) return { west, south, east, north };
+
+      if (Array.isArray(bboxRaw?.bbox) && bboxRaw.bbox.length === 4) {
+        const w = asNum(bboxRaw.bbox[0]);
+        const s = asNum(bboxRaw.bbox[1]);
+        const e = asNum(bboxRaw.bbox[2]);
+        const n = asNum(bboxRaw.bbox[3]);
+        if (ok(w, s, e, n)) return { west: w, south: s, east: e, north: n };
+      }
+
+      throw new Error("Formato de bounds não reconhecido em t0_bounds.json.");
+    }
+
+    function parseTimeAny(x) {
+      if (x == null) return null;
+      if (x instanceof Date) return x;
+
+      if (typeof x === "number") {
+        if (!Number.isFinite(x)) return null;
+        if (x > 1e15) return new Date(x / 1e6);
+        if (x > 1e12) return new Date(x);
+        if (x > 1e9) return new Date(x * 1000);
+        return null;
+      }
+
+      if (typeof x === "string") {
+        const d = new Date(x);
+        if (!isNaN(d.getTime())) return d;
+      }
+      return null;
+    }
+
+    function fmtTime(d) {
+      if (!(d instanceof Date) || isNaN(d.getTime())) return "—";
+
+      const yyyy = d.getUTCFullYear();
+      const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+      const dd = String(d.getUTCDate()).padStart(2, "0");
+      const hh = String(d.getUTCHours()).padStart(2, "0");
+      const mi = String(d.getUTCMinutes()).padStart(2, "0");
+      const ss = String(d.getUTCSeconds()).padStart(2, "0");
+
+      return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss} UTC`;
+    }
+
+    function nearestIndex(timesMs, targetMs) {
+      let lo = 0, hi = timesMs.length - 1;
+      if (timesMs.length === 0) return -1;
+      if (targetMs <= timesMs[0]) return 0;
+      if (targetMs >= timesMs[hi]) return hi;
+
+      while (hi - lo > 1) {
+        const mid = (lo + hi) >> 1;
+        if (timesMs[mid] < targetMs) lo = mid;
+        else hi = mid;
+      }
+      return (Math.abs(timesMs[lo] - targetMs) <= Math.abs(timesMs[hi] - targetMs)) ? lo : hi;
+    }
+
+    class CanvasOverlay extends L.Layer {
+      constructor(drawFn, opts = {}) {
+        super();
+        this._drawFn = drawFn;
+        this.options = opts;
+      }
+
+      onAdd(map) {
+        this._map = map;
+        this._canvas = L.DomUtil.create("canvas", "leaflet-canvas-overlay");
+        this._canvas.style.position = "absolute";
+        this._canvas.style.pointerEvents = "none";
+        this._ctx = this._canvas.getContext("2d");
+
+        const pane = map.getPane(this.options.pane || "overlayPane");
+        pane.appendChild(this._canvas);
+
+        map.on("move zoom resize", this._reset, this);
+        this._reset();
+      }
+
+      onRemove(map) {
+        map.off("move zoom resize", this._reset, this);
+        if (this._canvas && this._canvas.parentNode) this._canvas.parentNode.removeChild(this._canvas);
+        this._map = null;
+        this._canvas = null;
+        this._ctx = null;
+      }
+
+      _reset() {
+        if (!this._map || !this._canvas) return;
+        const size = this._map.getSize();
+        this._canvas.width = Math.round(size.x);
+        this._canvas.height = Math.round(size.y);
+        const topLeft = this._map.containerPointToLayerPoint([0, 0]);
+        L.DomUtil.setPosition(this._canvas, topLeft);
+        this.redraw();
+      }
+
+      redraw() {
+        if (!this._map || !this._ctx) return;
+        const ctx = this._ctx;
+        ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+        this._drawFn(ctx, this._map, this._canvas);
+      }
+    }
+
+    function normalizeFrameList(obj, guessKey = "frames") {
+      if (Array.isArray(obj)) {
+        return obj.map(f => (f && !f.t && (f.time_utc || f.time || f.timestamp) ? ({ ...f, t: f.time_utc || f.time || f.timestamp }) : f));
+      }
+      if (obj && Array.isArray(obj[guessKey])) {
+        return obj[guessKey].map(f => (f && !f.t && (f.time_utc || f.time || f.timestamp) ? ({ ...f, t: f.time_utc || f.time || f.timestamp }) : f));
+      }
+
+      if (obj && Array.isArray(obj.timestamps) && Array.isArray(obj.frames)) {
+        return obj.frames.map((f, i) => ({ ...f, t: obj.timestamps[i] }));
+      }
+      if (obj && Array.isArray(obj.timestamps) && Array.isArray(obj.values)) {
+        return obj.values.map((v, i) => ({ t: obj.timestamps[i], ...v }));
+      }
+      return [];
+    }
+
+    function normalizeOilPoints(frame) {
+      const pts = frame?.points || frame?.particles || frame?.data || [];
+      if (!Array.isArray(pts)) return [];
+
+      const out = [];
+      for (const p of pts) {
+        if (Array.isArray(p) && p.length >= 2) {
+          const lat = Number(p[0]);
+          const lon = Number(p[1]);
+          if (Number.isFinite(lat) && Number.isFinite(lon)) out.push({ lat, lon });
+          continue;
+        }
+
+        const lat = p.lat ?? p.latitude ?? p.y;
+        const lon = p.lon ?? p.longitude ?? p.x;
+        if (lat == null || lon == null) continue;
+        const la = Number(lat), lo = Number(lon);
+        if (Number.isFinite(la) && Number.isFinite(lo)) out.push({ lat: la, lon: lo });
+      }
+      return out;
+    }
+
+    function pointInRing(lon, lat, ring) {
+      let inside = false;
+      for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+        const xi = Number(ring[i][0]), yi = Number(ring[i][1]);
+        const xj = Number(ring[j][0]), yj = Number(ring[j][1]);
+
+        const intersect =
+          ((yi > lat) !== (yj > lat)) &&
+          (lon < (xj - xi) * (lat - yi) / ((yj - yi) || 1e-12) + xi);
+
+        if (intersect) inside = !inside;
+      }
+      return inside;
+    }
+
+    function pointInPolygonCoords(lon, lat, polygonCoords) {
+      if (!Array.isArray(polygonCoords) || polygonCoords.length === 0) return false;
+
+      const outerRing = polygonCoords[0];
+      if (!pointInRing(lon, lat, outerRing)) return false;
+
+      for (let i = 1; i < polygonCoords.length; i++) {
+        if (pointInRing(lon, lat, polygonCoords[i])) return false;
+      }
+      return true;
+    }
+
+    function pointInFeature(lon, lat, feature) {
+      const geom = feature?.geometry;
+      if (!geom) return false;
+
+      if (geom.type === "Polygon") {
+        return pointInPolygonCoords(lon, lat, geom.coordinates);
+      }
+
+      if (geom.type === "MultiPolygon") {
+        return geom.coordinates.some(poly => pointInPolygonCoords(lon, lat, poly));
+      }
+
+      return false;
+    }
+
+    function normalizeVectorFrame(frame) {
+      if (!frame) return [];
+
+      const directPts =
+        (Array.isArray(frame.pts) && frame.pts) ||
+        (Array.isArray(frame.points) && frame.points) ||
+        (Array.isArray(frame.vectors) && frame.vectors) ||
+        (Array.isArray(frame.data) && frame.data) ||
+        (Array.isArray(frame.uv) && frame.uv) ||
+        null;
+
+      if (!directPts) return [];
+
+      const out = [];
+      for (const p of directPts) {
+        if (Array.isArray(p) && p.length >= 4) {
+          const lat = Number(p[0]);
+          const lon = Number(p[1]);
+          const u = Number(p[2]);
+          const v = Number(p[3]);
+          if (Number.isFinite(lat) && Number.isFinite(lon) && Number.isFinite(u) && Number.isFinite(v)) {
+            out.push({ lat, lon, u, v });
+          }
+          continue;
+        }
+
+        const lat = p.lat ?? p.latitude ?? p.y ?? p.Y;
+        const lon = p.lon ?? p.lng ?? p.longitude ?? p.x ?? p.X;
+        const u = p.u ?? p.uo ?? p.u10 ?? p.u_10 ?? p.ux ?? p.eastward ?? p.eastward_wind ?? p.u_component;
+        const v = p.v ?? p.vo ?? p.v10 ?? p.v_10 ?? p.uy ?? p.northward ?? p.northward_wind ?? p.v_component;
+
+        if (lat == null || lon == null || u == null || v == null) continue;
+
+        const la = Number(lat), lo = Number(lon), uu = Number(u), vv = Number(v);
+        if (!Number.isFinite(la) || !Number.isFinite(lo) || !Number.isFinite(uu) || !Number.isFinite(vv)) continue;
+
+        const fixed = (Math.abs(la) > 90 && Math.abs(lo) <= 90) ? { lat: lo, lon: la } : { lat: la, lon: lo };
+        out.push({ lat: fixed.lat, lon: fixed.lon, u: uu, v: vv });
+      }
+
+      return out;
+    }
+
+    function probabilityStyle(feature) {
+      const conf = Number(feature?.properties?.confidence);
+      if (conf >= 0.9) {
+        return { weight: 1.2, color: "#ef4444", fillColor: "#dc2626", fillOpacity: 0.60 };
+      }
+      if (conf >= 0.75) {
+        return { weight: 1.0, color: "#f59e0b", fillColor: "#f59e0b", fillOpacity: 0.45 };
+      }
+      return { weight: 0.9, color: "#60a5fa", fillColor: "#3b82f6", fillOpacity: 0.28 };
+    }
+
+    function probabilityTooltip(feature) {
+      const p = feature?.properties || {};
+      return `
+        <div style="min-width:180px;">
+          <div style="font-weight:700; font-size:13px; margin-bottom:4px;">
+            Mancha probabilística
+          </div>
+          <div style="font-size:12px; line-height:1.4;">
+            <b>Confidence:</b> ${p.confidence ?? "—"}<br>
+            <b>Count:</b> ${p.count ?? "—"}<br>
+            <b>Relative density:</b> ${p.relative_density ?? "—"}
+          </div>
+        </div>
+      `;
+    }
+
+    function ampTooltip(feature) {
+      const p = feature?.properties || {};
+      const nome = getAmpFeatureName(feature);
+      const categoria = p.iucn_cat || p.IUCN_CAT || "—";
+      const designacao = p.designacao || p.DESIG || p.designacao_eng || p.DESIG_ENG || "—";
+      return `
+        <div style="min-width:220px;">
+          <div style="font-weight:700; font-size:13px; margin-bottom:4px;">${nome}</div>
+          <div style="font-size:12px; line-height:1.4;">
+            <b>Categoria IUCN:</b> ${categoria}<br>
+            <b>Designação:</b> ${designacao}
+          </div>
+        </div>
+      `;
+    }
+
+    function normalizeTextValue(v) {
+      return String(v ?? "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim()
+        .toLowerCase();
+    }
+
+    function getAmpFeatureName(feature) {
+      const p = feature?.properties || {};
+      return p.amp_nome || p.NAME || p.name || p.NOME || "AMP sem nome";
+    }
+
+    function extractHitAmpNames(summary, alertPayload, ampsHitGeo = null) {
+      const candidates = [
+        ...(Array.isArray(summary?.amps_intersectadas) ? summary.amps_intersectadas : []),
+        ...(Array.isArray(summary?.amps_afetadas) ? summary.amps_afetadas : []),
+        ...(Array.isArray(summary?.amp_names_hit) ? summary.amp_names_hit : []),
+        ...(Array.isArray(summary?.amp_hit_names) ? summary.amp_hit_names : []),
+        ...(Array.isArray(alertPayload?.amps_intersectadas) ? alertPayload.amps_intersectadas : []),
+        ...(Array.isArray(alertPayload?.amps_afetadas) ? alertPayload.amps_afetadas : []),
+        ...(Array.isArray(alertPayload?.amp_names_hit) ? alertPayload.amp_names_hit : []),
+        ...(Array.isArray(alertPayload?.amp_hit_names) ? alertPayload.amp_hit_names : []),
+        ...(Array.isArray(ampsHitGeo?.features) ? ampsHitGeo.features.map(getAmpFeatureName) : [])
+      ];
+
+      return new Set(candidates.map(normalizeTextValue).filter(Boolean));
+    }
+
+    function getFirstIntersectionTime(summary, alertPayload) {
+      return parseTimeAny(summary?.primeira_interseccao_utc) || parseTimeAny(alertPayload?.primeira_interseccao_utc) || null;
+    }
+
+    function setAlertBox(payload) {
+      const box = document.getElementById("alertBox");
+      const title = document.getElementById("alertTitle");
+      const message = document.getElementById("alertMessage");
+
+      const level = payload?.alert_level || "sem_intersecao";
+      box.className = `alert-box level-${level}`;
+      title.textContent = payload?.alert_title || "Sem alerta";
+      message.textContent = payload?.alert_message || "Sem informações adicionais.";
+    }
+
+    function fillSummary(summary) {
+      document.getElementById("sumStatus").textContent = summary?.status ?? "—";
+      document.getElementById("sumT0").textContent = summary?.t0_observado ?? "—";
+      document.getElementById("sumTf").textContent = summary?.t_final_simulado ?? "—";
+      document.getElementById("sumAmpHit").textContent = summary?.amp_intersecta === true ? "Sim" : "Não";
+      document.getElementById("sumNAmp").textContent = summary?.n_amps_intersectadas ?? "—";
+      document.getElementById("sumFirstHit").textContent = summary?.primeira_interseccao_utc ?? "—";
+    }
+
+    function isFiniteNumber(v) {
+      return typeof v === "number" && Number.isFinite(v);
+    }
+
+    function parseNumericMaybe(v) {
+      if (v == null || v === "") return null;
+      const n = Number(v);
+      return Number.isFinite(n) ? n : null;
+    }
+
+    
+    function humanizeEvidenceBand(v) {
+      const key = String(v || "").trim().toLowerCase();
+      const labels = {
+        muito_forte: "Evidência muito forte",
+        forte: "Evidência forte",
+        moderada: "Evidência moderada",
+        fraca: "Evidência fraca",
+        muito_fraca: "Evidência muito fraca"
+      };
+      return labels[key] || (key ? key.replace(/_/g, " ") : "—");
+    }
+
+    function humanizeEnum(v) {
+      const key = String(v || "").trim();
+      const labels = {
+        human_confirmed: "Confirmado por humano",
+        human_reviewed: "Revisado por humano",
+        machine_only: "Somente máquina",
+        vessel: "Navio",
+        infrastructure: "Infraestrutura",
+        natural: "Natural",
+        unknown: "Desconhecido",
+        other: "Outro",
+        confirmed_oil: "Óleo confirmado",
+        likely_oil: "Provável óleo",
+        uncertain: "Incerto",
+        likely_non_oil: "Provável não óleo",
+        non_oil: "Não óleo"
+      };
+      return labels[key] || (key ? key.replace(/_/g, " ") : "—");
+    }
+
+    function formatPctValue(v, fractionDigits = 0) {
+      const n = parseNumericMaybe(v);
+      if (!Number.isFinite(n)) return "—";
+      return `${n.toFixed(fractionDigits)}%`;
+    }
+
+    function formatScoreValue(v) {
+      const n = parseNumericMaybe(v);
+      if (!Number.isFinite(n)) return "—";
+      return n.toFixed(3);
+    }
+
+    function pickFirstDefined(...values) {
+      for (const value of values) {
+        if (value !== undefined && value !== null && value !== "") return value;
+      }
+      return null;
+    }
+
+    function resolveClassificationData(summary = {}, alertPayload = {}, manifest = {}, catalogItem = {}) {
+      const nestedClassification =
+        pickFirstDefined(summary?.classification, alertPayload?.classification, manifest?.classification, catalogItem?.classification) || {};
+      const nestedIndex =
+        pickFirstDefined(summary?.classification_index, alertPayload?.classification_index, manifest?.classification_index, catalogItem?.classification_index) || {};
+
+      const machineConfidence = pickFirstDefined(
+        nestedClassification.machine_confidence,
+        summary?.machine_confidence,
+        catalogItem?.machine_confidence,
+        catalogItem?.machine_confidence_normalized
+      );
+      const sourceScore = pickFirstDefined(
+        nestedClassification.source_score_raw,
+        nestedClassification.source_score,
+        summary?.source_score_raw,
+        summary?.source_score,
+        catalogItem?.source_score_raw,
+        catalogItem?.source_score,
+        catalogItem?.source_score_normalized
+      );
+      const slickConfidence = pickFirstDefined(
+        nestedClassification.slick_confidence,
+        summary?.slick_confidence,
+        catalogItem?.slick_confidence
+      );
+
+      return {
+        review_level: pickFirstDefined(nestedClassification.review_level, summary?.review_level, catalogItem?.review_level),
+        source_context: pickFirstDefined(nestedClassification.source_context, summary?.source_context, catalogItem?.source_context),
+        oil_status: pickFirstDefined(nestedClassification.oil_status, summary?.oil_status, catalogItem?.oil_status),
+        human_label: pickFirstDefined(nestedClassification.human_label, summary?.human_label, catalogItem?.human_label, catalogItem?.human_label_normalized),
+        machine_confidence: machineConfidence,
+        source_score: sourceScore,
+        slick_confidence: slickConfidence,
+        evidence_level: pickFirstDefined(
+          nestedIndex.evidence_level,
+          summary?.evidence_level,
+          alertPayload?.evidence_level,
+          manifest?.evidence_level,
+          catalogItem?.evidence_level
+        ),
+        evidence_band: pickFirstDefined(
+          nestedIndex.evidence_band,
+          summary?.evidence_band,
+          alertPayload?.evidence_band,
+          manifest?.evidence_band,
+          catalogItem?.evidence_band
+        ),
+        evidence_label: pickFirstDefined(
+          nestedIndex.evidence_label,
+          summary?.evidence_label,
+          alertPayload?.evidence_label,
+          manifest?.evidence_label,
+          catalogItem?.evidence_label
+        ),
+        evidence_explanation: pickFirstDefined(
+          nestedIndex.evidence_explanation,
+          summary?.evidence_explanation,
+          alertPayload?.evidence_explanation,
+          manifest?.evidence_explanation,
+          catalogItem?.evidence_explanation
+        ),
+        score_total: pickFirstDefined(
+          nestedIndex.score_total,
+          summary?.score_total,
+          alertPayload?.score_total,
+          manifest?.score_total,
+          catalogItem?.score_total
+        ),
+        evidence_components: pickFirstDefined(
+          nestedIndex.evidence_components,
+          summary?.evidence_components,
+          alertPayload?.evidence_components,
+          manifest?.evidence_components,
+          catalogItem?.evidence_components
+        ) || {},
+        component_details: pickFirstDefined(
+          nestedIndex.component_details,
+          summary?.component_details,
+          alertPayload?.component_details,
+          manifest?.component_details,
+          catalogItem?.component_details
+        ) || {}
+      };
+    }
+
+    function buildEvidenceListItems(cls) {
+      const items = [];
+      const details = cls.component_details || {};
+      const comps = cls.evidence_components || {};
+
+      const pushUnique = (txt) => {
+        const s = String(txt || "").trim();
+        if (!s) return;
+        if (!items.includes(s)) items.push(s);
+      };
+
+      const classReasons = Array.isArray(details?.classification?.reasons) ? details.classification.reasons : [];
+      const contextReasons = Array.isArray(details?.context?.reasons) ? details.context.reasons : [];
+
+      classReasons.forEach(r => pushUnique(humanizeEnum(r) === "—" ? r : humanizeEnum(r)));
+      contextReasons.forEach(r => pushUnique(r));
+
+      if (Number(comps.morphology_score) > 0) {
+        pushUnique("A morfologia do slick é compatível com uma feição potencialmente oleosa.");
+      } else if (Number(comps.morphology_score) < 0) {
+        pushUnique("A morfologia do slick reduz a força da evidência.");
+      }
+
+      if (Number(comps.structure_score) > 0) {
+        pushUnique("A geometria do caso é consistente e possui estrutura suficiente para análise.");
+      }
+
+      if (Number(comps.classification_score) > 0 && cls.machine_confidence != null) {
+        pushUnique(`A confiança da máquina reforça a detecção (${formatPctValue((Number(cls.machine_confidence) <= 1 ? Number(cls.machine_confidence) * 100 : Number(cls.machine_confidence)), 1)}).`);
+      }
+
+      if (Number(comps.context_score) > 0 && cls.source_context) {
+        pushUnique(`O contexto associado ao caso favorece a hipótese de óleo (${humanizeEnum(cls.source_context)}).`);
+      } else if (Number(comps.context_score) < 0 && cls.source_context) {
+        pushUnique(`O contexto associado ao caso enfraquece a hipótese de óleo (${humanizeEnum(cls.source_context)}).`);
+      }
+
+      if (!items.length && cls.evidence_explanation) {
+        pushUnique(cls.evidence_explanation);
+      }
+
+      return items;
+    }
+
+    function fillClassification(summary = {}, alertPayload = {}, manifest = {}, catalogItem = {}) {
+      const cls = resolveClassificationData(summary, alertPayload, manifest, catalogItem);
+      const evidenceLevel = String(cls.evidence_level || "—").toUpperCase();
+
+      document.getElementById("clsDisplayConfidence").textContent = evidenceLevel || "—";
+      document.getElementById("clsConfidenceBand").textContent =
+        cls.evidence_label || humanizeEvidenceBand(cls.evidence_band);
+      document.getElementById("clsReviewLevel").textContent = humanizeEnum(cls.review_level);
+      document.getElementById("clsSourceContext").textContent = humanizeEnum(cls.source_context);
+      document.getElementById("clsOilStatus").textContent = humanizeEnum(cls.oil_status);
+      document.getElementById("clsHumanLabel").textContent = cls.human_label || "—";
+
+      const machinePct = (() => {
+        const n = parseNumericMaybe(cls.machine_confidence);
+        if (!Number.isFinite(n)) return "—";
+        return n <= 1 ? `${(n * 100).toFixed(1)}%` : `${n.toFixed(1)}%`;
+      })();
+      const slickPct = (() => {
+        const n = parseNumericMaybe(cls.slick_confidence);
+        if (!Number.isFinite(n)) return "—";
+        return n <= 1 ? `${(n * 100).toFixed(1)}%` : `${n.toFixed(1)}%`;
+      })();
+
+      document.getElementById("clsMachineConfidence").textContent = machinePct;
+      document.getElementById("clsSourceScore").textContent = formatScoreValue(cls.source_score);
+      document.getElementById("clsSlickConfidence").textContent = slickPct;
+      document.getElementById("clsConfidenceExplanation").textContent =
+        cls.evidence_explanation || "Sem explicação adicional para o índice de evidência deste caso.";
+
+      const steps = Array.from(document.querySelectorAll("#clsEvidenceScale .evidence-step"));
+      const stepOrder = ["E1", "E2", "E3", "E4", "E5"];
+      const activeIndex = stepOrder.indexOf(evidenceLevel);
+      steps.forEach((el, idx) => {
+        el.classList.toggle("active", idx <= activeIndex && activeIndex >= 0);
+      });
+
+      const evidenceItems = buildEvidenceListItems(cls);
+      const listEl = document.getElementById("clsEvidenceList");
+      listEl.innerHTML = "";
+      if (!evidenceItems.length) {
+        const li = document.createElement("li");
+        li.textContent = "Sem evidências textuais adicionais para este caso.";
+        listEl.appendChild(li);
+      } else {
+        evidenceItems.forEach(txt => {
+          const li = document.createElement("li");
+          li.textContent = txt;
+          listEl.appendChild(li);
+        });
+      }
+    }
+
+    function formatCaseSelectLabel(item) {
+      const cls = resolveClassificationData({}, {}, {}, item || {});
+      const parts = [String(item?.case_id || "")];
+      const level = String(cls.evidence_level || "").trim().toUpperCase();
+      if (level) parts.push(level);
+      const band = cls.evidence_label || humanizeEvidenceBand(cls.evidence_band);
+      if (band && band !== "—") parts.push(band);
+      const source = cls.human_label || humanizeEnum(cls.source_context);
+      if (source && source !== "—") parts.push(source);
+      return parts.join(" — ");
+    }
+
+    
+    function initLegendCardToggle() {
+      const card = document.getElementById("legendCard");
+      const header = document.getElementById("legendCardHeader");
+      if (!card || !header) return;
+
+      const setCollapsed = (collapsed) => {
+        card.classList.toggle("collapsed", !!collapsed);
+        header.setAttribute("aria-expanded", collapsed ? "false" : "true");
+      };
+
+      header.addEventListener("click", () => {
+        setCollapsed(!card.classList.contains("collapsed"));
+      });
+
+      header.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter" || ev.key === " ") {
+          ev.preventDefault();
+          setCollapsed(!card.classList.contains("collapsed"));
+        }
+      });
+    }
+
+
+function clamp(value, min, max) {
+
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function makeTemporalFloatingPanelDraggable() {
+      const panel = document.getElementById("temporalFloatingPanel");
+      const handle = document.getElementById("temporalFloatingHandle");
+      const mapWrap = document.getElementById("map-wrap");
+      if (!panel || !handle || !mapWrap) return;
+      if (panel.dataset.dragReady === "1") return;
+      panel.dataset.dragReady = "1";
+
+      let dragging = false;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      const onPointerMove = (ev) => {
+        if (!dragging) return;
+        const wrapRect = mapWrap.getBoundingClientRect();
+        const panelRect = panel.getBoundingClientRect();
+
+        let left = ev.clientX - wrapRect.left - offsetX;
+        let top = ev.clientY - wrapRect.top - offsetY;
+
+        left = Math.max(0, Math.min(left, wrapRect.width - panelRect.width));
+        top = Math.max(0, Math.min(top, wrapRect.height - panelRect.height));
+
+        panel.style.left = `${left}px`;
+        panel.style.top = `${top}px`;
+        panel.style.right = "auto";
+        panel.style.bottom = "auto";
+      };
+
+      const stopDragging = () => {
+        dragging = false;
+        panel.classList.remove("dragging");
+        window.removeEventListener("pointermove", onPointerMove);
+        window.removeEventListener("pointerup", stopDragging);
+      };
+
+      handle.addEventListener("pointerdown", (ev) => {
+        const panelRect = panel.getBoundingClientRect();
+        dragging = true;
+        offsetX = ev.clientX - panelRect.left;
+        offsetY = ev.clientY - panelRect.top;
+        panel.classList.add("dragging");
+        window.addEventListener("pointermove", onPointerMove);
+        window.addEventListener("pointerup", stopDragging);
+      });
+
+      requestAnimationFrame(() => {
+        const wrapRect = mapWrap.getBoundingClientRect();
+        const panelRect = panel.getBoundingClientRect();
+
+        let left = panelRect.left - wrapRect.left;
+        let top = panelRect.top - wrapRect.top;
+
+        left = Math.max(0, Math.min(left, wrapRect.width - panelRect.width));
+        top = Math.max(0, Math.min(top, wrapRect.height - panelRect.height));
+
+        panel.style.left = `${left}px`;
+        panel.style.top = `${top}px`;
+        panel.style.right = "auto";
+        panel.style.bottom = "auto";
+      });
+
+      window.addEventListener("resize", () => {
+        const wrapRect = mapWrap.getBoundingClientRect();
+        const panelRect = panel.getBoundingClientRect();
+
+        let left = panelRect.left - wrapRect.left;
+        let top = panelRect.top - wrapRect.top;
+
+        left = Math.max(0, Math.min(left, wrapRect.width - panelRect.width));
+        top = Math.max(0, Math.min(top, wrapRect.height - panelRect.height));
+
+        panel.style.left = `${left}px`;
+        panel.style.top = `${top}px`;
+        panel.style.right = "auto";
+        panel.style.bottom = "auto";
+      });
+    }
+
+    function syncTemporalFloatingControls() {
+      const floatingRoot = document.getElementById("temporalFloatingPanel");
+      if (!floatingRoot) return;
+      if (floatingRoot.dataset.syncReady === "1") return;
+      floatingRoot.dataset.syncReady = "1";
+
+      const btnPlay = document.getElementById("btnPlay");
+      const btnPause = document.getElementById("btnPause");
+      const speed = document.getElementById("speed");
+      const timeSlider = document.getElementById("timeSlider");
+      const tsLabel = document.getElementById("tsLabel");
+
+      const btnPlayFloating = document.getElementById("btnPlayFloating");
+      const btnPauseFloating = document.getElementById("btnPauseFloating");
+      const speedFloating = document.getElementById("speedFloating");
+      const timeSliderFloating = document.getElementById("timeSliderFloating");
+      const tsLabelFloating = document.getElementById("tsLabelFloating");
+
+      if (!btnPlayFloating || !btnPauseFloating || !speedFloating || !timeSliderFloating || !tsLabelFloating) return;
+
+      const usingFloatingAsPrimary = !btnPlay || !btnPause || !speed || !timeSlider || !tsLabel;
+
+      const copyFromBaseToFloating = () => {
+        const sourceSpeed = speed || speedFloating;
+        const sourceSlider = timeSlider || timeSliderFloating;
+        const sourceTsLabel = tsLabel || tsLabelFloating;
+
+        speedFloating.value = sourceSpeed.value;
+        timeSliderFloating.min = sourceSlider.min;
+        timeSliderFloating.max = sourceSlider.max;
+        timeSliderFloating.step = sourceSlider.step;
+        timeSliderFloating.value = sourceSlider.value;
+        tsLabelFloating.textContent = sourceTsLabel.textContent || "—";
+      };
+
+      if (!usingFloatingAsPrimary) {
+        const clickProxy = (target) => {
+          if (!target) return;
+          target.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+          copyFromBaseToFloating();
+        };
+
+        btnPlayFloating.addEventListener("click", () => clickProxy(btnPlay));
+        btnPauseFloating.addEventListener("click", () => clickProxy(btnPause));
+
+        speedFloating.addEventListener("change", () => {
+          speed.value = speedFloating.value;
+          speed.dispatchEvent(new Event("change", { bubbles: true }));
+          copyFromBaseToFloating();
+        });
+
+        timeSliderFloating.addEventListener("input", () => {
+          timeSlider.value = timeSliderFloating.value;
+          timeSlider.dispatchEvent(new Event("input", { bubbles: true }));
+          copyFromBaseToFloating();
+        });
+
+        timeSliderFloating.addEventListener("change", () => {
+          timeSlider.value = timeSliderFloating.value;
+          timeSlider.dispatchEvent(new Event("change", { bubbles: true }));
+          copyFromBaseToFloating();
+        });
+
+        speed.addEventListener("change", copyFromBaseToFloating);
+        timeSlider.addEventListener("input", copyFromBaseToFloating);
+        timeSlider.addEventListener("change", copyFromBaseToFloating);
+
+        const tsObserver = new MutationObserver(copyFromBaseToFloating);
+        tsObserver.observe(tsLabel, { childList: true, subtree: true, characterData: true });
+      } else {
+        speedFloating.style.backgroundColor = "rgba(18, 30, 64, 0.98)";
+        speedFloating.style.color = "#eef4ff";
+      }
+
+      speedFloating.style.backgroundColor = "rgba(18, 30, 64, 0.98)";
+      speedFloating.style.color = "#eef4ff";
+      speedFloating.style.borderColor = "rgba(255,255,255,0.14)";
+
+      copyFromBaseToFloating();
+    }
+
+    function buildUnifiedTimeline(summary, totalFrames) {
+      const t0 = parseTimeAny(summary?.t0_observado);
+      const tf = parseTimeAny(summary?.t_final_simulado);
+
+      if (!(t0 instanceof Date) || isNaN(t0.getTime())) return [];
+      if (!(tf instanceof Date) || isNaN(tf.getTime())) return [];
+      if (!Number.isFinite(totalFrames) || totalFrames <= 0) return [];
+      if (totalFrames === 1) return [t0.getTime()];
+
+      const out = [];
+      const t0ms = t0.getTime();
+      const tfms = tf.getTime();
+
+      for (let i = 0; i < totalFrames; i++) {
+        const frac = i / (totalFrames - 1);
+        out.push(t0ms + frac * (tfms - t0ms));
+      }
+      return out;
+    }
+
+    function buildTimelineFromFrames(frames, summary) {
+      if (Array.isArray(frames) && frames.length) {
+        const arr = frames
+          .map(fr => parseTimeAny(fr?.t ?? fr?.time_utc ?? fr?.time ?? fr?.timestamp))
+          .map(d => (d instanceof Date && !isNaN(d.getTime()) ? d.getTime() : NaN));
+        if (arr.some(Number.isFinite)) {
+          return arr.map((v, i) => Number.isFinite(v) ? v : (
+            i > 0 && Number.isFinite(arr[i - 1]) ? arr[i - 1] : (
+              buildUnifiedTimeline(summary, frames.length)[i] ?? Date.now()
+            )
+          ));
+        }
+      }
+      return buildUnifiedTimeline(summary, Array.isArray(frames) ? frames.length : 0);
+    }
+
+    async function loadCasesIndex() {
+      return await fetchJSON("./cases_index.json");
+    }
+
+    function resolveWebRootPath(rel) {
+      if (!rel) return null;
+      if (/^(https?:)?\/\//i.test(rel)) return rel;
+      if (rel.startsWith("./") || rel.startsWith("/")) return rel;
+      return `./${rel}`;
+    }
+
+    function dateKeyFromValue(value) {
+      const d = parseTimeAny(value);
+      if (!(d instanceof Date) || isNaN(d.getTime())) return "";
+      const yyyy = d.getUTCFullYear();
+      const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
+      const dd = String(d.getUTCDate()).padStart(2, "0");
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function formatDateKey(dateKey) {
+      if (!dateKey) return "Data não informada";
+      const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(dateKey));
+      if (!m) return String(dateKey);
+      return `${m[3]}/${m[2]}/${m[1]}`;
+    }
+
+    function getDateBucket(maxCasesPerScene) {
+      const n = Number(maxCasesPerScene || 0);
+      if (n >= 10) return 4;
+      if (n >= 7) return 3;
+      if (n >= 4) return 2;
+      if (n >= 1) return 1;
+      return 0;
+    }
+
+    function buildDateStats(catalog) {
+      const byDate = new Map();
+
+      for (const item of (Array.isArray(catalog) ? catalog : [])) {
+        const dateKey = String(item?.date_key || "");
+        const sceneId = String(item?.scene_id || "sem_cena");
+        if (!dateKey) continue;
+
+        if (!byDate.has(dateKey)) {
+          byDate.set(dateKey, {
+            date_key: dateKey,
+            date_label: formatDateKey(dateKey),
+            total_cases: 0,
+            scenes_count: 0,
+            max_cases_per_scene: 0,
+            scene_counts: new Map()
+          });
+        }
+
+        const rec = byDate.get(dateKey);
+        rec.total_cases += 1;
+        rec.scene_counts.set(sceneId, (rec.scene_counts.get(sceneId) || 0) + 1);
+      }
+
+      const out = [];
+      for (const rec of byDate.values()) {
+        rec.scenes_count = rec.scene_counts.size;
+        rec.max_cases_per_scene = Math.max(0, ...Array.from(rec.scene_counts.values()));
+        rec.bucket = getDateBucket(rec.max_cases_per_scene);
+        out.push({
+          date_key: rec.date_key,
+          date_label: rec.date_label,
+          total_cases: rec.total_cases,
+          scenes_count: rec.scenes_count,
+          max_cases_per_scene: rec.max_cases_per_scene,
+          bucket: rec.bucket
+        });
+      }
+
+      out.sort((a, b) => String(b.date_key).localeCompare(String(a.date_key)));
+      return out;
+    }
+
+    function getMonthKeyFromDateKey(dateKey) {
+      const m = /^(\d{4})-(\d{2})-\d{2}$/.exec(String(dateKey || ""));
+      return m ? `${m[1]}-${m[2]}` : "";
+    }
+
+    function formatMonthKey(monthKey) {
+      const m = /^(\d{4})-(\d{2})$/.exec(String(monthKey || ""));
+      if (!m) return monthKey || "";
+      const names = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
+      return `${names[Number(m[2]) - 1]} ${m[1]}`;
+    }
+
+    function buildCalendarMonths(dateStats) {
+      const months = [];
+      const seen = new Set();
+      for (const item of (Array.isArray(dateStats) ? dateStats : [])) {
+        const mk = getMonthKeyFromDateKey(item.date_key);
+        if (!mk || seen.has(mk)) continue;
+        seen.add(mk);
+        months.push(mk);
+      }
+      months.sort();
+      return months;
+    }
+
+    function renderCalendarWeekdays(container) {
+      const labels = ["D", "S", "T", "Q", "Q", "S", "S"];
+      container.innerHTML = "";
+      for (const label of labels) {
+        const el = document.createElement("div");
+        el.className = "calendar-weekday";
+        el.textContent = label;
+        container.appendChild(el);
+      }
+    }
+
+    function renderDateCalendar(options) {
+      const {
+        calendarDaysGrid,
+        calendarMonthLabel,
+        calendarSelectedInfo,
+        dateStats,
+        selectedDateKey,
+        activeMonthKey,
+        onSelectDate
+      } = options;
+
+      const statsMap = new Map((Array.isArray(dateStats) ? dateStats : []).map(item => [String(item.date_key), item]));
+      const m = /^(\d{4})-(\d{2})$/.exec(String(activeMonthKey || ""));
+      if (!m) {
+        calendarMonthLabel.textContent = "Sem datas";
+        calendarDaysGrid.innerHTML = "";
+        calendarSelectedInfo.textContent = "";
+        return;
+      }
+
+      const year = Number(m[1]);
+      const month = Number(m[2]) - 1;
+      calendarMonthLabel.textContent = formatMonthKey(activeMonthKey);
+      calendarDaysGrid.innerHTML = "";
+
+      const first = new Date(Date.UTC(year, month, 1));
+      const firstWeekday = first.getUTCDay();
+      const lastDay = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+
+      for (let i = 0; i < firstWeekday; i++) {
+        const empty = document.createElement("div");
+        empty.className = "calendar-day-empty";
+        calendarDaysGrid.appendChild(empty);
+      }
+
+      for (let day = 1; day <= lastDay; day++) {
+        const dateKey = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        const stat = statsMap.get(dateKey) || null;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `calendar-day-btn ${stat ? `bucket-${stat.bucket}` : "no-data"}`;
+        if (String(dateKey) === String(selectedDateKey)) btn.classList.add("selected");
+        btn.innerHTML = `<span class="day-number">${day}</span>${stat ? '<span class="day-meta-dot"></span>' : ''}`;
+
+        if (stat) {
+          btn.title = `${stat.date_label} · ${stat.total_cases} caso(s) no total · ${stat.scenes_count} cena(s) · pico de ${stat.max_cases_per_scene} caso(s) em uma cena`;
+          btn.addEventListener("click", () => onSelectDate(dateKey));
+        } else {
+          btn.disabled = true;
+        }
+
+        calendarDaysGrid.appendChild(btn);
+      }
+
+      const selectedStat = statsMap.get(String(selectedDateKey || ""));
+      if (selectedStat) {
+        calendarSelectedInfo.textContent = `${selectedStat.date_label} · ${selectedStat.total_cases} caso(s) distribuído(s) em ${selectedStat.scenes_count} cena(s). Maior concentração em uma cena: ${selectedStat.max_cases_per_scene}.`;
+      } else {
+        calendarSelectedInfo.textContent = "Selecione um dia colorido para filtrar as cenas e os casos daquela data.";
+      }
+    }
+
+    function buildSelectionCatalog(casesIndex) {
+      const out = [];
+
+      for (const item of (Array.isArray(casesIndex) ? casesIndex : [])) {
+        const caseId = String(item?.case_id ?? "").trim();
+        if (!caseId) continue;
+
+        const t0 = item?.t0_observado ?? null;
+        const dateKey = dateKeyFromValue(t0);
+        const sceneId = String(item?.scene_id ?? "").trim();
+
+        out.push({
+          ...item,
+          case_id: caseId,
+          scene_id: sceneId,
+          t0_observado: t0,
+          date_key: dateKey,
+          date_label: formatDateKey(dateKey)
+        });
+      }
+
+      out.sort((a, b) => {
+        const ta = parseTimeAny(a?.t0_observado)?.getTime?.() ?? 0;
+        const tb = parseTimeAny(b?.t0_observado)?.getTime?.() ?? 0;
+        return tb - ta;
+      });
+
+      return out;
+    }
+
+
+    async function loadManifest(caseId, casesIndex = []) {
+      const item = Array.isArray(casesIndex)
+        ? casesIndex.find(x => String(x?.case_id) === String(caseId))
+        : null;
+
+      if (item?.manifest) {
+        return await fetchJSON(resolveWebRootPath(item.manifest));
+      }
+
+      return await fetchJSON(`./cases/${caseId}/manifest.json`);
+    }
+
+    function featureCollection(features = []) {
+      return { type: "FeatureCollection", features };
+    }
+
+    function explodeFeatureToPolygons(feature, inheritedProps = {}) {
+      if (!feature || !feature.geometry) return [];
+
+      const props = { ...(feature.properties || {}), ...inheritedProps };
+      const geom = feature.geometry;
+
+      if (geom.type === "Polygon") {
+        return [{
+          type: "Feature",
+          properties: { ...props },
+          geometry: { type: "Polygon", coordinates: geom.coordinates }
+        }];
+      }
+
+      if (geom.type === "MultiPolygon") {
+        return geom.coordinates.map((coords, idx) => ({
+          type: "Feature",
+          properties: { ...props, part_id: props.part_id ?? (idx + 1) },
+          geometry: { type: "Polygon", coordinates: coords }
+        }));
+      }
+
+      if (geom.type === "GeometryCollection" && Array.isArray(geom.geometries)) {
+        const out = [];
+        geom.geometries.forEach((g, idx) => {
+          if (g.type === "Polygon") {
+            out.push({
+              type: "Feature",
+              properties: { ...props, part_id: props.part_id ?? (idx + 1) },
+              geometry: { type: "Polygon", coordinates: g.coordinates }
+            });
+          } else if (g.type === "MultiPolygon") {
+            g.coordinates.forEach((coords, j) => {
+              out.push({
+                type: "Feature",
+                properties: { ...props, part_id: props.part_id ?? `${idx + 1}.${j + 1}` },
+                geometry: { type: "Polygon", coordinates: coords }
+              });
+            });
+          }
+        });
+        return out;
+      }
+
+      return [];
+    }
+
+    function explodeFeatureCollectionToPolygons(fc) {
+      if (!fc || !Array.isArray(fc.features)) return featureCollection([]);
+      const out = [];
+      fc.features.forEach((ft, featureIdx) => {
+        const parts = explodeFeatureToPolygons(ft, { source_feature_id: featureIdx + 1 });
+        parts.forEach((p, i) => {
+          if (p.properties?.part_id == null) p.properties.part_id = i + 1;
+          out.push(p);
+        });
+      });
+      return featureCollection(out);
+    }
+
+    function chooseBestSlickPartsGeo(slickGeo, slickPartsGeo) {
+      const explicitPartsCount = Array.isArray(slickPartsGeo?.features) ? slickPartsGeo.features.length : 0;
+      const explodedFromAggregate = explodeFeatureCollectionToPolygons(slickGeo);
+      const explodedCount = Array.isArray(explodedFromAggregate.features) ? explodedFromAggregate.features.length : 0;
+
+      if (explicitPartsCount > 1) {
+        return slickPartsGeo;
+      }
+
+      if (explodedCount > explicitPartsCount) {
+        return explodedFromAggregate;
+      }
+
+      if (explicitPartsCount > 0) {
+        return slickPartsGeo;
+      }
+
+      return explodedFromAggregate;
+    }
+
+    function getBestSlickBounds(slickPartsLayer, slickLayer) {
+      const b1 = slickPartsLayer?.getBounds?.();
+      if (b1 && b1.isValid && b1.isValid()) return b1;
+
+      const b2 = slickLayer?.getBounds?.();
+      if (b2 && b2.isValid && b2.isValid()) return b2;
+
+      return null;
+    }
+
+    async function main() {
+      const requestedCase = qs("case", DEFAULT_CASE_ID);
+      const requestedScene = qs("scene", null);
+      const requestedDate = qs("date", null);
+
+      const casesIndex = await loadCasesIndex();
+      if (!Array.isArray(casesIndex) || casesIndex.length === 0) {
+        throw new Error("cases_index.json veio vazio.");
+      }
+
+      const catalog = buildSelectionCatalog(casesIndex);
+
+      const dateSelect = document.getElementById("dateSelect");
+      const sceneSelect = document.getElementById("sceneSelect");
+      const caseSelect = document.getElementById("caseSelect");
+      const calendarPrevBtn = document.getElementById("calendarPrevBtn");
+      const calendarNextBtn = document.getElementById("calendarNextBtn");
+      const calendarMonthLabel = document.getElementById("calendarMonthLabel");
+      const calendarWeekdays = document.getElementById("calendarWeekdays");
+      const calendarDaysGrid = document.getElementById("calendarDaysGrid");
+      const calendarSelectedInfo = document.getElementById("calendarSelectedInfo");
+
+      const chooseInitialSelection = () => {
+        let selectedItem = null;
+
+        if (requestedCase) {
+          selectedItem = catalog.find(x => String(x.case_id) === String(requestedCase)) || null;
+        }
+
+        if (!selectedItem && requestedScene && requestedDate) {
+          selectedItem = catalog.find(
+            x => String(x.scene_id || "") === String(requestedScene) &&
+                 String(x.date_key || "") === String(requestedDate)
+          ) || null;
+        }
+
+        if (!selectedItem && requestedScene) {
+          selectedItem = catalog.find(x => String(x.scene_id || "") === String(requestedScene)) || null;
+        }
+
+        if (!selectedItem && requestedDate) {
+          selectedItem = catalog.find(x => String(x.date_key || "") === String(requestedDate)) || null;
+        }
+
+        if (!selectedItem) selectedItem = catalog[0];
+
+        return {
+          dateKey: selectedItem?.date_key || "",
+          sceneId: selectedItem?.scene_id || "",
+          caseId: String(selectedItem?.case_id || "")
+        };
+      };
+
+      async function navigateWithSelection({ dateKey, sceneId, caseId }) {
+        const nextCaseId = String(caseId || "");
+        const nextDateKey = String(dateKey || "");
+        const nextSceneId = String(sceneId || "");
+
+        const url = new URL(window.location.href);
+        if (nextCaseId) url.searchParams.set("case", nextCaseId);
+        else url.searchParams.delete("case");
+
+        if (nextDateKey) url.searchParams.set("date", nextDateKey);
+        else url.searchParams.delete("date");
+
+        if (nextSceneId) url.searchParams.set("scene", nextSceneId);
+        else url.searchParams.delete("scene");
+
+        history.replaceState({}, "", url.toString());
+
+        await updateCaseMapOnly({
+          dateKey: nextDateKey,
+          sceneId: nextSceneId,
+          caseId: nextCaseId
+        });
+      }
+
+      function syncSelectOptions(selectEl, items, valueKey, labelFn, preferredValue = "") {
+        const previousValue = preferredValue || selectEl.value || "";
+        selectEl.innerHTML = "";
+
+        for (const item of items) {
+          const opt = document.createElement("option");
+          opt.value = String(item?.[valueKey] ?? "");
+          opt.textContent = labelFn(item);
+          selectEl.appendChild(opt);
+        }
+
+        const allowedValues = items.map(item => String(item?.[valueKey] ?? ""));
+        const nextValue = allowedValues.includes(String(previousValue))
+          ? String(previousValue)
+          : (allowedValues[0] || "");
+
+        selectEl.value = nextValue;
+        return nextValue;
+      }
+
+      function getSceneItemsForDate(dateKey) {
+        const filtered = catalog.filter(item => String(item.date_key || "") === String(dateKey || ""));
+        const seen = new Set();
+        const out = [];
+        for (const item of filtered) {
+          const key = String(item.scene_id || "");
+          if (seen.has(key)) continue;
+          seen.add(key);
+          out.push({
+            scene_id: item.scene_id || "",
+            scene_label: item.scene_id || "Cena não informada",
+            count: filtered.filter(x => String(x.scene_id || "") === key).length
+          });
+        }
+        return out;
+      }
+
+      function getCaseItems(dateKey, sceneId) {
+        return catalog.filter(item =>
+          String(item.date_key || "") === String(dateKey || "") &&
+          String(item.scene_id || "") === String(sceneId || "")
+        );
+      }
+
+      function getCasesForDate(dateKey) {
+        return catalog.filter(item => String(item.date_key || "") === String(dateKey || ""));
+      }
+
+      function getEvidenceButtonClass(item) {
+        const lvl = String(item?.evidence_level || "").trim().toLowerCase();
+        return ["e1","e2","e3","e4","e5"].includes(lvl) ? lvl : "e2";
+      }
+
+      function renderDateCaseButtons(dateKey, activeCaseIdForDate = "") {
+        const listEl = document.getElementById("dateCasesList");
+        if (!listEl) return;
+
+        const items = getCasesForDate(dateKey).sort((a, b) => {
+          const ta = parseTimeAny(a?.t0_observado)?.getTime?.() ?? 0;
+          const tb = parseTimeAny(b?.t0_observado)?.getTime?.() ?? 0;
+          return ta - tb;
+        });
+
+        listEl.innerHTML = "";
+
+        if (!items.length) {
+          listEl.innerHTML = '<div class="date-cases-empty">Nenhum caso disponível para esta data.</div>';
+          return;
+        }
+
+        items.forEach((item) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          const evClass = getEvidenceButtonClass(item);
+          const evidenceLevel = String(item?.evidence_level || "—").toUpperCase();
+          const evidenceLabel = item?.evidence_label || humanizeEvidenceBand(item?.evidence_band);
+          const reviewLabel = humanizeEnum(item?.review_level);
+          const sourceLabel = item?.human_label || humanizeEnum(item?.source_context);
+          const timeLabel = fmtTime(item?.t0_observado);
+
+          btn.className = `date-case-btn ${evClass}`;
+          if (String(item?.case_id || "") === String(activeCaseIdForDate || "")) {
+            btn.classList.add("active");
+          }
+
+          btn.innerHTML = `
+            <div class="date-case-top">
+              <div class="date-case-id">Caso ${item?.case_id || "—"}</div>
+              <div class="date-case-evidence ${evClass}">${evidenceLevel}</div>
+            </div>
+            <div class="date-case-meta">
+              <span class="date-case-pill">${timeLabel || "—"}</span>
+              <span class="date-case-pill">${evidenceLabel || "Sem índice"}</span>
+              <span class="date-case-pill">${reviewLabel || "—"}</span>
+            </div>
+            <div class="date-case-sub">${sourceLabel && sourceLabel !== "—" ? sourceLabel : "Sem classificação complementar disponível."}</div>
+          `;
+
+          btn.addEventListener("click", () => {
+            navigateWithSelection({
+              dateKey: item?.date_key || dateKey,
+              sceneId: item?.scene_id || "",
+              caseId: String(item?.case_id || "")
+            });
+          });
+
+          listEl.appendChild(btn);
+        });
+      }
+
+      async function updateCaseMapOnly({ dateKey, sceneId, caseId }) {
+        if (!caseId) return;
+
+        setStatus("Atualizando caso no mapa...");
+
+        activeCaseId = String(caseId || "");
+        selectedCatalogItem = catalog.find(x => String(x.case_id) === String(activeCaseId)) || {};
+
+        if (dateSelect) dateSelect.value = String(dateKey || "");
+        if (sceneSelect) sceneSelect.value = String(sceneId || "");
+        if (caseSelect) caseSelect.value = String(caseId || "");
+
+        document.getElementById("caseIdLabel").textContent = activeCaseId || "—";
+        renderDateCaseButtons(String(dateKey || ""), activeCaseId);
+
+        const manifest = await loadManifest(activeCaseId, casesIndex);
+        const caseBase = `./cases/${activeCaseId}`;
+
+        const resolveCasePath = (rel, localCaseBase) => {
+          if (!rel) return null;
+          if (/^(https?:)?\/\//i.test(rel)) return rel;
+          if (rel.startsWith("./cases/") || rel.startsWith("cases/")) return rel;
+          if (rel.startsWith("/")) return rel;
+          return `${localCaseBase}/${rel}`;
+        };
+
+        const paths = {
+          sarPng: resolveCasePath(manifest?.layers?.sar_png, caseBase),
+          sarBbox: resolveCasePath(manifest?.layers?.sar_bounds, caseBase),
+          slick: resolveCasePath(manifest?.layers?.slick_t0, caseBase),
+          slickParts: resolveCasePath(manifest?.layers?.slick_t0_parts, caseBase),
+          amps: resolveCasePath(manifest?.layers?.amps, caseBase),
+          ampsHit: resolveCasePath(manifest?.layers?.amps_hit, caseBase),
+          oilPts: resolveCasePath(manifest?.layers?.openoil_points, caseBase),
+          prob: resolveCasePath(manifest?.layers?.openoil_probability_frames, caseBase),
+          trajT0Tk: resolveCasePath(manifest?.layers?.trajectory_t0_tk, caseBase),
+          trajFull: resolveCasePath(manifest?.layers?.trajectory_full, caseBase),
+          wind: resolveCasePath(
+            manifest?.layers?.gfs_wind ??
+            manifest?.layers?.gfs_wind_frames ??
+            manifest?.layers?.meteo?.gfs_wind_frames,
+            caseBase
+          ),
+          curr: resolveCasePath(
+            manifest?.layers?.hycom_currents ??
+            manifest?.layers?.hycom_currents_frames ??
+            manifest?.layers?.ocean?.hycom_currents_frames,
+            caseBase
+          ),
+          caseSummary: resolveCasePath(manifest?.layers?.case_summary, caseBase),
+          alertPayload: resolveCasePath(manifest?.layers?.alert_payload, caseBase),
+        };
+
+        const summary = paths.caseSummary ? await fetchJSON(paths.caseSummary) : {};
+        const alertPayload = paths.alertPayload ? await fetchJSON(paths.alertPayload) : {};
+        const ampsHitGeo = paths.ampsHit
+          ? await fetchJSON(paths.ampsHit).catch(() => featureCollection([]))
+          : featureCollection([]);
+
+        const hitAmpNames = extractHitAmpNames(summary, alertPayload, ampsHitGeo);
+
+        setAlertBox(alertPayload);
+        fillSummary(summary);
+        fillClassification(summary, alertPayload, manifest, selectedCatalogItem);
+
+        stop();
+        currentOilIndex = 0;
+        lastAmpPanelSignature = "";
+        setAmpInfoPanelVisible(false);
+        stopAmpBlinking();
+
+        if (combinedHoverOpen) {
+          map.closePopup(combinedHoverPopup);
+          combinedHoverOpen = false;
+        }
+
+        hoverAmpFeature = null;
+        hoverProbFeature = null;
+        hoveredAmpKey = null;
+        pinnedAmpKey = null;
+        dynamicHitAmpNames.clear();
+        ampLayersHit.length = 0;
+
+        if (sarOverlay && map.hasLayer(sarOverlay)) map.removeLayer(sarOverlay);
+        if (slickLayer && map.hasLayer(slickLayer)) map.removeLayer(slickLayer);
+        if (slickPartsLayer && map.hasLayer(slickPartsLayer)) map.removeLayer(slickPartsLayer);
+        if (ampsLayer && map.hasLayer(ampsLayer)) map.removeLayer(ampsLayer);
+        if (probLayer && map.hasLayer(probLayer)) map.removeLayer(probLayer);
+
+        const bboxRaw = paths.sarBbox ? await fetchJSON(paths.sarBbox) : null;
+        const bounds = bboxRaw ? parseBoundsFromT0BoundsJson(bboxRaw) : null;
+
+        sarBounds = null;
+        sarOverlay = null;
+
+        if (paths.sarPng && bounds) {
+          sarBounds = L.latLngBounds(
+            [bounds.south, bounds.west],
+            [bounds.north, bounds.east]
+          );
+          sarOverlay = L.imageOverlay(paths.sarPng, sarBounds, {
+            opacity: (parseInt(ui.sarOpacity?.value || "85", 10) / 100)
+          });
+
+          if (ui.tgSar.checked) sarOverlay.addTo(map);
+          map.fitBounds(sarBounds, { padding: [20, 20] });
+        }
+
+        const slickGeo = paths.slick ? await fetchJSON(paths.slick) : featureCollection([]);
+        const slickPartsGeoRaw = paths.slickParts ? await fetchJSON(paths.slickParts) : featureCollection([]);
+        const slickPartsGeo = chooseBestSlickPartsGeo(slickGeo, slickPartsGeoRaw);
+
+        slickLayer = L.geoJSON(slickGeo, {
+          pane: "slickAggPane",
+          style: {
+            weight: 2.5,
+            color: "#ff4d4f",
+            fillColor: "#ff4d4f",
+            fillOpacity: 0.05
+          }
+        });
+
+        slickPartsLayer = L.geoJSON(slickPartsGeo, {
+          pane: "slickPartsPane",
+          interactive: false,
+          style: () => ({
+            weight: 4,
+            color: "#ffd166",
+            fillColor: "#ff8c00",
+            fillOpacity: 0.45
+          })
+        });
+
+        if (ui.tgSlick.checked) slickLayer.addTo(map);
+        if (ui.tgSlickParts.checked) slickPartsLayer.addTo(map);
+
+        ampsGeo = featureCollection([]);
+        try {
+          ampsGeo = await fetchJSON(GLOBAL_AMPS_PATH);
+        } catch (err) {
+          console.warn("Falha ao carregar camada global de AMPs. Tentando fallback do caso...", err);
+          ampsGeo = paths.amps ? await fetchJSON(paths.amps) : (ampsHitGeo || featureCollection([]));
+        }
+
+        if ((!ampsGeo?.features?.length) && Array.isArray(ampsHitGeo?.features) && ampsHitGeo.features.length) {
+          ampsGeo = ampsHitGeo;
+        }
+
+        if (ui.ampsInfo) {
+          ui.ampsInfo.textContent = `AMPs: ${ampsGeo?.features?.length ?? 0}`;
+        }
+
+        ampsLayer = L.geoJSON(ampsGeo, {
+          pane: "ampsPane",
+          interactive: false,
+          style: (feature) => getAmpDefaultStyle(feature)
+        });
+
+        if (ui.tgAmps.checked) ampsLayer.addTo(map);
+
+        const oilPtsRaw = paths.oilPts ? await fetchJSON(paths.oilPts) : { frames: [] };
+        oilFrames = normalizeFrameList(oilPtsRaw, "frames");
+        if (!oilFrames || oilFrames.length === 0) {
+          throw new Error("OpenOil frames (pontos) veio vazio.");
+        }
+
+        oilTimesMs = buildUnifiedTimeline(summary, oilFrames.length);
+        if (!oilTimesMs || oilTimesMs.length !== oilFrames.length) {
+          throw new Error("Não foi possível montar a linha do tempo unificada de t0 até tk para o OpenOil.");
+        }
+
+        probFrames = [];
+        probTimesMs = [];
+        hasProbFrames = false;
+        currentProbFeatures = [];
+
+        if (paths.prob) {
+          try {
+            const probRaw = await fetchJSON(paths.prob);
+            probFrames = normalizeFrameList(probRaw, "frames");
+            probTimesMs = buildUnifiedTimeline(summary, probFrames.length);
+            hasProbFrames = Array.isArray(probFrames) && probFrames.length > 0;
+          } catch (err) {
+            console.warn("Falha ao carregar probability_frames.json:", err);
+            hasProbFrames = false;
+          }
+        }
+
+        if (!hasProbFrames) {
+          ui.probToggleWrap.classList.add("hidden");
+          ui.probLegend.classList.add("hidden");
+          ui.tgProb.checked = false;
+        } else {
+          ui.probToggleWrap.classList.remove("hidden");
+          ui.probLegend.classList.remove("hidden");
+        }
+
+        const windRaw = paths.wind ? await fetchJSON(paths.wind).catch(() => null) : null;
+        const currRaw = paths.curr ? await fetchJSON(paths.curr).catch(() => null) : null;
+
+        windFrames = windRaw ? normalizeFrameList(windRaw, "frames") : [];
+        currFrames = currRaw ? normalizeFrameList(currRaw, "frames") : [];
+        windTimesMs = buildTimelineFromFrames(windFrames, summary);
+        currTimesMs = buildTimelineFromFrames(currFrames, summary);
+
+        slider.max = String(oilFrames.length - 1);
+        slider.value = "0";
+        tsLabel.textContent = "—";
+
+        applyToggles();
+        renderFrame();
+        setStatus(`Caso ${activeCaseId} atualizado no mapa.`);
+      }
+
+      const initialSelection = chooseInitialSelection();
+      const dateStats = buildDateStats(catalog);
+      const calendarMonths = buildCalendarMonths(dateStats);
+      let activeCalendarMonth = getMonthKeyFromDateKey(initialSelection.dateKey) || calendarMonths[calendarMonths.length - 1] || "";
+
+      renderCalendarWeekdays(calendarWeekdays);
+
+      const uniqueDates = dateStats.map(item => ({
+        date_key: item.date_key,
+        date_label: item.date_label,
+        count: item.total_cases,
+        scenes_count: item.scenes_count,
+        max_cases_per_scene: item.max_cases_per_scene,
+        bucket: item.bucket
+      }));
+
+      let selectedDate = syncSelectOptions(
+        dateSelect,
+        uniqueDates,
+        "date_key",
+        item => `${item.date_label} (${item.count})`,
+        initialSelection.dateKey
+      );
+
+      function goToDateSelection(nextDate) {
+        const nextSceneItems = getSceneItemsForDate(nextDate);
+        const nextScene = nextSceneItems[0]?.scene_id || "";
+        const nextCase = getCaseItems(nextDate, nextScene)[0]?.case_id || "";
+        navigateWithSelection({ dateKey: nextDate, sceneId: nextScene, caseId: nextCase });
+      }
+
+      function rerenderCalendar() {
+        renderDateCalendar({
+          calendarDaysGrid,
+          calendarMonthLabel,
+          calendarSelectedInfo,
+          dateStats,
+          selectedDateKey: dateSelect.value,
+          activeMonthKey: activeCalendarMonth,
+          onSelectDate: (dateKey) => {
+            dateSelect.value = String(dateKey || "");
+            renderDateCaseButtons(String(dateKey || ""), "");
+            goToDateSelection(dateKey);
+          }
+        });
+
+        const monthIdx = calendarMonths.indexOf(activeCalendarMonth);
+        calendarPrevBtn.disabled = monthIdx <= 0;
+        calendarNextBtn.disabled = monthIdx < 0 || monthIdx >= calendarMonths.length - 1;
+      }
+
+      calendarPrevBtn.addEventListener("click", () => {
+        const idx = calendarMonths.indexOf(activeCalendarMonth);
+        if (idx > 0) {
+          activeCalendarMonth = calendarMonths[idx - 1];
+          rerenderCalendar();
+        }
+      });
+
+      calendarNextBtn.addEventListener("click", () => {
+        const idx = calendarMonths.indexOf(activeCalendarMonth);
+        if (idx >= 0 && idx < calendarMonths.length - 1) {
+          activeCalendarMonth = calendarMonths[idx + 1];
+          rerenderCalendar();
+        }
+      });
+
+      rerenderCalendar();
+
+      let sceneItems = getSceneItemsForDate(selectedDate);
+      let selectedScene = syncSelectOptions(
+        sceneSelect,
+        sceneItems,
+        "scene_id",
+        item => item.count > 1 ? `${item.scene_label} (${item.count} casos)` : item.scene_label,
+        initialSelection.sceneId
+      );
+
+      let caseItems = getCaseItems(selectedDate, selectedScene);
+      let activeCaseId = syncSelectOptions(
+        caseSelect,
+        caseItems,
+        "case_id",
+        item => formatCaseSelectLabel(item),
+        initialSelection.caseId
+      );
+
+      renderDateCaseButtons(selectedDate, activeCaseId);
+
+      dateSelect.addEventListener("change", () => {
+        const nextDate = dateSelect.value;
+        activeCalendarMonth = getMonthKeyFromDateKey(nextDate) || activeCalendarMonth;
+        rerenderCalendar();
+        renderDateCaseButtons(nextDate, "");
+        goToDateSelection(nextDate);
+      });
+
+      sceneSelect.addEventListener("change", () => {
+        const nextScene = sceneSelect.value;
+        const nextCase = getCaseItems(dateSelect.value, nextScene)[0]?.case_id || "";
+        navigateWithSelection({ dateKey: dateSelect.value, sceneId: nextScene, caseId: nextCase });
+      });
+
+      caseSelect.addEventListener("change", () => {
+        const selected = catalog.find(x => String(x.case_id) === String(caseSelect.value));
+        navigateWithSelection({
+          dateKey: selected?.date_key || dateSelect.value,
+          sceneId: selected?.scene_id || sceneSelect.value,
+          caseId: String(caseSelect.value || "")
+        });
+      });
+
+      document.getElementById("caseIdLabel").textContent = activeCaseId;
+      let selectedCatalogItem = catalog.find(x => String(x.case_id) === String(activeCaseId)) || {};
+
+      const manifest = await loadManifest(activeCaseId, casesIndex);
+
+      const caseBase = `./cases/${activeCaseId}`;
+      function resolveCasePath(rel, caseBase) {
+        if (!rel) return null;
+        if (/^(https?:)?\/\//i.test(rel)) return rel;
+        if (rel.startsWith("./cases/") || rel.startsWith("cases/")) return rel;
+        if (rel.startsWith("/")) return rel;
+        return `${caseBase}/${rel}`;
+      }
+
+      const paths = {
+        sarPng: resolveCasePath(manifest?.layers?.sar_png, caseBase),
+        sarBbox: resolveCasePath(manifest?.layers?.sar_bounds, caseBase),
+        slick: resolveCasePath(manifest?.layers?.slick_t0, caseBase),
+        slickParts: resolveCasePath(manifest?.layers?.slick_t0_parts, caseBase),
+        amps: resolveCasePath(manifest?.layers?.amps, caseBase),
+        ampsHit: resolveCasePath(manifest?.layers?.amps_hit, caseBase),
+        oilPts: resolveCasePath(manifest?.layers?.openoil_points, caseBase),
+        prob: resolveCasePath(manifest?.layers?.openoil_probability_frames, caseBase),
+        trajT0Tk: resolveCasePath(manifest?.layers?.trajectory_t0_tk, caseBase),
+        trajFull: resolveCasePath(manifest?.layers?.trajectory_full, caseBase),
+        wind: resolveCasePath(
+          manifest?.layers?.gfs_wind ??
+          manifest?.layers?.gfs_wind_frames ??
+          manifest?.layers?.meteo?.gfs_wind_frames,
+          caseBase
+        ),
+        curr: resolveCasePath(
+          manifest?.layers?.hycom_currents ??
+          manifest?.layers?.hycom_currents_frames ??
+          manifest?.layers?.ocean?.hycom_currents_frames,
+          caseBase
+        ),
+        caseSummary: resolveCasePath(manifest?.layers?.case_summary, caseBase),
+        alertPayload: resolveCasePath(manifest?.layers?.alert_payload, caseBase),
+      };
+
+      console.log("manifest.layers =", manifest?.layers);
+      console.log("paths.sarPng =", paths.sarPng);
+      console.log("paths.sarBbox =", paths.sarBbox);
+
+      const summary = paths.caseSummary ? await fetchJSON(paths.caseSummary) : {};
+      const alertPayload = paths.alertPayload ? await fetchJSON(paths.alertPayload) : {};
+      const ampsHitGeo = paths.ampsHit ? await fetchJSON(paths.ampsHit).catch(() => featureCollection([])) : featureCollection([]);
+
+      const hitAmpNames = extractHitAmpNames(summary, alertPayload, ampsHitGeo);
+
+      setAlertBox(alertPayload);
+      initLegendCardToggle();
+      fillSummary(summary);
+      fillClassification(summary, alertPayload, manifest, selectedCatalogItem);
+
+      const ui = {
+        tgSar: document.getElementById("tgSar"),
+        tgSlick: document.getElementById("tgSlick"),
+        tgSlickParts: document.getElementById("tgSlickParts"),
+        tgAmps: document.getElementById("tgAmps"),
+        tgOilPts: document.getElementById("tgOilPts"),
+        tgTrajFull: document.getElementById("tgTrajFull"),
+        tgProb: document.getElementById("tgProb"),
+        probToggleWrap: document.getElementById("probToggleWrap"),
+        probLegend: document.getElementById("probLegend"),
+        tgWind: document.getElementById("tgWind"),
+        tgCurr: document.getElementById("tgCurr"),
+        btnPlay: document.getElementById("btnPlay") || document.getElementById("btnPlayFloating"),
+        btnPause: document.getElementById("btnPause") || document.getElementById("btnPauseFloating"),
+        speed: document.getElementById("speed") || document.getElementById("speedFloating"),
+        sarOpacity: document.getElementById("sarOpacity"),
+        sarOpacityLabel: document.getElementById("sarOpacityLabel"),
+        ampsInfo: document.getElementById("ampsInfo"),
+        btnZoomSar: document.getElementById("btnZoomSar"),
+        btnZoomAmps: document.getElementById("btnZoomAmps"),
+        btnZoomSlick: document.getElementById("btnZoomSlick"),
+        ampInfoPanel: document.getElementById("ampInfoPanel"),
+        ampInfoHandle: document.getElementById("ampInfoHandle"),
+        ampInfoTitle: document.getElementById("ampInfoTitle"),
+        ampInfoToggle: document.getElementById("ampInfoToggle"),
+        ampInfoTableBody: document.querySelector("#ampInfoTable tbody"),
+      };
+
+      enableAmpInfoPanelDrag();
+      syncTemporalFloatingControls();
+      makeTemporalFloatingPanelDraggable();
+
+      setStatus("Carregando bounds do SAR…");
+      const bboxRaw = paths.sarBbox ? await fetchJSON(paths.sarBbox) : null;
+      const bounds = bboxRaw ? parseBoundsFromT0BoundsJson(bboxRaw) : null;
+      console.log("bboxRaw =", bboxRaw);
+      console.log("bounds parseado =", bounds);
+
+      if (paths.sarPng) {
+        const testImg = new Image();
+        testImg.onload = () => console.log("SAR PNG carregou:", paths.sarPng, testImg.width, testImg.height);
+        testImg.onerror = (e) => console.error("Erro ao carregar SAR PNG:", paths.sarPng, e);
+        testImg.src = paths.sarPng;
+      } else {
+        console.warn("paths.sarPng está nulo ou vazio; overlay SAR não será criado.");
+      }
+
+      const map = L.map("map", { preferCanvas: true });
+
+      const dark = L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
+        {
+          subdomains: "abcd",
+          maxZoom: 20,
+          attribution: "&copy; OpenStreetMap &copy; CARTO"
+        }
+      ).addTo(map);
+
+      map.createPane("slickAggPane");
+      map.getPane("slickAggPane").style.zIndex = 430;
+
+      map.createPane("slickPartsPane");
+      map.getPane("slickPartsPane").style.zIndex = 440;
+
+      map.createPane("ampsPane");
+      map.getPane("ampsPane").style.zIndex = 450;
+
+      map.createPane("probPane");
+      map.getPane("probPane").style.zIndex = 650;
+
+      let sarOverlay = null;
+      let sarBounds = null;
+      if (paths.sarPng && bounds) {
+        sarBounds = L.latLngBounds([bounds.south, bounds.west], [bounds.north, bounds.east]);
+        console.log("sarBounds leaflet =", sarBounds.toBBoxString());
+        map.fitBounds(sarBounds, { padding: [20, 20] });
+        sarOverlay = L.imageOverlay(paths.sarPng, sarBounds, { opacity: 1.0 }).addTo(map);
+        console.log("sarOverlay criado com:", { url: paths.sarPng, bounds: sarBounds.toBBoxString() });
+      } else {
+        console.warn("SAR não criado:", { pathsSarPng: paths.sarPng, bounds });
+        map.setView([-24, -44], 6);
+      }
+
+      setStatus("Carregando slick observado…");
+
+      const slickGeo = paths.slick ? await fetchJSON(paths.slick) : featureCollection([]);
+      const slickPartsGeoRaw = paths.slickParts ? await fetchJSON(paths.slickParts) : featureCollection([]);
+      const slickPartsGeo = chooseBestSlickPartsGeo(slickGeo, slickPartsGeoRaw);
+
+      console.log("slick_t0 original:", slickGeo);
+      console.log("slick_t0_parts original:", slickPartsGeoRaw);
+      console.log("slick_t0_parts usado:", slickPartsGeo);
+      console.log("slick_t0 count =", slickGeo?.features?.length || 0);
+      console.log("slick_t0_parts raw count =", slickPartsGeoRaw?.features?.length || 0);
+      console.log("slick_t0_parts final count =", slickPartsGeo?.features?.length || 0);
+
+      let slickLayer = L.geoJSON(slickGeo, {
+        pane: "slickAggPane",
+        style: {
+          weight: 2.5,
+          color: "#ff4d4f",
+          fillColor: "#ff4d4f",
+          fillOpacity: 0.05
+        }
+      }).addTo(map);
+
+
+      let slickPartsLayer = L.geoJSON(slickPartsGeo, {
+        pane: "slickPartsPane",
+        interactive: false,
+        style: () => ({
+          weight: 4,
+          color: "#ffd166",
+          fillColor: "#ff8c00",
+          fillOpacity: 0.45
+        })
+      }).addTo(map);
+
+      console.log("camadas desenhadas no Leaflet:", slickPartsLayer.getLayers().length);
+
+      setStatus("Carregando AMPs do Brasil…");
+
+      let ampsGeo = featureCollection([]);
+      try {
+        ampsGeo = await fetchJSON(GLOBAL_AMPS_PATH);
+      } catch (err) {
+        console.warn("Falha ao carregar camada global de AMPs. Tentando fallback do caso...", err);
+        ampsGeo = paths.amps ? await fetchJSON(paths.amps) : (ampsHitGeo || featureCollection([]));
+      }
+
+      if ((!ampsGeo?.features?.length) && Array.isArray(ampsHitGeo?.features) && ampsHitGeo.features.length) {
+        ampsGeo = ampsHitGeo;
+      }
+
+      const ampsCount = ampsGeo?.features?.length ?? 0;
+      if (ui.ampsInfo) ui.ampsInfo.textContent = `AMPs: ${ampsCount}`;
+
+      let ampsLayer = null;
+      const ampLayersHit = [];
+      const dynamicHitAmpNames = new Set();
+      let blinkPhase = false;
+      let blinkTimer = null;
+      let lastAmpPanelSignature = "";
+      let ampInfoMinimized = false;
+      let hoveredAmpKey = null;
+      let pinnedAmpKey = null;
+
+      function setAmpInfoPanelVisible(visible) {
+        if (!ui.ampInfoPanel) return;
+        ui.ampInfoPanel.classList.toggle("visible", !!visible);
+      }
+
+      function setAmpInfoPanelMinimized(minimized) {
+        if (!ui.ampInfoPanel || !ui.ampInfoToggle) return;
+        ampInfoMinimized = !!minimized;
+        ui.ampInfoPanel.classList.toggle("minimized", ampInfoMinimized);
+        ui.ampInfoToggle.textContent = ampInfoMinimized ? "+" : "−";
+        ui.ampInfoToggle.setAttribute("aria-label", ampInfoMinimized ? "Maximizar painel" : "Minimizar painel");
+        ui.ampInfoToggle.setAttribute("title", ampInfoMinimized ? "Maximizar painel" : "Minimizar painel");
+      }
+
+      setAmpInfoPanelMinimized(false);
+
+      function updateAmpInfoPanel(layers, currentDisplayDate) {
+        if (!Array.isArray(layers) || !layers.length || !ui.ampInfoTableBody || !ui.ampInfoTitle) return;
+
+        const instante = fmtTime(currentDisplayDate);
+        ui.ampInfoTitle.textContent = layers.length === 1 ? "AMP atingida" : `AMPs atingidas (${layers.length})`;
+
+        ui.ampInfoTableBody.innerHTML = layers.map((layer) => {
+          const p = layer?.feature?.properties || {};
+          const nome = getAmpFeatureName(layer.feature);
+          const categoria = p.iucn_cat || p.IUCN_CAT || "—";
+          const designacao = p.designacao || p.DESIG || p.designacao_eng || p.DESIG_ENG || "—";
+          const ampKey = normalizeTextValue(nome);
+
+          return `
+            <tr data-amp-key="${ampKey}">
+              <td>${nome}</td>
+              <td>${categoria}</td>
+              <td>${designacao}</td>
+              <td>${instante}</td>
+            </tr>
+          `;
+        }).join("");
+
+        setAmpInfoPanelVisible(true);
+      }
+
+      function maybeShowHitAmpPanel(currentDisplayDate) {
+        if (!ampLayersHit.length) {
+          lastAmpPanelSignature = "";
+          setAmpInfoPanelVisible(false);
+          return;
+        }
+        if (!(currentDisplayDate instanceof Date) || isNaN(currentDisplayDate.getTime())) return;
+
+        const signature = ampLayersHit
+          .map((layer) => normalizeTextValue(getAmpFeatureName(layer.feature)))
+          .sort()
+          .join("|") + `@${currentDisplayDate.getTime()}`;
+
+        if (lastAmpPanelSignature === signature && ui.ampInfoPanel?.classList.contains("visible")) return;
+
+        updateAmpInfoPanel(ampLayersHit, currentDisplayDate);
+        lastAmpPanelSignature = signature;
+      }
+
+      function enableAmpInfoPanelDrag() {
+        const panel = ui.ampInfoPanel;
+        const handle = ui.ampInfoHandle;
+        const mapWrap = document.getElementById("map-wrap");
+        if (!panel || !handle || !mapWrap) return;
+
+        let dragging = false;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        const onPointerMove = (ev) => {
+          if (!dragging) return;
+          const wrapRect = mapWrap.getBoundingClientRect();
+          const panelRect = panel.getBoundingClientRect();
+
+          let left = ev.clientX - wrapRect.left - offsetX;
+          let top = ev.clientY - wrapRect.top - offsetY;
+
+          left = Math.max(0, Math.min(left, wrapRect.width - panelRect.width));
+          top = Math.max(0, Math.min(top, wrapRect.height - panelRect.height));
+
+          panel.style.left = `${left}px`;
+          panel.style.top = `${top}px`;
+          panel.style.right = "auto";
+          panel.style.bottom = "auto";
+        };
+
+        const stopDragging = () => {
+          dragging = false;
+          window.removeEventListener("pointermove", onPointerMove);
+          window.removeEventListener("pointerup", stopDragging);
+        };
+
+        handle.addEventListener("pointerdown", (ev) => {
+          if (ev.target === ui.ampInfoToggle) return;
+          const panelRect = panel.getBoundingClientRect();
+          dragging = true;
+          offsetX = ev.clientX - panelRect.left;
+          offsetY = ev.clientY - panelRect.top;
+          window.addEventListener("pointermove", onPointerMove);
+          window.addEventListener("pointerup", stopDragging);
+        });
+
+        const clearHoveredAmp = () => {
+          if (pinnedAmpKey) {
+            hoveredAmpKey = pinnedAmpKey;
+            if (blinkTimer) {
+              updateAmpBlinkState(true);
+            } else {
+              startAmpBlinking();
+            }
+            return;
+          }
+          if (!hoveredAmpKey) return;
+          hoveredAmpKey = null;
+          if (blinkTimer) {
+            updateAmpBlinkState(true);
+          } else {
+            updateAmpBlinkState(false);
+          }
+        };
+
+        ui.ampInfoTableBody?.addEventListener("mouseover", (ev) => {
+          const row = ev.target.closest("tr[data-amp-key]");
+          if (!row) return;
+          const nextKey = row.dataset.ampKey || null;
+          if (!nextKey || hoveredAmpKey === nextKey) return;
+          hoveredAmpKey = nextKey;
+          if (blinkTimer) {
+            updateAmpBlinkState(true);
+          } else {
+            startAmpBlinking();
+          }
+        });
+
+        ui.ampInfoTableBody?.addEventListener("mouseout", (ev) => {
+          const row = ev.target.closest("tr[data-amp-key]");
+          if (!row) return;
+          const related = ev.relatedTarget;
+          if (related && row.contains(related)) return;
+          const stillInsideAnotherRow = related?.closest ? related.closest("tr[data-amp-key]") : null;
+          if (stillInsideAnotherRow) return;
+          clearHoveredAmp();
+        });
+
+        ui.ampInfoTableBody?.addEventListener("click", (ev) => {
+          const row = ev.target.closest("tr[data-amp-key]");
+          if (!row) return;
+          const nextKey = row.dataset.ampKey || null;
+          if (!nextKey) return;
+
+          pinnedAmpKey = (pinnedAmpKey === nextKey) ? null : nextKey;
+          hoveredAmpKey = pinnedAmpKey;
+
+          if (hoveredAmpKey) {
+            startAmpBlinking();
+            updateAmpBlinkState(true);
+          } else if (blinkTimer) {
+            updateAmpBlinkState(true);
+          } else {
+            updateAmpBlinkState(false);
+          }
+        });
+
+        ui.ampInfoPanel?.addEventListener("mouseleave", clearHoveredAmp);
+
+        ui.ampInfoToggle?.addEventListener("click", () => {
+          hoveredAmpKey = null;
+          pinnedAmpKey = null;
+          setAmpInfoPanelVisible(true);
+          setAmpInfoPanelMinimized(!ampInfoMinimized);
+        });
+
+        ui.ampInfoHandle?.addEventListener("dblclick", () => {
+          hoveredAmpKey = null;
+          pinnedAmpKey = null;
+          setAmpInfoPanelVisible(true);
+          setAmpInfoPanelMinimized(!ampInfoMinimized);
+        });
+      }
+
+      function isHitAmpFeature(feature) {
+        const nome = getAmpFeatureName(feature);
+        const key = normalizeTextValue(nome);
+        return dynamicHitAmpNames.has(key);
+      }
+
+      function getAmpHiddenStyle() {
+        return { weight: 0, opacity: 0, fillOpacity: 0, interactive: false };
+      }
+
+      function getAmpHoverExclusiveStyle(feature, blinkingOn = true) {
+        if (blinkingOn) {
+          return { weight: 3.6, color: "#ff0000", fillColor: "#ff0000", fillOpacity: 0.35, opacity: 1 };
+        }
+        return { weight: 2.4, color: "#7f1d1d", fillColor: "#ef4444", fillOpacity: 0.16, opacity: 1 };
+      }
+
+      function getAmpDefaultStyle(feature) {
+        return { weight: 1.2, color: "#60a5fa", fillColor: "#60a5fa", fillOpacity: 0.08 };
+      }
+
+      function getAmpBlinkStyle(feature, blinkingOn = true) {
+        if (!isHitAmpFeature(feature)) return getAmpDefaultStyle(feature);
+        if (blinkingOn) {
+          return { weight: 3.2, color: "#ff0000", fillColor: "#ff0000", fillOpacity: 0.35 };
+        }
+        return { weight: 2.2, color: "#7f1d1d", fillColor: "#ef4444", fillOpacity: 0.16 };
+      }
+
+      function rebuildHitAmpLayerList() {
+        ampLayersHit.length = 0;
+        if (!ampsLayer) return;
+
+        ampsLayer.eachLayer((layer) => {
+          if (isHitAmpFeature(layer.feature)) {
+            ampLayersHit.push(layer);
+          }
+        });
+      }
+
+      function detectAmpHitsAtCurrentFrame() {
+        dynamicHitAmpNames.clear();
+
+        const fr = oilFrames[currentOilIndex];
+        if (!fr || !ampsLayer) {
+          rebuildHitAmpLayerList();
+          return;
+        }
+
+        const pts = normalizeOilPoints(fr);
+        if (!pts.length) {
+          rebuildHitAmpLayerList();
+          return;
+        }
+
+        ampsLayer.eachLayer((layer) => {
+          const feature = layer.feature;
+          const ampName = getAmpFeatureName(feature);
+          const ampKey = normalizeTextValue(ampName);
+
+          for (const p of pts) {
+            if (pointInFeature(p.lon, p.lat, feature)) {
+              dynamicHitAmpNames.add(ampKey);
+              break;
+            }
+          }
+        });
+
+        rebuildHitAmpLayerList();
+      }
+
+      function updateAmpBlinkState(active) {
+        if (!ampsLayer) return;
+
+        if (hoveredAmpKey) {
+          blinkPhase = active ? !blinkPhase : false;
+          ampsLayer.eachLayer((lyr) => {
+            const key = normalizeTextValue(getAmpFeatureName(lyr.feature));
+            if (key === hoveredAmpKey) {
+              lyr.setStyle(active ? getAmpHoverExclusiveStyle(lyr.feature, blinkPhase) : getAmpDefaultStyle(lyr.feature));
+              if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) lyr.bringToFront();
+            } else {
+              lyr.setStyle(getAmpHiddenStyle());
+            }
+          });
+          return;
+        }
+
+        if (!ampLayersHit.length) return;
+
+        if (!active) {
+          ampsLayer.eachLayer((lyr) => lyr.setStyle(getAmpDefaultStyle(lyr.feature)));
+          return;
+        }
+
+        blinkPhase = !blinkPhase;
+        ampsLayer.eachLayer((lyr) => {
+          if (isHitAmpFeature(lyr.feature)) {
+            lyr.setStyle(getAmpBlinkStyle(lyr.feature, blinkPhase));
+            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) lyr.bringToFront();
+          } else {
+            lyr.setStyle(getAmpDefaultStyle(lyr.feature));
+          }
+        });
+      }
+
+      function startAmpBlinking() {
+        if (!ampLayersHit.length || blinkTimer) return;
+        updateAmpBlinkState(true);
+        blinkTimer = setInterval(() => updateAmpBlinkState(true), 550);
+      }
+
+      function stopAmpBlinking() {
+        if (blinkTimer) {
+          clearInterval(blinkTimer);
+          blinkTimer = null;
+        }
+        updateAmpBlinkState(false);
+      }
+
+      ampsLayer = L.geoJSON(ampsGeo, {
+        pane: "ampsPane",
+        interactive: false,
+        style: (feature) => getAmpDefaultStyle(feature)
+      }).addTo(map);
+
+      rebuildHitAmpLayerList();
+
+      if (ui.btnZoomSar) {
+        ui.btnZoomSar.addEventListener("click", () => {
+          if (sarBounds) map.fitBounds(sarBounds, { padding: [20, 20] });
+        });
+      }
+
+      if (ui.btnZoomAmps) {
+        ui.btnZoomAmps.addEventListener("click", () => {
+          const b = ampsLayer.getBounds();
+          if (b && b.isValid && b.isValid()) map.fitBounds(b, { padding: [20, 20] });
+        });
+      }
+
+      if (ui.btnZoomSlick) {
+        ui.btnZoomSlick.addEventListener("click", () => {
+          const b = getBestSlickBounds(slickPartsLayer, slickLayer);
+          if (b && b.isValid && b.isValid()) map.fitBounds(b, { padding: [20, 20] });
+        });
+      }
+
+      if (ui.sarOpacity && sarOverlay) {
+        const v0 = parseInt(ui.sarOpacity.value, 10);
+        sarOverlay.setOpacity(Math.max(0, Math.min(1, v0 / 100)));
+        if (ui.sarOpacityLabel) ui.sarOpacityLabel.textContent = `${v0}%`;
+
+        ui.sarOpacity.addEventListener("input", () => {
+          const v = parseInt(ui.sarOpacity.value, 10);
+          sarOverlay.setOpacity(Math.max(0, Math.min(1, v / 100)));
+          if (ui.sarOpacityLabel) ui.sarOpacityLabel.textContent = `${v}%`;
+        });
+      }
+
+      setStatus("Carregando OpenOil…");
+      const oilPtsRaw = paths.oilPts ? await fetchJSON(paths.oilPts) : { frames: [] };
+      let oilFrames = normalizeFrameList(oilPtsRaw, "frames");
+      if (!oilFrames || oilFrames.length === 0) {
+        throw new Error("OpenOil frames (pontos) veio vazio.");
+      }
+
+      let oilTimesMs = buildUnifiedTimeline(summary, oilFrames.length);
+      if (!oilTimesMs || oilTimesMs.length !== oilFrames.length) {
+        throw new Error("Não foi possível montar a linha do tempo unificada de t0 até tk para o OpenOil.");
+      }
+
+      setStatus("Carregando mancha probabilística…");
+      let probFrames = [];
+      let probTimesMs = [];
+      let hasProbFrames = false;
+
+      if (paths.prob) {
+        try {
+          const probRaw = await fetchJSON(paths.prob);
+          probFrames = normalizeFrameList(probRaw, "frames");
+          probTimesMs = buildUnifiedTimeline(summary, probFrames.length);
+          hasProbFrames = Array.isArray(probFrames) && probFrames.length > 0;
+        } catch (err) {
+          console.warn("Falha ao carregar probability_frames.json:", err);
+          hasProbFrames = false;
+        }
+      }
+
+      if (!hasProbFrames) {
+        ui.probToggleWrap.classList.add("hidden");
+        ui.probLegend.classList.add("hidden");
+        ui.tgProb.checked = false;
+      }
+
+      setStatus("Carregando vento/correntes…");
+      const windRaw = paths.wind ? await fetchJSON(paths.wind).catch(() => null) : null;
+      const currRaw = paths.curr ? await fetchJSON(paths.curr).catch(() => null) : null;
+
+      let windFrames = windRaw ? normalizeFrameList(windRaw, "frames") : [];
+      let currFrames = currRaw ? normalizeFrameList(currRaw, "frames") : [];
+      let windTimesMs = buildTimelineFromFrames(windFrames, summary);
+      let currTimesMs = buildTimelineFromFrames(currFrames, summary);
+
+      const slider = document.getElementById("timeSlider") || document.getElementById("timeSliderFloating");
+      const tsLabel = document.getElementById("tsLabel") || document.getElementById("tsLabelFloating");
+      slider.max = String(oilFrames.length - 1);
+      slider.value = "0";
+
+      let currentOilIndex = 0;
+
+      const oilCanvas = new CanvasOverlay((ctx, map) => {
+        if (!ui.tgOilPts.checked) return;
+        const fr = oilFrames[currentOilIndex];
+        if (!fr) return;
+        drawPoints(ctx, map, normalizeOilPoints(fr), { radius: 2, alpha: 0.28, maxPoints: 6000 });
+      }).addTo(map);
+
+      const trajCanvas = new CanvasOverlay((ctx, map) => {
+        if (!ui.tgTrajFull.checked) return;
+        drawTrajectoryTrail(ctx, map, oilFrames, currentOilIndex, {
+          alpha: 0.36,
+          color: "#d9d9d9",
+          lineWidth: 1.0,
+          maxSegments: 80000
+        });
+      }).addTo(map);
+
+      let currentProbFeatures = [];
+      const probLayer = L.geoJSON(featureCollection([]), {
+        pane: "probPane",
+        interactive: false,
+        style: probabilityStyle
+      });
+
+      function renderProbabilityFrame() {
+        probLayer.clearLayers();
+        currentProbFeatures = [];
+        if (!hasProbFrames) return;
+        if (!ui.tgProb.checked) return;
+
+        let fr = null;
+        const t = oilTimesMs[currentOilIndex];
+
+        if (probFrames.length === oilFrames.length) {
+          fr = probFrames[currentOilIndex];
+        } else if (Array.isArray(probTimesMs) && probTimesMs.length > 0 && Number.isFinite(t)) {
+          const pi = nearestIndex(probTimesMs, t);
+          fr = probFrames[pi];
+        }
+
+        if (!fr) return;
+
+        const features = Array.isArray(fr.features) ? fr.features : [];
+        if (!features.length) return;
+
+        currentProbFeatures = Array.isArray(features) ? features : [];
+        probLayer.addData(featureCollection(currentProbFeatures));
+        if (map.hasLayer(probLayer)) probLayer.bringToFront();
+      }
+
+      if (hasProbFrames && ui.tgProb.checked) {
+        probLayer.addTo(map);
+        renderProbabilityFrame();
+      }
+
+      const windCanvas = new CanvasOverlay((ctx, map) => {
+        if (!ui.tgWind.checked || windFrames.length === 0) return;
+        const wi = nearestIndex(windTimesMs, oilTimesMs[currentOilIndex]);
+        const fr = windFrames[wi];
+        if (!fr) return;
+        const vec = normalizeVectorFrame(fr);
+        if (!vec.length) return;
+        drawWindBarbs(ctx, map, vec, {
+          alpha: 0.88,
+          stride: 2,
+          scale: 18,
+          maxBarbs: 1200,
+          color: "#f8fafc"
+        });
+      }).addTo(map);
+
+      const currCanvas = new CanvasOverlay((ctx, map) => {
+        if (!ui.tgCurr.checked || currFrames.length === 0) return;
+        const ci = nearestIndex(currTimesMs, oilTimesMs[currentOilIndex]);
+        const fr = currFrames[ci];
+        if (!fr) return;
+        const vec = normalizeVectorFrame(fr);
+        if (!vec.length) return;
+        drawArrows(ctx, map, vec, { alpha: 0.65, stride: 2, scale: 12, maxArrows: 2000 });
+      }).addTo(map);
+
+      function applyToggles() {
+        if (sarOverlay) {
+          if (ui.tgSar.checked) {
+            if (!map.hasLayer(sarOverlay)) sarOverlay.addTo(map);
+          } else {
+            if (map.hasLayer(sarOverlay)) map.removeLayer(sarOverlay);
+          }
+        }
+
+        if (ui.tgSlick.checked) {
+          if (!map.hasLayer(slickLayer)) slickLayer.addTo(map);
+        } else if (map.hasLayer(slickLayer)) {
+          map.removeLayer(slickLayer);
+        }
+
+        if (ui.tgSlickParts.checked) {
+          if (!map.hasLayer(slickPartsLayer)) slickPartsLayer.addTo(map);
+        } else if (map.hasLayer(slickPartsLayer)) {
+          map.removeLayer(slickPartsLayer);
+        }
+
+        if (ui.tgAmps.checked) {
+          if (!map.hasLayer(ampsLayer)) ampsLayer.addTo(map);
+        } else {
+          if (map.hasLayer(ampsLayer)) map.removeLayer(ampsLayer);
+          stopAmpBlinking();
+          setAmpInfoPanelVisible(false);
+        }
+
+        if (hasProbFrames) {
+          if (ui.tgProb.checked) {
+            if (!map.hasLayer(probLayer)) probLayer.addTo(map);
+          } else if (map.hasLayer(probLayer)) {
+            map.removeLayer(probLayer);
+          }
+        }
+
+        if (map.hasLayer(slickPartsLayer)) slickPartsLayer.bringToBack();
+        if (map.hasLayer(ampsLayer)) ampsLayer.bringToFront();
+        if (hasProbFrames && map.hasLayer(probLayer)) probLayer.bringToFront();
+
+        oilCanvas.redraw();
+        trajCanvas.redraw();
+        renderProbabilityFrame();
+        windCanvas.redraw();
+        currCanvas.redraw();
+      }
+
+      function renderFrame() {
+        const displayDate = parseTimeAny(oilTimesMs[currentOilIndex]);
+        tsLabel.textContent = fmtTime(displayDate);
+        slider.value = String(currentOilIndex);
+
+        detectAmpHitsAtCurrentFrame();
+
+        if (ampLayersHit.length > 0 && ui.tgAmps.checked) {
+          startAmpBlinking();
+          maybeShowHitAmpPanel(displayDate);
+        } else {
+          stopAmpBlinking();
+          lastAmpPanelSignature = "";
+          setAmpInfoPanelVisible(false);
+        }
+
+        if (map.hasLayer(slickPartsLayer)) slickPartsLayer.bringToBack();
+        if (map.hasLayer(ampsLayer)) ampsLayer.bringToFront();
+        if (hasProbFrames && map.hasLayer(probLayer)) probLayer.bringToFront();
+
+        oilCanvas.redraw();
+        trajCanvas.redraw();
+        renderProbabilityFrame();
+        windCanvas.redraw();
+        currCanvas.redraw();
+      }
+
+      const combinedHoverPopup = L.popup({
+        autoClose: false,
+        closeButton: false,
+        closeOnClick: false,
+        className: "combined-hover-popup",
+        offset: [0, -10]
+      });
+      let combinedHoverOpen = false;
+      let hoverAmpFeature = null;
+      let hoverProbFeature = null;
+
+      function setAmpHoverVisual(feature = null) {
+        hoverAmpFeature = feature || null;
+        if (!ampsLayer) return;
+        ampsLayer.eachLayer((lyr) => {
+          const isHovered = hoverAmpFeature && lyr.feature === hoverAmpFeature;
+          if (isHovered) {
+            if (isHitAmpFeature(lyr.feature)) {
+              lyr.setStyle({ weight: 3.4, color: "#ff0000", fillColor: "#ff0000", fillOpacity: 0.38, opacity: 1 });
+            } else {
+              lyr.setStyle({ weight: 2.2, color: "#93c5fd", fillColor: "#60a5fa", fillOpacity: 0.16, opacity: 1 });
+            }
+            if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) lyr.bringToFront();
+          } else if (!hoveredAmpKey && !pinnedAmpKey) {
+            lyr.setStyle(getAmpDefaultStyle(lyr.feature));
+          }
+        });
+      }
+
+      function findAmpFeatureAtLatLng(latlng) {
+        if (!ui.tgAmps.checked || !Array.isArray(ampsGeo?.features)) return null;
+        const lon = latlng.lng;
+        const lat = latlng.lat;
+        for (const feature of ampsGeo.features) {
+          if (pointInFeature(lon, lat, feature)) return feature;
+        }
+        return null;
+      }
+
+      function findProbFeatureAtLatLng(latlng) {
+        if (!hasProbFrames || !ui.tgProb.checked || !Array.isArray(currentProbFeatures)) return null;
+        const lon = latlng.lng;
+        const lat = latlng.lat;
+        for (const feature of currentProbFeatures) {
+          if (pointInFeature(lon, lat, feature)) return feature;
+        }
+        return null;
+      }
+
+      function buildCombinedHoverContent(ampFeature, probFeature) {
+        const parts = [];
+        if (ampFeature) parts.push(ampTooltip(ampFeature));
+        if (probFeature) parts.push(probabilityTooltip(probFeature));
+        return `<div style="display:flex; flex-direction:column; gap:8px;">${parts.join('<div style="height:1px; background:rgba(148,163,184,0.18);"></div>')}</div>`;
+      }
+
+      function hideCombinedHover() {
+        setAmpHoverVisual(null);
+        hoverProbFeature = null;
+        if (combinedHoverOpen) {
+          map.closePopup(combinedHoverPopup);
+          combinedHoverOpen = false;
+        }
+      }
+
+      map.on("mousemove", (e) => {
+        const ampFeature = findAmpFeatureAtLatLng(e.latlng);
+        const probFeature = findProbFeatureAtLatLng(e.latlng);
+
+        if (!ampFeature && !probFeature) {
+          hideCombinedHover();
+          return;
+        }
+
+        setAmpHoverVisual(ampFeature || null);
+        hoverProbFeature = probFeature || null;
+        combinedHoverPopup
+          .setLatLng(e.latlng)
+          .setContent(buildCombinedHoverContent(ampFeature, probFeature));
+
+        if (!combinedHoverOpen) {
+          combinedHoverPopup.openOn(map);
+          combinedHoverOpen = true;
+        } else {
+          combinedHoverPopup.update();
+        }
+      });
+
+      map.on("mouseout", hideCombinedHover);
+      map.on("movestart", hideCombinedHover);
+      map.on("zoomstart", hideCombinedHover);
+
+      slider.addEventListener("input", () => {
+        currentOilIndex = Math.max(0, Math.min(oilFrames.length - 1, parseInt(slider.value, 10)));
+        renderFrame();
+      });
+
+      ["tgSar","tgSlick","tgSlickParts","tgAmps","tgOilPts","tgTrajFull","tgProb","tgWind","tgCurr"].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener("change", applyToggles);
+      });
+
+      let playing = false;
+      let timer = null;
+
+      function getPlaybackInterval() {
+        const sp = parseInt(ui.speed.value, 10) || 1;
+        return Math.max(60, Math.round(800 / sp));
+      }
+
+      function stop() {
+        playing = false;
+        if (timer) clearInterval(timer);
+        timer = null;
+      }
+
+      function startTimer() {
+        if (timer) clearInterval(timer);
+        timer = setInterval(() => {
+          currentOilIndex += 1;
+          if (currentOilIndex >= oilFrames.length) {
+            currentOilIndex = oilFrames.length - 1;
+            renderFrame();
+            stop();
+            return;
+          }
+          renderFrame();
+        }, getPlaybackInterval());
+      }
+
+      function play() {
+        if (playing) return;
+        playing = true;
+        startTimer();
+      }
+
+      ui.btnPlay.addEventListener("click", play);
+      ui.btnPause.addEventListener("click", stop);
+
+      ui.speed.addEventListener("change", () => {
+        if (playing) startTimer();
+      });
+
+      L.control.layers({ "Mapa escuro": dark }, {}).addTo(map);
+
+      applyToggles();
+      renderFrame();
+
+      const slickAggCount = slickGeo?.features?.length || 0;
+      const slickPartsCountRaw = slickPartsGeoRaw?.features?.length || 0;
+      const slickPartsCountFinal = slickPartsGeo?.features?.length || 0;
+
+      setStatus(
+        `OK: caso ${activeCaseId}` +
+        ` | slick_agregado=${slickAggCount}` +
+        ` | slick_partes_raw=${slickPartsCountRaw}` +
+        ` | slick_partes_final=${slickPartsCountFinal}` +
+        ` | OpenOil=${oilFrames.length} frames` +
+        ` | prob=${hasProbFrames ? probFrames.length : 0}` +
+        ` | vento=${windFrames.length}` +
+        ` | correntes=${currFrames.length}` +
+        ` | AMPs=${ampsCount}`
+      );
+    }
+
+    function drawPoints(ctx, map, points, opts = {}) {
+      const { radius = 2, alpha = 0.22, maxPoints = 6000 } = opts;
+      if (!Array.isArray(points) || points.length === 0) return;
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = "#f8fafc";
+
+      const step = Math.max(1, Math.floor(points.length / maxPoints));
+      for (let i = 0; i < points.length; i += step) {
+        const p = points[i];
+        const pt = map.latLngToContainerPoint([p.lat, p.lon]);
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function drawTrajectoryTrail(ctx, map, oilFrames, currentIndex, opts = {}) {
+      const {
+        alpha = 0.28,
+        color = "#f97316",
+        lineWidth = 0.8,
+        maxSegments = 80000
+      } = opts;
+
+      if (!Array.isArray(oilFrames) || oilFrames.length < 2 || currentIndex <= 0) return;
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = color;
+      ctx.lineWidth = lineWidth;
+
+      let drawn = 0;
+
+      for (let k = 1; k <= currentIndex; k++) {
+        const prevPts = normalizeOilPoints(oilFrames[k - 1]);
+        const currPts = normalizeOilPoints(oilFrames[k]);
+
+        const n = Math.min(prevPts.length, currPts.length);
+        if (n === 0) continue;
+
+        const step = Math.max(1, Math.floor((currentIndex * n) / maxSegments));
+
+        ctx.beginPath();
+        for (let i = 0; i < n; i += step) {
+          if (drawn >= maxSegments) break;
+
+          const p0 = prevPts[i];
+          const p1 = currPts[i];
+
+          const a = map.latLngToContainerPoint([p0.lat, p0.lon]);
+          const b = map.latLngToContainerPoint([p1.lat, p1.lon]);
+
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          drawn++;
+        }
+        ctx.stroke();
+
+        if (drawn >= maxSegments) break;
+      }
+
+      ctx.restore();
+    }
+
+    function drawWindBarbs(ctx, map, vectors, opts = {}) {
+      const { alpha = 0.85, stride = 2, scale = 18, maxBarbs = 1200, color = "#f8fafc" } = opts;
+      if (!Array.isArray(vectors) || vectors.length === 0) return;
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = 1;
+
+      const step0 = Math.max(1, stride);
+      const step = Math.max(step0, Math.floor(vectors.length / maxBarbs) * step0);
+
+      for (let i = 0; i < vectors.length; i += step) {
+        const vv = vectors[i];
+        const { lat, lon, u, v } = vv;
+        if (lat == null || lon == null || u == null || v == null) continue;
+
+        const p0 = map.latLngToContainerPoint([lat, lon]);
+        const mag = Math.sqrt(u * u + v * v);
+        if (!isFinite(mag) || mag <= 0) continue;
+
+        const dx = u / mag;
+        const dy = -v / mag;
+
+        const shaftLen = Math.min(34, Math.max(10, scale * (0.55 + Math.log1p(mag) * 0.45)));
+        const x1 = p0.x + dx * shaftLen;
+        const y1 = p0.y + dy * shaftLen;
+
+        ctx.beginPath();
+        ctx.moveTo(p0.x, p0.y);
+        ctx.lineTo(x1, y1);
+        ctx.stroke();
+
+        const knots = mag * 1.94384;
+        let remaining = knots;
+        const pennants = Math.floor(remaining / 50);
+        remaining -= pennants * 50;
+        const fullBarbs = Math.floor(remaining / 10);
+        remaining -= fullBarbs * 10;
+        const halfBarbs = Math.floor(remaining / 5);
+
+        const barbSpacing = 4.5;
+        const barbLen = Math.max(5, shaftLen * 0.32);
+        const px = -dy;
+        const py = dx;
+
+        let offset = 0;
+
+        function pointAlong(distFromTip) {
+          return { x: x1 - dx * distFromTip, y: y1 - dy * distFromTip };
+        }
+
+        for (let k = 0; k < pennants; k++) {
+          const a = pointAlong(offset);
+          const b = pointAlong(offset + barbSpacing);
+          const x2 = a.x + px * barbLen;
+          const y2 = a.y + py * barbLen;
+
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(x2, y2);
+          ctx.lineTo(b.x, b.y);
+          ctx.closePath();
+          ctx.fill();
+
+          offset += barbSpacing + 2.5;
+        }
+
+        for (let k = 0; k < fullBarbs; k++) {
+          const a = pointAlong(offset);
+          const x2 = a.x + px * barbLen;
+          const y2 = a.y + py * barbLen;
+
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+
+          offset += barbSpacing;
+        }
+
+        if (halfBarbs > 0) {
+          const a = pointAlong(offset);
+          const x2 = a.x + px * (barbLen * 0.55);
+          const y2 = a.y + py * (barbLen * 0.55);
+
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(x2, y2);
+          ctx.stroke();
+        }
+      }
+
+      ctx.restore();
+    }
+
+    function drawArrows(ctx, map, vectors, opts = {}) {
+      const { alpha = 0.55, stride = 2, scale = 12, maxArrows = 2000 } = opts;
+      if (!Array.isArray(vectors) || vectors.length === 0) return;
+
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = "#93c5fd";
+      ctx.lineWidth = 1;
+
+      const step0 = Math.max(1, stride);
+      const step = Math.max(step0, Math.floor(vectors.length / maxArrows) * step0);
+
+      for (let i = 0; i < vectors.length; i += step) {
+        const vv = vectors[i];
+        const lat = vv.lat;
+        const lon = vv.lon;
+        const u = vv.u;
+        const w = vv.v;
+
+        if (lat == null || lon == null || u == null || w == null) continue;
+
+        const p0 = map.latLngToContainerPoint([lat, lon]);
+        const mag = Math.sqrt(u * u + w * w);
+        if (!isFinite(mag) || mag === 0) continue;
+
+        const ux = u / mag;
+        const uy = -w / mag;
+
+        const len = Math.min(40, Math.max(6, scale * (0.7 + Math.log1p(mag))));
+        const x1 = p0.x + ux * len;
+        const y1 = p0.y + uy * len;
+
+        ctx.beginPath();
+        ctx.moveTo(p0.x, p0.y);
+        ctx.lineTo(x1, y1);
+        ctx.stroke();
+
+        const ang = Math.atan2(y1 - p0.y, x1 - p0.x);
+        const head = 4;
+        const a1 = ang + Math.PI * 0.75;
+        const a2 = ang - Math.PI * 0.75;
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x1 + Math.cos(a1) * head, y1 + Math.sin(a1) * head);
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x1 + Math.cos(a2) * head, y1 + Math.sin(a2) * head);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    main().catch(err => {
+      console.error(err);
+      setStatus("ERRO: " + (err?.message ?? String(err)));
+      alert("Erro ao iniciar o dashboard:\n\n" + (err?.message ?? String(err)));
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+{
+  "west": -41.00939433026768,
+  "south": -23.811483002365126,
+  "east": -38.19730816485993,
+  "north": -21.744302677174893,
+  "bounds": {
+    "west": -41.00939433026768,
+    "south": -23.811483002365126,
+    "east": -38.19730816485993,
+    "north": -21.744302677174893
+  },
+  "bounds_leaflet": [
+    [
+      -23.811483002365126,
+      -41.00939433026768
+    ],
+    [
+      -21.744302677174893,
+      -38.19730816485993
+    ]
+  ],
+  "meta": {
+    "width": 1600,
+    "height": 1276,
+    "resampled": true,
+    "source_width": 3913,
+    "source_height": 3120,
+    "dtype": "float32",
+    "count": 1,
+    "bounds_crs": "EPSG:4326",
+    "source_tif": "/home/lourenco/labirinto-do-fauno/mestrado/UnB/CERULEAN/SIMOMv2/data/processed/scenes/S1B_IW_GRDH_1SDV_20211104T080537_20211104T080602_029435_038345_2C34/sentinel1/out/S1B_IW_GRDH_1SDV_20211104T080537_20211104T080602_029435_038345_2C34_VV_sigma0_TC_80m.tif",
+    "source_crs": "EPSG:3857"
+  },
+  "source_crs_bounds": {
+    "west": -4565144.894585959,
+    "south": -2730453.260457568,
+    "east": -4252104.894585959,
+    "north": -2480853.260457568
+  }
+}
