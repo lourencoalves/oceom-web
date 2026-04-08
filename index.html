@@ -1488,6 +1488,254 @@
       color: #38bdf8;
     }
 
+
+
+    #firstVisitGuide {
+      position: fixed;
+      inset: 0;
+      z-index: 5000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(2, 6, 23, 0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    #firstVisitGuide.visible {
+      display: flex;
+    }
+
+    .guide-modal {
+      width: min(720px, 100%);
+      max-height: min(86vh, 820px);
+      overflow: auto;
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      background: linear-gradient(180deg, rgba(15,23,42,0.98), rgba(30,41,59,0.98));
+      box-shadow: 0 24px 60px rgba(0,0,0,0.38);
+      color: var(--text-main);
+    }
+
+    .guide-header {
+      padding: 20px 20px 12px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+    }
+
+    .guide-header h2 {
+      margin: 0 0 10px 0;
+      font-size: 24px;
+      color: var(--text-strong);
+    }
+
+    .guide-header p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text-main);
+    }
+
+    .guide-body {
+      padding: 16px 20px 10px;
+    }
+
+    .guide-note {
+      border: 1px solid rgba(245, 158, 11, 0.22);
+      background: linear-gradient(180deg, rgba(120,53,15,0.18), rgba(15,23,42,0.14));
+      border-radius: 14px;
+      padding: 14px 15px;
+      font-size: 13px;
+      line-height: 1.65;
+      color: #f8fafc;
+    }
+
+    .guide-note strong {
+      color: #fde68a;
+    }
+
+    .guide-actions {
+      padding: 14px 20px 20px;
+      border-top: 1px solid rgba(148, 163, 184, 0.14);
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    #helpGuideBtn {
+      position: fixed;
+      right: 400px;
+      bottom: 18px;
+      z-index: 4600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 112px;
+      height: 36px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(89, 168, 255, 0.40);
+      background:
+        linear-gradient(180deg, rgba(126,189,255,0.34), rgba(59,130,246,0.18)),
+        linear-gradient(135deg, rgba(89,168,255,0.30), rgba(89,168,255,0.08));
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        0 14px 26px rgba(0,0,0,0.28);
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+    }
+
+    #helpGuideBtn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(120, 190, 255, 0.55);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        0 18px 30px rgba(0,0,0,0.32),
+        0 0 0 4px rgba(96,165,250,0.10);
+      filter: brightness(1.04);
+    }
+
+    #helpGuideBtn:active {
+      transform: translateY(0);
+    }
+
+    #helpGuideBtn .helpGuideIcon {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    @media (max-width: 980px) {
+      #helpGuideBtn {
+        right: 400px;
+        bottom: 12px;
+        min-width: 0;
+        padding: 0 14px;
+        height: 34px;
+      }
+    }
+
+    @media (max-width: 700px) {
+      #firstVisitGuide {
+        padding: 14px;
+      }
+
+      .guide-header,
+      .guide-body,
+      .guide-actions {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .guide-header h2 {
+        font-size: 21px;
+      }
+
+      .guide-actions {
+        justify-content: stretch;
+      }
+
+      .guide-actions .btn {
+        width: 100%;
+      }
+    }
+
+    .guide-spotlight {
+      position: fixed;
+      inset: 0;
+      z-index: 5200;
+      pointer-events: none;
+      display: none;
+    }
+
+    .guide-spotlight.visible {
+      display: block;
+    }
+
+     .guide-highlight {
+      position: fixed;
+      border-radius: 18px;
+      box-shadow:
+        0 0 0 9999px rgba(2, 6, 23, 0.68),
+        0 0 0 3px rgba(251, 191, 36, 0.92),
+        0 0 0 10px rgba(245, 158, 11, 0.14),
+        0 0 28px rgba(245, 158, 11, 0.22);
+      background: rgba(245, 158, 11, 0.04);
+      pointer-events: none;
+    }
+
+    .guide-tooltip {
+      position: fixed;
+      z-index: 5201;
+      width: min(340px, calc(100vw - 24px));
+      background: linear-gradient(180deg, rgba(120,53,15,0.22), rgba(15,23,42,0.18));
+      color: #f8fafc;
+      border: 1px solid rgba(245, 158, 11, 0.28);
+      border-radius: 18px;
+      box-shadow:
+        0 18px 40px rgba(0,0,0,0.35),
+        0 0 0 1px rgba(255,255,255,0.03) inset,
+        0 0 18px rgba(245, 158, 11, 0.10);
+      padding: 16px;
+      pointer-events: auto;
+      max-height: min(280px, calc(100vh - 24px));
+      overflow: auto;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    .guide-tooltip-title {
+      font-size: 14px;
+      font-weight: 900;
+      color: #fde68a;
+      margin-bottom: 6px;
+      letter-spacing: 0.01em;
+    }
+
+    .guide-tooltip-text {
+      font-size: 13px;
+      line-height: 1.55;
+      color: #f8fafc;
+    }
+
+    .guide-tooltip-actions {
+      margin-top: 14px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .guide-tooltip .btn {
+      height: 30px;
+      padding: 4px 10px;
+      font-size: 11px;
+      border-radius: 10px;
+    }
+
+    .guide-tooltip .btn.primary {
+      border-color: rgba(245, 158, 11, 0.42);
+      background:
+        linear-gradient(180deg, rgba(251,191,36,0.34), rgba(217,119,6,0.24)),
+        linear-gradient(135deg, rgba(245,158,11,0.28), rgba(120,53,15,0.12));
+      color: #ffffff;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        0 10px 20px rgba(120, 53, 15, 0.20);
+    }
+
+    .guide-tooltip .btn.primary:hover {
+      border-color: rgba(251, 191, 36, 0.60);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.12),
+        0 12px 24px rgba(120, 53, 15, 0.26);
+    }
+
   </style>
 </head>
 
@@ -1653,7 +1901,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" id="mapLayersCard">
         <div class="section-title">Camadas do mapa</div>
 
         <div class="row zoom-actions">
@@ -4615,5 +4863,299 @@ function clamp(value, min, max) {
       alert("Erro ao iniciar o dashboard:\n\n" + (err?.message ?? String(err)));
     });
   </script>
+
+ <button id="helpGuideBtn" type="button" aria-label="Abrir guia de ajuda" title="Abrir guia de ajuda">
+  <span class="helpGuideIcon">?</span>
+  <span>Ajuda</span>
+</button>
+
+<div id="firstVisitGuide" aria-hidden="true" role="dialog" aria-labelledby="guideWelcomeTitle">
+  <div class="guide-modal">
+    <div class="guide-header">
+      <h2 id="guideWelcomeTitle">Seja bem-vindo(a)!</h2>
+      <p>
+        Este sistema está em fase de desenvolvimento e validação. As informações, produtos, mapas, simulações e alertas aqui disponibilizados possuem caráter preliminar e experimental, não devendo ser publicados, reproduzidos, compartilhados ou transmitidos sem autorização prévia.
+      </p>
+    </div>
+
+    <div class="guide-body">
+      <div class="guide-note">
+        O sistema ainda não possui aprovação oficial da comunidade técnica/científica competente, e seus resultados não devem ser utilizados como base única para tomada de decisão operacional, institucional ou pública.
+      </div>
+    </div>
+
+    <div class="guide-actions">
+      <button id="guideSkipBtn" class="btn ghost" type="button">Pular guia</button>
+      <button id="guideContinueBtn" class="btn primary" type="button">Continuar</button>
+    </div>
+  </div>
+</div>
+
+<div id="guideSpotlight" class="guide-spotlight" aria-hidden="true">
+  <div id="guideHighlight" class="guide-highlight"></div>
+</div>
+
+<div id="guideTooltip" class="guide-tooltip hidden" role="dialog" aria-live="polite">
+  <div class="guide-tooltip-title" id="guideTooltipTitle">Calendário de casos</div>
+  <div class="guide-tooltip-text" id="guideTooltipText">
+    Selecione pelo calendário os casos disponíveis.
+  </div>
+  <div class="guide-tooltip-actions">
+    <button id="guideTooltipClose" class="btn primary" type="button">Entendi</button>
+  </div>
+</div>
+
+<div id="guideTooltipArrow" class="guide-tooltip-arrow" aria-hidden="true"></div>
+
+<script>
+(function () {
+  const firstVisitGuide = document.getElementById("firstVisitGuide");
+  const helpGuideBtn = document.getElementById("helpGuideBtn");
+  const guideSkipBtn = document.getElementById("guideSkipBtn");
+  const guideContinueBtn = document.getElementById("guideContinueBtn");
+
+  const spotlight = document.getElementById("guideSpotlight");
+  const highlight = document.getElementById("guideHighlight");
+  const tooltip = document.getElementById("guideTooltip");
+  const tooltipTitle = document.getElementById("guideTooltipTitle");
+  const tooltipText = document.getElementById("guideTooltipText");
+  const tooltipClose = document.getElementById("guideTooltipClose");
+
+  if (!firstVisitGuide) return;
+
+  let currentGuideStep = 0;
+  let guideScrollLock = false;
+
+  function openGuide() {
+    firstVisitGuide.classList.add("visible");
+    firstVisitGuide.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+  }
+
+  function closeGuide() {
+    firstVisitGuide.classList.remove("visible");
+    firstVisitGuide.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+  }
+
+  function hideElementGuide() {
+    spotlight?.classList.remove("visible");
+    spotlight?.setAttribute("aria-hidden", "true");
+    tooltip?.classList.add("hidden");
+  }
+
+  function showGuideForSelector(selector, title, text, allowAutoScroll = true) {
+    const target = document.querySelector(selector);
+    if (!target || !spotlight || !highlight || !tooltip) return;
+
+    const viewportH = window.innerHeight;
+    const currentRect = target.getBoundingClientRect();
+
+    const isOutOfView =
+      currentRect.top < 80 ||
+      currentRect.bottom > (viewportH - 80);
+
+    if (allowAutoScroll && isOutOfView) {
+      guideScrollLock = true;
+
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest"
+      });
+
+      setTimeout(() => {
+        guideScrollLock = false;
+        showGuideForSelector(selector, title, text, false);
+      }, 450);
+
+      return;
+    }
+
+    const rect = target.getBoundingClientRect();
+    const pad = 8;
+
+    spotlight.classList.add("visible");
+    spotlight.setAttribute("aria-hidden", "false");
+
+    highlight.style.top = `${rect.top - pad}px`;
+    highlight.style.left = `${rect.left - pad}px`;
+    highlight.style.width = `${rect.width + (pad * 2)}px`;
+    highlight.style.height = `${rect.height + (pad * 2)}px`;
+
+    tooltipTitle.textContent = title;
+    tooltipText.textContent = text;
+    tooltip.classList.remove("hidden");
+
+    const viewportW = window.innerWidth;
+
+    const tooltipWidth = Math.min(320, viewportW - 24);
+    tooltip.style.width = `${tooltipWidth}px`;
+
+    const gap = 70;
+
+    const spaceRight = viewportW - rect.right;
+    const placeRight = spaceRight >= (tooltipWidth + gap + 12);
+
+    let left = placeRight
+      ? rect.right + gap
+      : rect.left - tooltipWidth - gap;
+
+    if (left < 12) left = 12;
+    if (left + tooltipWidth > viewportW - 12) {
+      left = viewportW - tooltipWidth - 12;
+    }
+
+    let top = rect.top + (rect.height / 2) - 70;
+    if (top < 12) top = 12;
+
+    const tooltipHeight = Math.min(260, tooltip.offsetHeight || 140);
+    const maxTop = window.innerHeight - tooltipHeight - 12;
+    if (top > maxTop) top = maxTop;
+
+    tooltip.style.left = `${left}px`;
+    tooltip.style.top = `${top}px`;
+  }
+
+  function openCalendarGuideStep() {
+    hideElementGuide();
+    showGuideForSelector(
+      ".date-calendar-card",
+      "Calendário de casos",
+      "Selecione pelo calendário os casos disponíveis."
+    );
+  }
+
+  function openDateCasesGuideStep() {
+    hideElementGuide();
+    showGuideForSelector(
+      "#dateCasesCard",
+      "Casos da data selecionada",
+      "Depois de escolher uma data no calendário, os casos disponíveis daquele dia aparecem neste quadro."
+    );
+  }
+
+  function openAlertGuideStep() {
+    hideElementGuide();
+    showGuideForSelector(
+      "#alertBox",
+      "Nível de alerta",
+      "Aqui o sistema mostra o status do alerta do caso selecionado, com a mensagem principal de risco ou situação."
+    );
+  }
+
+  function openClassificationGuideStep() {
+    hideElementGuide();
+    showGuideForSelector(
+      ".classification-card",
+      "Classificação do caso",
+      "Neste quadro você vê a força da evidência, a faixa de confiança e os principais indicadores usados na classificação."
+    );
+  }
+
+  function openMapLayersGuideStep() {
+    hideElementGuide();
+    showGuideForSelector(
+      "#mapLayersCard",
+      "Camadas do mapa",
+      "Neste bloco você controla as camadas exibidas no mapa, como SAR, slick observado, partes do slick e outras visualizações."
+    );
+  }
+
+  function openPlaybackGuideStep() {
+    hideElementGuide();
+    showGuideForSelector(
+      "#temporalFloatingPanel",
+      "Controle temporal",
+      "Aqui você controla a animação com play e pause, ajusta a velocidade e acompanha a evolução temporal da simulação."
+    );
+  }
+
+  const guideSteps = [
+    openCalendarGuideStep,
+    openDateCasesGuideStep,
+    openAlertGuideStep,
+    openClassificationGuideStep,
+    openMapLayersGuideStep,
+    openPlaybackGuideStep
+  ];
+
+  function runGuideStep(index) {
+    if (index < 0 || index >= guideSteps.length) {
+      hideElementGuide();
+      return;
+    }
+
+    currentGuideStep = index;
+    const step = guideSteps[currentGuideStep];
+    if (typeof step === "function") {
+      step();
+    }
+  }
+
+  function nextGuideStep() {
+    const nextIndex = currentGuideStep + 1;
+    if (nextIndex < guideSteps.length) {
+      runGuideStep(nextIndex);
+    } else {
+      hideElementGuide();
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", openGuide, { once: true });
+  } else {
+    openGuide();
+  }
+
+  helpGuideBtn?.addEventListener("click", function () {
+    closeGuide();
+    setTimeout(() => runGuideStep(0), 120);
+  });
+
+  guideSkipBtn?.addEventListener("click", function () {
+    closeGuide();
+    hideElementGuide();
+  });
+
+  guideContinueBtn?.addEventListener("click", function () {
+    closeGuide();
+    setTimeout(() => runGuideStep(0), 120);
+  });
+
+  tooltipClose?.addEventListener("click", function () {
+    nextGuideStep();
+  });
+
+  firstVisitGuide.addEventListener("click", function (ev) {
+    if (ev.target === firstVisitGuide) {
+      closeGuide();
+    }
+  });
+
+  document.addEventListener("keydown", function (ev) {
+    if (ev.key === "Escape") {
+      if (firstVisitGuide.classList.contains("visible")) {
+        closeGuide();
+      }
+      hideElementGuide();
+    }
+  });
+
+  window.addEventListener("resize", function () {
+    if (spotlight?.classList.contains("visible")) {
+      runGuideStep(currentGuideStep);
+    }
+  });
+
+  window.addEventListener("scroll", function () {
+    if (guideScrollLock) return;
+
+    if (spotlight?.classList.contains("visible")) {
+      runGuideStep(currentGuideStep);
+    }
+  }, true);
+})();
+</script>
 </body>
 </html>
