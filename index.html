@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="pt-BR">
+<html lang="es-ES">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>OCEOM — Observação Computacional de Eventos de Óleo no Mar</title>
+  <title>OCEOM — Observación Computacional de Eventos de Petróleo en el Mar</title>
 
   <link
     rel="stylesheet"
@@ -144,10 +144,39 @@
     }
 
     #ampInfoPanel.minimized {
-      width: 56px;
-      height: 56px;
-      border-radius: 999px;
-      overflow: hidden;
+      width: 56px !important;
+      min-width: 56px !important;
+      max-width: 56px !important;
+
+      height: 56px !important;
+      min-height: 56px !important;
+      max-height: 56px !important;
+
+      padding: 0 !important;
+      border-radius: 999px !important;
+      overflow: hidden !important;
+
+      display: block !important;
+      cursor: grab;
+    }
+
+    #ampInfoPanel.dragging {
+      cursor: grabbing;
+    }
+
+    #ampInfoPanel.minimized {
+      cursor: grab;
+      z-index: 1700;
+    }
+
+    #ampInfoPanel.minimized #ampInfoHandle {
+      cursor: grab;
+      touch-action: none;
+    }
+
+    #ampInfoPanel.minimized #ampInfoToggle {
+      cursor: grab;
+      touch-action: none;
     }
 
     #ampInfoPanel.minimized #ampInfoContent {
@@ -155,11 +184,21 @@
     }
 
     #ampInfoPanel.minimized #ampInfoHandle {
-      height: 100%;
-      padding: 0;
-      border-bottom: 0;
-      justify-content: center;
-      cursor: pointer;
+      width: 56px !important;
+      height: 56px !important;
+      min-width: 56px !important;
+      min-height: 56px !important;
+
+      padding: 0 !important;
+      margin: 0 !important;
+      border-bottom: 0 !important;
+      border-radius: 999px !important;
+
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+
+      cursor: grab;
     }
 
     #ampInfoPanel.minimized #ampInfoTitle {
@@ -167,13 +206,24 @@
     }
 
     #ampInfoPanel.minimized #ampInfoToggle {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      font-size: 24px;
+      width: 56px !important;
+      height: 56px !important;
+      min-width: 56px !important;
+      min-height: 56px !important;
+
+      padding: 0 !important;
+      margin: 0 !important;
+      border-radius: 999px !important;
+
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+
+      font-size: 30px !important;
+      font-weight: 900 !important;
+      line-height: 1 !important;
+
+      cursor: grab;
     }
 
     #ampInfoContent {
@@ -190,16 +240,40 @@
     #ampInfoTable th,
     #ampInfoTable td {
       text-align: left;
-      padding: 8px 10px;
+      padding: 7px 6px;
       border-bottom: 1px solid rgba(148, 163, 184, 0.18);
       vertical-align: top;
+
+      white-space: normal !important;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      hyphens: auto;
     }
 
     #ampInfoTable th {
-      width: 112px;
       color: #fca5a5;
       font-weight: 800;
       background: rgba(239, 68, 68, 0.06);
+    }
+
+    #ampInfoTable th:nth-child(1),
+    #ampInfoTable td:nth-child(1) {
+      width: 30%;
+    }
+
+    #ampInfoTable th:nth-child(2),
+    #ampInfoTable td:nth-child(2) {
+      width: 18%;
+    }
+
+    #ampInfoTable th:nth-child(3),
+    #ampInfoTable td:nth-child(3) {
+      width: 24%;
+    }
+
+    #ampInfoTable th:nth-child(4),
+    #ampInfoTable td:nth-child(4) {
+      width: 28%;
     }
 
     #ampInfoTable tr:last-child th,
@@ -965,7 +1039,7 @@
         max-width: none;
       }
     }
-  
+
 
     .date-calendar-wrap {
       display: grid;
@@ -1105,7 +1179,7 @@
       min-height: 18px;
     }
 
-    
+
     .calendar-legend-collapsible {
       padding: 0;
       overflow: hidden;
@@ -1374,7 +1448,7 @@
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
       gap: 6px;
-      margin-bottom: 12px;
+      margin-bottom: 18px;
     }
 
     .evidence-step {
@@ -1421,6 +1495,194 @@
     .evidence-step.level-e3.active { background: linear-gradient(180deg, rgba(250,204,21,0.22), rgba(113,63,18,0.14)); border-color: rgba(250,204,21,0.35); }
     .evidence-step.level-e4.active { background: linear-gradient(180deg, rgba(34,197,94,0.22), rgba(20,83,45,0.14)); border-color: rgba(34,197,94,0.35); }
     .evidence-step.level-e5.active { background: linear-gradient(180deg, rgba(6,182,212,0.26), rgba(8,47,73,0.16)); border-color: rgba(34,211,238,0.40); }
+
+    .evidence-calc-card {
+      margin: 0 0 12px 0;
+      padding: 11px;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      background:
+        linear-gradient(180deg, rgba(15,23,42,0.38), rgba(15,23,42,0.24)),
+        rgba(255,255,255,0.02);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.03),
+        0 8px 18px rgba(2, 6, 23, 0.12);
+    }
+
+    .evidence-calc-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .evidence-calc-title {
+      font-size: 12px;
+      font-weight: 900;
+      color: var(--text-strong);
+      line-height: 1.2;
+    }
+
+    .evidence-calc-formula {
+      margin-top: 3px;
+      font-size: 10.5px;
+      line-height: 1.35;
+      color: var(--text-soft);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      overflow-wrap: anywhere;
+    }
+
+    .evidence-calc-total strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 13px;
+      color: #f8fafc;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .evidence-calc-total span {
+      display: block;
+      font-size: 9px;
+      font-weight: 900;
+      color: #67e8f9;
+      letter-spacing: 0.08em;
+    }
+
+    .evidence-calc-total strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 15px;
+      color: #f8fafc;
+      line-height: 1;
+    }
+
+    .evidence-calc-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 7px;
+    }
+
+    .evidence-calc-row {
+      display: grid;
+      grid-template-columns: minmax(78px, 1fr) 42px 52px 62px;
+      gap: 6px;
+      align-items: center;
+      padding: 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      background: rgba(255,255,255,0.025);
+    }
+
+    .evidence-calc-row.favors {
+      border-color: rgba(34, 197, 94, 0.24);
+      background: rgba(34, 197, 94, 0.055);
+    }
+
+    .evidence-calc-row.against {
+      border-color: rgba(239, 68, 68, 0.26);
+      background: rgba(239, 68, 68, 0.055);
+    }
+
+    .evidence-calc-row.neutral {
+      border-color: rgba(148, 163, 184, 0.14);
+      background: rgba(148, 163, 184, 0.045);
+    }
+
+    .evidence-calc-name {
+      min-width: 0;
+    }
+
+    .evidence-calc-name strong {
+      display: block;
+      font-size: 11px;
+      color: var(--text-strong);
+      line-height: 1.2;
+    }
+
+    .evidence-calc-name span {
+      display: block;
+      margin-top: 2px;
+      font-size: 9.5px;
+      color: var(--text-soft);
+      line-height: 1.25;
+    }
+
+    .evidence-calc-mini {
+      text-align: center;
+    }
+
+    .evidence-calc-mini span {
+      display: block;
+      font-size: 8.5px;
+      color: var(--text-soft);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .evidence-calc-mini strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 11px;
+      color: var(--text-main);
+      line-height: 1;
+    }
+
+    .evidence-calc-impact {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 22px;
+      padding: 4px 6px;
+      border-radius: 999px;
+      font-size: 9.5px;
+      font-weight: 900;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .evidence-calc-impact.favors {
+      color: #bbf7d0;
+      background: rgba(34, 197, 94, 0.16);
+    }
+
+    .evidence-calc-impact.against {
+      color: #fecaca;
+      background: rgba(239, 68, 68, 0.16);
+    }
+
+    .evidence-calc-impact.neutral {
+      color: #cbd5e1;
+      background: rgba(148, 163, 184, 0.12);
+    }
+
+    .evidence-calc-note,
+    .evidence-calc-empty {
+      margin-top: 8px;
+      font-size: 10.5px;
+      color: var(--text-soft);
+      line-height: 1.45;
+    }
+
+    @media (max-width: 480px) {
+      .evidence-calc-row {
+        grid-template-columns: 1fr 40px 46px;
+      }
+
+      .evidence-calc-row .evidence-calc-mini:nth-of-type(3) {
+        grid-column: 2 / 3;
+      }
+
+      .evidence-calc-impact {
+        grid-column: 1 / -1;
+        justify-content: flex-start;
+        width: fit-content;
+      }
+    }
 
     .classification-badges {
       display: flex;
@@ -1736,6 +1998,682 @@
         0 12px 24px rgba(120, 53, 15, 0.26);
     }
 
+
+
+    /* ==========================================================
+       AJUSTES RESPONSIVOS — desktop, tablet e mobile
+       Mantém o mapa e o painel lateral legíveis em telas pequenas.
+       ========================================================== */
+    html,
+    body {
+      width: 100%;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    img,
+    canvas,
+    svg,
+    video {
+      max-width: 100%;
+    }
+
+    #app {
+      width: 100%;
+      height: 100vh;
+      height: 100dvh;
+      min-width: 0;
+      overflow: hidden;
+    }
+
+    #map-wrap,
+    #panel,
+    .card,
+    .classification-card,
+    .date-calendar-card,
+    .calendar-legend,
+    .alert-box {
+      min-width: 0;
+    }
+
+    #panel {
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .title {
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .sub,
+    .hint,
+    .classification-note,
+    .calendar-selected-info,
+    .date-case-sub,
+    .date-case-pill,
+    .classification-pill,
+    .ts .v {
+      overflow-wrap: anywhere;
+    }
+
+    #ampInfoContent {
+      overflow-x: hidden !important;
+      -webkit-overflow-scrolling: auto;
+    }
+
+    #ampInfoTable {
+      width: 100% !important;
+      min-width: 0 !important;
+      max-width: 100% !important;
+      table-layout: fixed;
+    }
+
+    .leaflet-control-container .leaflet-top,
+    .leaflet-control-container .leaflet-bottom {
+      z-index: 620;
+    }
+
+
+    /* Mantém os CanvasOverlay do Leaflet no tamanho real do mapa.
+       Sem isso, a regra responsiva global para canvas pode reduzir/desalinhar
+       os pontos da animação OpenOil em alguns layouts. */
+    #map canvas,
+    .leaflet-canvas-overlay {
+      max-width: none !important;
+      max-height: none !important;
+    }
+
+    @media (max-width: 1180px) {
+      #app {
+        grid-template-columns: minmax(0, 1fr) 340px;
+      }
+    }
+
+    @media (max-width: 980px) {
+      body {
+        overflow: hidden;
+      }
+
+      #app {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(320px, 52dvh) minmax(0, 48dvh);
+      }
+
+      #map-wrap {
+        min-height: 320px;
+      }
+
+      #panel {
+        min-height: 0;
+        height: 100%;
+        padding: 12px;
+        gap: 10px;
+      }
+
+      .title {
+        font-size: 16px;
+      }
+
+      .card,
+      .classification-card,
+      .alert-box {
+        padding: 10px;
+        border-radius: 12px;
+      }
+
+      .evidence-scale {
+        grid-template-columns: repeat(5, minmax(54px, 1fr));
+        overflow-x: auto;
+        padding-bottom: 4px;
+      }
+
+      .classification-badges,
+      .date-case-meta {
+        gap: 6px;
+      }
+
+      .classification-pill,
+      .date-case-pill {
+        max-width: 100%;
+      }
+
+      #helpGuideBtn {
+        right: 12px !important;
+        bottom: 12px !important;
+        z-index: 4700;
+      }
+
+      #temporalFloatingPanel {
+        left: 12px !important;
+        right: auto !important;
+        top: auto !important;
+        bottom: 56px !important;
+        width: min(420px, calc(100% - 24px)) !important;
+        min-width: 0 !important;
+        max-width: calc(100% - 24px) !important;
+      }
+
+      #ampInfoPanel {
+        left: 12px !important;
+        top: 12px !important;
+        right: auto !important;
+        bottom: auto !important;
+        width: min(360px, calc(100% - 24px)) !important;
+        max-height: calc(52dvh - 24px);
+      }
+    }
+
+    @media (max-width: 700px) {
+      #app {
+        grid-template-rows: minmax(300px, 50dvh) minmax(0, 50dvh);
+      }
+
+      #map-wrap {
+        min-height: 300px;
+      }
+
+      #panel {
+        padding: 10px;
+      }
+
+      .row {
+        gap: 8px;
+      }
+
+      .btn,
+      .btn.small,
+      select {
+        min-height: 40px;
+        font-size: 13px;
+      }
+
+      .date-calendar-card {
+        padding: 10px;
+      }
+
+      .calendar-weekdays,
+      .calendar-days-grid {
+        gap: 4px;
+      }
+
+      .calendar-day-btn,
+      .calendar-day-empty {
+        min-height: 38px;
+        border-radius: 9px;
+      }
+
+      .calendar-nav-btn {
+        width: 36px;
+        height: 36px;
+      }
+
+      .date-case-top {
+        align-items: flex-start;
+      }
+
+      .date-case-id {
+        overflow-wrap: anywhere;
+      }
+
+      .ts {
+        grid-template-columns: 1fr;
+        gap: 2px;
+      }
+
+      #temporalFloatingPanel {
+        bottom: 54px !important;
+      }
+
+      #temporalFloatingPanel .floating-row-top {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+
+      #temporalFloatingPanel .floating-speed-inline {
+        grid-column: 1 / -1;
+      }
+
+      #temporalFloatingPanel .floating-row-top .btn,
+      #temporalFloatingPanel .floating-speed-inline {
+        width: 100%;
+        min-width: 0;
+      }
+
+      .guide-tooltip {
+        left: 12px !important;
+        right: 12px !important;
+        width: auto !important;
+        max-height: min(300px, calc(100dvh - 24px));
+      }
+    }
+
+    @media (max-width: 480px) {
+      #app {
+        grid-template-rows: minmax(280px, 48dvh) minmax(0, 52dvh);
+      }
+
+      #map-wrap {
+        min-height: 280px;
+      }
+
+      .title {
+        font-size: 15px;
+      }
+
+      .sub,
+      #status,
+      .hint,
+      .alert-box p,
+      .classification-note,
+      .evidence-list li {
+        font-size: 12px;
+      }
+
+      .calendar-day-btn,
+      .calendar-day-empty {
+        min-height: 34px;
+      }
+
+      .calendar-day-btn {
+        font-size: 11px;
+      }
+
+      .calendar-day-btn .day-meta-dot {
+        right: 4px;
+        bottom: 4px;
+      }
+
+      .classification-score {
+        font-size: 24px;
+      }
+
+      .evidence-scale {
+        grid-template-columns: repeat(5, minmax(58px, 1fr));
+      }
+
+      .evidence-step {
+        min-height: 42px;
+        padding: 6px 4px;
+      }
+
+      .evidence-step .e-label {
+        font-size: 8.5px;
+      }
+
+      #ampInfoPanel {
+        max-height: calc(48dvh - 24px);
+      }
+
+      #temporalFloatingPanel {
+        padding: 8px;
+        bottom: 52px !important;
+      }
+
+      #temporalFloatingPanel .floating-title {
+        font-size: 10px;
+      }
+
+      #helpGuideBtn {
+        width: 42px;
+        min-width: 42px;
+        height: 42px;
+        padding: 0;
+        border-radius: 999px;
+      }
+
+      #helpGuideBtn span:not(.helpGuideIcon) {
+        display: none;
+      }
+    }
+
+    @media (max-width: 760px) and (orientation: landscape) {
+      #app {
+        grid-template-columns: minmax(0, 1fr) minmax(300px, 42vw);
+        grid-template-rows: 1fr;
+      }
+
+      #map-wrap {
+        min-height: 0;
+      }
+
+      #panel {
+        border-top: none;
+        border-left: 1px solid var(--border);
+      }
+
+      #temporalFloatingPanel {
+        width: min(360px, calc(100% - 24px)) !important;
+        bottom: 12px !important;
+      }
+    }
+
+    @media (pointer: coarse) {
+      .btn,
+      .calendar-nav-btn,
+      .calendar-day-btn,
+      .ios-toggle,
+      #helpGuideBtn,
+      #ampInfoToggle {
+        touch-action: manipulation;
+      }
+    }
+
+
+    /* ==========================================================
+       CONTROLE TEMPORAL FLUTUANTE — minimizar como botão arrastável
+       Garante que o painel não suma quando minimizado.
+       ========================================================== */
+    #temporalFloatingPanel {
+      transition: width .18s ease, height .18s ease, padding .18s ease, border-radius .18s ease, box-shadow .18s ease;
+    }
+
+    #temporalFloatingPanel .floating-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      width: 100%;
+    }
+
+    #temporalFloatingPanel .floating-title-text {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    #temporalFloatingMinimize {
+      appearance: none;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.06);
+      color: #eaf3ff;
+      width: 28px;
+      height: 28px;
+      flex: 0 0 28px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1;
+      cursor: pointer;
+      touch-action: none;
+    }
+
+    #temporalFloatingMinimize:hover {
+      border-color: rgba(120,190,255,0.42);
+      background: rgba(96,165,250,0.16);
+    }
+
+    #temporalFloatingPanel.temporal-minimized {
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      gap: 0 !important;
+      width: 56px !important;
+      min-width: 56px !important;
+      max-width: 56px !important;
+      height: 56px !important;
+      min-height: 56px !important;
+      max-height: 56px !important;
+      padding: 0 !important;
+      border-radius: 999px !important;
+      overflow: visible !important;
+      z-index: 1600 !important;
+      cursor: grab;
+      box-shadow: 0 16px 34px rgba(0,0,0,0.34);
+    }
+
+    #temporalFloatingPanel.temporal-minimized.dragging {
+      cursor: grabbing;
+    }
+
+    #temporalFloatingPanel.temporal-minimized .floating-row {
+      display: none !important;
+    }
+
+    #temporalFloatingPanel.temporal-minimized .floating-title {
+      width: 56px !important;
+      height: 56px !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: grab;
+    }
+
+    #temporalFloatingPanel.temporal-minimized .floating-title-text {
+      display: none !important;
+    }
+
+    #temporalFloatingPanel.temporal-minimized #temporalFloatingMinimize {
+      width: 56px !important;
+      height: 56px !important;
+      flex: 0 0 56px !important;
+      border-radius: 999px !important;
+      border: 0 !important;
+      background:
+        linear-gradient(180deg, rgba(126,189,255,0.38), rgba(59,130,246,0.22)),
+        linear-gradient(135deg, rgba(89,168,255,0.35), rgba(89,168,255,0.10)) !important;
+      color: #fff !important;
+      font-size: 25px !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.10);
+    }
+
+    #temporalFloatingPanel.temporal-minimized::after {
+      display: none !important;
+      content: none !important;
+    }
+
+    @media (max-width: 980px) {
+      #temporalFloatingPanel.temporal-minimized {
+        width: 54px !important;
+        min-width: 54px !important;
+        max-width: 54px !important;
+        height: 54px !important;
+        min-height: 54px !important;
+        max-height: 54px !important;
+      }
+
+      #temporalFloatingPanel.temporal-minimized .floating-title,
+      #temporalFloatingPanel.temporal-minimized #temporalFloatingMinimize {
+        width: 54px !important;
+        height: 54px !important;
+        flex-basis: 54px !important;
+      }
+    }
+
+    #temporalFloatingPanel.temporal-minimized #temporalFloatingMinimize {
+      font-size: 30px !important;
+      font-weight: 900 !important;
+      line-height: 1 !important;
+    }
+
+    #temporalFloatingPanel.temporal-minimized #temporalFloatingMinimize::before,
+    #temporalFloatingPanel.temporal-minimized #temporalFloatingMinimize::after {
+      content: none !important;
+      display: none !important;
+    }
+
+    /* ==========================================================
+       PAINEL AJUSTÁVEL — desktop e mobile
+       Desktop: arraste a barra vertical entre mapa e painel.
+       Mobile: arraste a barra horizontal entre mapa e painel.
+       ========================================================== */
+    :root {
+      --panel-width: 380px;
+      --panel-min-desktop: 280px;
+      --panel-resizer-size: 10px;
+      --map-height-mobile: 52dvh;
+    }
+
+    #app {
+      grid-template-columns: minmax(0, 1fr) var(--panel-resizer-size) minmax(var(--panel-min-desktop), var(--panel-width)) !important;
+      grid-template-rows: 1fr !important;
+    }
+
+    #panelResizer {
+      position: relative;
+      z-index: 900;
+      background: linear-gradient(90deg, rgba(15,23,42,0.15), rgba(96,165,250,0.18), rgba(15,23,42,0.15));
+      border-left: 1px solid rgba(148,163,184,0.18);
+      border-right: 1px solid rgba(148,163,184,0.18);
+      cursor: col-resize;
+      touch-action: none;
+      user-select: none;
+    }
+
+    #panelResizer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 3px;
+      height: 46px;
+      border-radius: 999px;
+      background: rgba(226,232,240,0.35);
+      box-shadow: 0 0 0 1px rgba(15,23,42,0.35);
+    }
+
+    #panelResizer:hover,
+    #panelResizer.is-dragging {
+      background: linear-gradient(90deg, rgba(37,99,235,0.22), rgba(96,165,250,0.38), rgba(37,99,235,0.22));
+    }
+
+    body.panel-resizing {
+      user-select: none;
+      cursor: col-resize;
+    }
+
+    body.panel-resizing-mobile {
+      user-select: none;
+      cursor: row-resize;
+    }
+
+    @media (max-width: 980px) {
+      #app {
+        grid-template-columns: 1fr !important;
+        grid-template-rows: minmax(220px, var(--map-height-mobile)) var(--panel-resizer-size) minmax(0, 1fr) !important;
+      }
+
+      #map-wrap {
+        min-height: 220px !important;
+      }
+
+      #panel {
+        min-height: 0 !important;
+        height: 100% !important;
+        border-left: none !important;
+        border-top: 1px solid var(--border) !important;
+      }
+
+      #panelResizer {
+        cursor: row-resize;
+        border-left: 0;
+        border-right: 0;
+        border-top: 1px solid rgba(148,163,184,0.18);
+        border-bottom: 1px solid rgba(148,163,184,0.18);
+        background: linear-gradient(180deg, rgba(15,23,42,0.15), rgba(96,165,250,0.18), rgba(15,23,42,0.15));
+      }
+
+      #panelResizer::before {
+        width: 56px;
+        height: 3px;
+      }
+
+      #panelResizer:hover,
+      #panelResizer.is-dragging {
+        background: linear-gradient(180deg, rgba(37,99,235,0.22), rgba(96,165,250,0.38), rgba(37,99,235,0.22));
+      }
+    }
+
+    @media (max-width: 700px) {
+      #ampInfoPanel:not(.minimized) {
+        width: min(360px, calc(100% - 24px)) !important;
+      }
+
+      #ampInfoTable {
+        font-size: 10.5px !important;
+      }
+
+      #ampInfoTable th,
+      #ampInfoTable td {
+        padding: 6px 4px !important;
+      }
+    }
+
+    @media (max-width: 700px) {
+  .evidence-scale {
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: 4px !important;
+    margin-bottom: 20px !important;
+    overflow-x: visible !important;
+    padding-bottom: 0 !important;
+  }
+
+  .evidence-step {
+    min-width: 0 !important;
+    min-height: 42px !important;
+    padding: 6px 2px !important;
+    border-radius: 8px !important;
+  }
+
+  .evidence-step .e-code {
+    font-size: 11px !important;
+    line-height: 1 !important;
+  }
+
+  .evidence-step .e-label {
+    font-size: 7.5px !important;
+    line-height: 1.05 !important;
+    margin-top: 3px !important;
+    letter-spacing: 0 !important;
+  }
+}
+    @media (max-width: 390px) {
+  .evidence-scale {
+    gap: 3px !important;
+  }
+
+  .evidence-step {
+    min-height: 40px !important;
+    padding: 5px 1px !important;
+    border-radius: 7px !important;
+  }
+
+  .evidence-step .e-code {
+    font-size: 10.5px !important;
+  }
+
+  .evidence-step .e-label {
+    font-size: 7px !important;
+  }
+}
+
+    @media (max-width: 480px) {
+  .evidence-calc-total {
+    min-width: 60px !important;
+    max-width: 68px !important;
+    padding: 5px 6px !important;
+  }
+
+  .evidence-calc-total strong {
+    font-size: 12px !important;
+  }
+
+  .evidence-calc-total span {
+    font-size: 8px !important;
+  }
+}
   </style>
 </head>
 
@@ -1745,40 +2683,43 @@
       <div id="map"></div>
       <div id="ampInfoPanel" aria-live="polite">
         <div id="ampInfoHandle">
-          <div id="ampInfoTitle">AMPs atingidas</div>
-          <button id="ampInfoToggle" type="button" aria-label="Minimizar painel" title="Minimizar painel">−</button>
+          <div id="ampInfoTitle">AMP alcanzadas</div>
+          <button id="ampInfoToggle" type="button" aria-label="Minimizar painel" title="Minimizar painel">-</button>
         </div>
         <div id="ampInfoContent">
           <table id="ampInfoTable">
             <thead>
               <tr>
-                <th>Nome</th>
-                <th>Categoria IUCN</th>
-                <th>Designação</th>
-                <th>Primeiro contato na simulação</th>
+                <th>Nombre</th>
+                <th>Categoría UICN</th>
+                <th>Designación</th>
+                <th>Primer contacto en la simulación</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td colspan="4">Nenhuma AMP atingida no momento.</td>
+                <td colspan="4">Ninguna AMP alcanzada en este momento.</td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <div id="temporalFloatingPanel" aria-label="Controles da animação temporal">
-        <div class="floating-title" id="temporalFloatingHandle" title="Arraste para mover">Animação temporal</div>
+      <div id="temporalFloatingPanel" aria-label="Controles de la animación temporal">
+        <div class="floating-title" id="temporalFloatingHandle" title="Arraste para mover">
+          <span class="floating-title-text">Animación temporal</span>
+          <button id="temporalFloatingMinimize" type="button" aria-label="Minimizar control temporal" title="Minimizar control temporal">-</button>
+        </div>
 
         <div class="floating-row floating-row-top">
-          <button id="btnPlayFloating" class="btn primary" type="button">
-            <span class="tf-icon">▶</span><span>Play</span>
+          <button id="btnReproducirFloating" class="btn primary" type="button">
+            <span class="tf-icon">▶</span><span>Reproducir</span>
           </button>
-          <button id="btnPauseFloating" class="btn ghost" type="button">
-            <span class="tf-icon">⏸</span><span>Pause</span>
+          <button id="btnPausaFloating" class="btn ghost" type="button">
+            <span class="tf-icon">⏸</span><span>Pausa</span>
           </button>
           <label class="floating-speed-inline">
-            <span>Velocidade</span>
+            <span>Velocidad</span>
             <select id="speedFloating">
               <option value="1">x1</option>
               <option value="2">x2</option>
@@ -1794,30 +2735,32 @@
 
         <div class="floating-row floating-row-ts">
           <div class="ts floating-ts-box">
-            <div class="k">Tempo:</div>
-            <div class="v" id="tsLabelFloating">—</div>
+            <div class="k">Tiempo:</div>
+            <div class="v" id="tsLabelFloating">?</div>
           </div>
         </div>
       </div>
 
     </div>
 
+    <div id="panelResizer" role="separator" aria-label="Redimensionar painel" aria-orientation="vertical" title="Arraste para ajustar o painel"></div>
+
     <div id="panel">
       <div class="row">
-        <div class="title">OCEOM — Observação Computacional de Eventos de Óleo no Mar</div>
-        <div class="sub">Caso <span id="caseIdLabel">—</span></div>
+        <div class="title">OCEOM — Observación Computacional de Eventos de Petróleo en el Mar</div>
+        <div class="sub">Caso <span id="caseIdLabel">?</span></div>
       </div>
 
       <div class="card">
-        <div class="section-title">Seleção</div>
-        <select id="dateSelect" aria-label="Selecionar data"></select>
+        <div class="section-title">Selección</div>
+        <select id="dateSelect" aria-label="Seleccionar fecha"></select>
 
         <div class="date-calendar-wrap" style="margin-top:10px;">
           <div class="date-calendar-card">
             <div class="date-calendar-toolbar">
-              <button id="calendarPrevBtn" class="calendar-nav-btn" type="button" aria-label="Mês anterior">&#8249;</button>
-              <div id="calendarMonthLabel" class="date-calendar-title">—</div>
-              <button id="calendarNextBtn" class="calendar-nav-btn" type="button" aria-label="Próximo mês">&#8250;</button>
+              <button id="calendarPrevBtn" class="calendar-nav-btn" type="button" aria-label="Mes anterior">&#8249;</button>
+              <div id="calendarMonthLabel" class="date-calendar-title">?</div>
+              <button id="calendarNextBtn" class="calendar-nav-btn" type="button" aria-label="Mes siguiente">&#8250;</button>
             </div>
             <div class="calendar-weekdays" id="calendarWeekdays"></div>
             <div class="calendar-days-grid" id="calendarDaysGrid"></div>
@@ -1826,22 +2769,22 @@
 
           <details class="calendar-legend calendar-legend-collapsible">
             <summary class="calendar-legend-summary">
-              <span class="calendar-legend-title" style="margin-bottom:0;">Legenda de cores do calendário</span>
+              <span class="calendar-legend-title" style="margin-bottom:0;">Leyenda de colores del calendario</span>
               <span class="calendar-legend-chevron" aria-hidden="false">⌄</span>
             </summary>
             <div class="calendar-legend-body">
-              <div class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:#2563eb;"></span><span>1 a 3 casos por cena</span></div>
-              <div class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:#0f766e;"></span><span>4 a 6 casos por cena</span></div>
-              <div class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:#d97706;"></span><span>7 a 9 casos por cena</span></div>
-              <div class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:#dc2626;"></span><span>10 ou mais</span></div>
-              <div class="calendar-legend-note">A cor do dia usa a maior concentração de casos observada em uma única cena daquela data.</div>
+              <div class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:#2563eb;"></span><span>1 a 3 casos por escena</span></div>
+              <div class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:#0f766e;"></span><span>4 a 6 casos por escena</span></div>
+              <div class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:#d97706;"></span><span>7 a 9 casos por escena</span></div>
+              <div class="calendar-legend-item"><span class="calendar-legend-swatch" style="background:#dc2626;"></span><span>10 o más</span></div>
+              <div class="calendar-legend-note">El color del día utiliza la mayor concentración de casos observada en una única escena de esa fecha.</div>
             </div>
           </details>
         </div>
 
         <div class="row" style="display:none;">
           <label class="lbl" style="width:100%;">
-            <span style="min-width:48px;">Cena</span>
+            <span style="min-width:48px;">Escena</span>
             <select id="sceneSelect"></select>
           </label>
         </div>
@@ -1853,56 +2796,81 @@
         </div>
 
         <div class="card" id="dateCasesCard">
-          <div class="section-title">Casos da data selecionada</div>
+          <div class="section-title">Casos de la fecha seleccionada</div>
           <div class="date-cases-list" id="dateCasesList">
-            <div class="date-cases-empty">Selecione uma data no calendário para ver os casos disponíveis.</div>
+            <div class="date-cases-empty">Seleccione una fecha en el calendario para ver los casos disponibles.</div>
           </div>
         </div>
       </div>
 
       <div id="alertBox" class="alert-box level-sem_intersecao">
-        <h3 id="alertTitle">Carregando alerta…</h3>
-        <p id="alertMessage">Aguardando dados do caso.</p>
+        <h3 id="alertTitle">Cargando alerta…</h3>
+        <p id="alertMessage">Esperando datos del caso.</p>
       </div>
 
       <div class="classification-card">
-        <div class="section-title">Classificação do caso</div>
+        <div class="section-title">Clasificación del caso</div>
         <div class="classification-top">
           <div class="classification-score-wrap">
-            <div class="classification-score" id="clsDisplayConfidence">—</div>
-            <div class="classification-band" id="clsConfidenceBand">—</div>
+            <div class="classification-score" id="clsDisplayConfidence">?</div>
+            <div class="classification-band" id="clsConfidenceBand">?</div>
           </div>
         </div>
 
-        <div class="evidence-scale" id="clsEvidenceScale" aria-label="Escala de evidência E1 a E5">
-          <div class="evidence-step level-e1" data-level="E1"><div class="e-code">E1</div><div class="e-label">Muito fraca</div></div>
-          <div class="evidence-step level-e2" data-level="E2"><div class="e-code">E2</div><div class="e-label">Fraca</div></div>
+        <div class="evidence-scale" id="clsEvidenceScale" aria-label="Escala de evidencia E1 a E5">
+          <div class="evidence-step level-e1" data-level="E1"><div class="e-code">E1</div><div class="e-label">Muy débil</div></div>
+          <div class="evidence-step level-e2" data-level="E2"><div class="e-code">E2</div><div class="e-label">Débil</div></div>
           <div class="evidence-step level-e3" data-level="E3"><div class="e-code">E3</div><div class="e-label">Moderada</div></div>
-          <div class="evidence-step level-e4" data-level="E4"><div class="e-code">E4</div><div class="e-label">Forte</div></div>
-          <div class="evidence-step level-e5" data-level="E5"><div class="e-code">E5</div><div class="e-label">Muito forte</div></div>
+          <div class="evidence-step level-e4" data-level="E4"><div class="e-code">E4</div><div class="e-label">Fuerte</div></div>
+          <div class="evidence-step level-e5" data-level="E5"><div class="e-code">E5</div><div class="e-label">Muy fuerte</div></div>
         </div>
+
+          <div class="evidence-calc-card" id="evidenceCalcCard">
+              <div class="evidence-calc-header">
+                <div>
+                  <div class="evidence-calc-title">Cálculo del índice de evidencia</div>
+                  <div class="evidence-calc-formula">
+                    IE = 4*Cclasificación + 3*Ccontexto + 2*Cmorfología + Cestructura
+                  </div>
+                </div>
+                <div class="evidence-calc-total">
+                  <span>IE</span>
+                  <strong id="evidenceCalcTotal">?</strong>
+                </div>
+              </div>
+
+              <div class="evidence-calc-grid" id="evidenceCalcGrid">
+                <div class="evidence-calc-empty">
+                  Seleccione un caso para visualizar el cálculo del índice de evidencia.
+                </div>
+              </div>
+
+              <div class="evidence-calc-note" id="evidenceCalcNote">
+                Los componentes positivos favorecen la evidencia; los negativos la desfavorecen; los valores cero son neutros.
+              </div>
+            </div>
 
         <div class="classification-badges">
-          <div class="classification-pill"><span>Revisão</span><strong id="clsReviewLevel">—</strong></div>
-          <div class="classification-pill"><span>Contexto</span><strong id="clsSourceContext">—</strong></div>
-          <div class="classification-pill"><span>Status</span><strong id="clsOilStatus">—</strong></div>
-          <div class="classification-pill"><span>Rótulo humano</span><strong id="clsHumanLabel">—</strong></div>
+          <div class="classification-pill"><span>Revisión</span><strong id="clsReviewLevel">?</strong></div>
+          <div class="classification-pill"><span>Contexto</span><strong id="clsSourceContext">?</strong></div>
+          <div class="classification-pill"><span>Estado</span><strong id="clsOilEstado">?</strong></div>
+          <div class="classification-pill"><span>Etiqueta humana</span><strong id="clsHumanLabel">?</strong></div>
         </div>
-        <div class="ts"><div class="k">Confiança da máquina:</div><div class="v" id="clsMachineConfidence">—</div></div>
-        <div class="ts"><div class="k">Score de fonte:</div><div class="v" id="clsSourceScore">—</div></div>
-        <div class="ts"><div class="k">Slick confidence:</div><div class="v" id="clsSlickConfidence">—</div></div>
-        <div class="classification-note" id="clsConfidenceExplanation">Selecione um caso para visualizar a interpretação da classificação.</div>
+        <div class="ts"><div class="k">Confianza de la máquina:</div><div class="v" id="clsMachineConfidence">?</div></div>
+        <div class="ts"><div class="k">Puntuación de la fuente:</div><div class="v" id="clsSourceScore">?</div></div>
+        <div class="ts"><div class="k">Confianza del slick:</div><div class="v" id="clsSlickConfidence">?</div></div>
+        <div class="classification-note" id="clsConfidenceExplanation">Seleccione un caso para visualizar la interpretación de la clasificación.</div>
 
         <div class="evidence-list-wrap">
-          <div class="evidence-list-title">Evidências do caso</div>
+          <div class="evidence-list-title">Evidencias del caso</div>
           <ul class="evidence-list" id="clsEvidenceList">
-            <li>Selecione um caso para visualizar as evidências disponíveis.</li>
+            <li>Seleccione un caso para visualizar las evidencias disponibles.</li>
           </ul>
         </div>
       </div>
 
       <div class="card" id="mapLayersCard">
-        <div class="section-title">Camadas do mapa</div>
+        <div class="section-title">Capas del mapa</div>
 
         <div class="row zoom-actions">
           <button id="btnZoomSar" class="btn small ghost" type="button">Zoom SAR</button>
@@ -1915,14 +2883,14 @@
             <input type="checkbox" id="tgSar" checked />
             <span class="ios-toggle-text">
               <span class="ios-toggle-title">SAR (t0)</span>
-              <span class="ios-toggle-subtitle">Exibe a imagem SAR de referência</span>
+              <span class="ios-toggle-subtitle">Muestra la imagen SAR de referencia</span>
             </span>
             <span class="ios-toggle-switch" aria-hidden="true"></span>
           </label>
 
           <div style="margin-left:18px; width: calc(100% - 18px);">
             <div style="display:flex; align-items:center; justify-content:space-between; gap:10px;">
-              <label for="sarOpacity" style="font-size:12px; color:var(--text-soft);">Opacidade SAR</label>
+              <label for="sarOpacity" style="font-size:12px; color:var(--text-soft);">Opacidad SAR</label>
               <span id="sarOpacityLabel" style="font-size:12px; color:var(--text-main);">85%</span>
             </div>
             <input id="sarOpacity" type="range" min="0" max="100" step="1" value="85" />
@@ -1932,15 +2900,15 @@
             <input type="checkbox" id="tgSlick" checked />
             <span class="ios-toggle-text">
               <span class="ios-toggle-title">Slick observado</span>
-              <span class="ios-toggle-subtitle">Mostra o polígono observado em t0</span>
+              <span class="ios-toggle-subtitle">Muestra el polígono observado en t0</span>
             </span>
             <span class="ios-toggle-switch" aria-hidden="true"></span>
           </label>
           <label class="ios-toggle">
             <input type="checkbox" id="tgSlickParts" checked />
             <span class="ios-toggle-text">
-              <span class="ios-toggle-title">Partes do slick</span>
-              <span class="ios-toggle-subtitle">Detalha as múltiplas partes da detecção</span>
+              <span class="ios-toggle-title">Partes del slick</span>
+              <span class="ios-toggle-subtitle">Detalla las múltiples partes de la detección</span>
             </span>
             <span class="ios-toggle-switch" aria-hidden="true"></span>
           </label>
@@ -1949,25 +2917,25 @@
             <input type="checkbox" id="tgAmps" checked />
             <span class="ios-toggle-text">
               <span class="ios-toggle-title">AMPs</span>
-              <span class="ios-toggle-subtitle">Mostra as áreas marinhas protegidas</span>
+              <span class="ios-toggle-subtitle">Muestra las áreas marinas protegidas</span>
             </span>
             <span class="ios-toggle-switch" aria-hidden="true"></span>
           </label>
-          <div id="ampsInfo">AMPs: —</div>
+          <div id="ampsInfo">AMP: ?</div>
 
           <label class="ios-toggle">
             <input type="checkbox" id="tgOilPts" checked />
             <span class="ios-toggle-text">
-              <span class="ios-toggle-title">OpenOil pontos</span>
-              <span class="ios-toggle-subtitle">Exibe as partículas da simulação</span>
+              <span class="ios-toggle-title">Puntos OpenOil</span>
+              <span class="ios-toggle-subtitle">Muestra las partículas de la simulación</span>
             </span>
             <span class="ios-toggle-switch" aria-hidden="true"></span>
           </label>
           <label class="ios-toggle">
             <input type="checkbox" id="tgTrajFull" checked />
             <span class="ios-toggle-text">
-              <span class="ios-toggle-title">OpenOil trajetórias</span>
-              <span class="ios-toggle-subtitle">Mostra o histórico completo das trajetórias</span>
+              <span class="ios-toggle-title">Trayectorias OpenOil</span>
+              <span class="ios-toggle-subtitle">Muestra el histórico completo de las trayectorias</span>
             </span>
             <span class="ios-toggle-switch" aria-hidden="true"></span>
           </label>
@@ -1976,38 +2944,38 @@
             <input type="checkbox" id="tgProb" checked />
             <span class="ios-toggle-text">
               <span class="ios-toggle-title">Mancha probabilística</span>
-              <span class="ios-toggle-subtitle">Exibe o envelope probabilístico da simulação</span>
+              <span class="ios-toggle-subtitle">Muestra la envolvente probabilística de la simulación</span>
             </span>
             <span class="ios-toggle-switch" aria-hidden="true"></span>
           </label>
           <div id="probLegend">
             <div class="prob-leg-item">
               <span class="prob-leg-swatch" style="background: rgba(220, 38, 38, 0.60);"></span>
-              <span>0.90 — núcleo mais provável</span>
+              <span>0.90 — núcleo más probable</span>
             </div>
             <div class="prob-leg-item">
               <span class="prob-leg-swatch" style="background: rgba(245, 158, 11, 0.45);"></span>
-              <span>0.75 — probabilidade intermediária</span>
+              <span>0.75 — probabilidad intermedia</span>
             </div>
             <div class="prob-leg-item">
               <span class="prob-leg-swatch" style="background: rgba(59, 130, 246, 0.28);"></span>
-              <span>0.50 — envelope mais amplo</span>
+              <span>0.50 — envolvente más amplia</span>
             </div>
           </div>
 
           <label class="ios-toggle">
             <input type="checkbox" id="tgWind" />
             <span class="ios-toggle-text">
-              <span class="ios-toggle-title">Vento (GFS)</span>
-              <span class="ios-toggle-subtitle">Ativa a camada de vento de superfície</span>
+              <span class="ios-toggle-title">Viento (GFS)</span>
+              <span class="ios-toggle-subtitle">Activa la capa de viento de superficie</span>
             </span>
             <span class="ios-toggle-switch" aria-hidden="true"></span>
           </label>
           <label class="ios-toggle">
             <input type="checkbox" id="tgCurr" />
             <span class="ios-toggle-text">
-              <span class="ios-toggle-title">Correntes (HYCOM)</span>
-              <span class="ios-toggle-subtitle">Ativa a camada de correntes oceânicas</span>
+              <span class="ios-toggle-title">Corrientes (HYCOM)</span>
+              <span class="ios-toggle-subtitle">Activa la capa de corrientes oceánicas</span>
             </span>
             <span class="ios-toggle-switch" aria-hidden="true"></span>
           </label>
@@ -2015,19 +2983,19 @@
       </div>
 
       <div class="card">
-        <div class="section-title">Resumo do caso</div>
-        <div class="ts"><div class="k">Status:</div><div class="v" id="sumStatus">—</div></div>
-        <div class="ts"><div class="k">t0 observado:</div><div class="v mono" id="sumT0">—</div></div>
-        <div class="ts"><div class="k">t final:</div><div class="v mono" id="sumTf">—</div></div>
-        <div class="ts"><div class="k">AMP intersecta:</div><div class="v" id="sumAmpHit">—</div></div>
-        <div class="ts"><div class="k">Nº AMPs:</div><div class="v" id="sumNAmp">—</div></div>
-        <div class="ts"><div class="k">Primeira interseção:</div><div class="v mono" id="sumFirstHit">—</div></div>
+        <div class="section-title">Resumen del caso</div>
+        <div class="ts"><div class="k">Estado:</div><div class="v" id="sumEstado">?</div></div>
+        <div class="ts"><div class="k">t0 observado:</div><div class="v mono" id="sumT0">?</div></div>
+        <div class="ts"><div class="k">t final:</div><div class="v mono" id="sumTf">?</div></div>
+        <div class="ts"><div class="k">AMP intersecta:</div><div class="v" id="sumAmpHit">?</div></div>
+        <div class="ts"><div class="k">N.º de AMP:</div><div class="v" id="sumNAmp">?</div></div>
+        <div class="ts"><div class="k">Primera intersección:</div><div class="v mono" id="sumFirstHit">?</div></div>
       </div>
 
       <div class="row foot">
-        <div id="status">Carregando dados…</div>
+        <div id="status">Cargando datos…</div>
         <div class="hint">
-          Rode via servidor local: <code>cd SIMOM/web && python -m http.server 8000</code>
+          Ejecute mediante servidor local: <code>cd SIMOM/web && python -m http.server 8000</code>
         </div>
       </div>
     </div>
@@ -2037,20 +3005,57 @@
     const DEFAULT_CASE_ID = null;
     const GLOBAL_AMPS_PATH = "./assets/geo/amps_brasil_costa.geojson";
 
+    // Em ambiente local, evita chamadas repetidas para uma camada global ausente,
+    // que geravam erros 404 no console. Em servidor publicado, a camada global
+    // continua sendo tentada normalmente. Para forçar no localhost, use ?globalAmps=1.
+    const IS_LOCAL_DEV_HOST = ["localhost", "127.0.0.1"].includes(window.location.hostname);
+    const FORCE_GLOBAL_AMPS = new URLSearchParams(window.location.search).get("globalAmps") === "1";
+    const SHOULD_TRY_GLOBAL_AMPS = FORCE_GLOBAL_AMPS || !IS_LOCAL_DEV_HOST;
+
     function qs(name, fallback = null) {
       const url = new URL(window.location.href);
       return url.searchParams.get(name) ?? fallback;
     }
 
-    function setStatus(msg) {
+    function setEstado(msg) {
       const el = document.getElementById("status");
       if (el) el.textContent = msg;
     }
 
     async function fetchJSON(path) {
       const r = await fetch(path, { cache: "no-store" });
-      if (!r.ok) throw new Error(`Falha ao carregar ${path} (HTTP ${r.status})`);
+      if (!r.ok) throw new Error(`Error al cargar ${path} (HTTP ${r.status})`);
       return await r.json();
+    }
+
+    function hasGeoJSONFeatures(geo) {
+      return Array.isArray(geo?.features) && geo.features.length > 0;
+    }
+
+    async function loadAmpsGeo(paths = {}, ampsHitGeo = null) {
+      if (paths?.amps) {
+        try {
+          const caseAmpsGeo = await fetchJSON(paths.amps);
+          if (hasGeoJSONFeatures(caseAmpsGeo)) return caseAmpsGeo;
+        } catch (err) {
+          console.warn("No se ha podido cargar la capa de AMP del caso. Probando otras alternativas...", err);
+        }
+      }
+
+      if (SHOULD_TRY_GLOBAL_AMPS) {
+        try {
+          const globalAmpsGeo = await fetchJSON(GLOBAL_AMPS_PATH);
+          if (hasGeoJSONFeatures(globalAmpsGeo)) return globalAmpsGeo;
+        } catch (err) {
+          console.warn("Capa global de AMP no encontrada. Usando alternativa del caso cuando esté disponible...", err);
+        }
+      }
+
+      if (hasGeoJSONFeatures(ampsHitGeo)) {
+        return ampsHitGeo;
+      }
+
+      return featureCollection([]);
     }
 
     function parseBoundsFromT0BoundsJson(bboxRaw) {
@@ -2121,7 +3126,7 @@
     }
 
     function fmtTime(d) {
-      if (!(d instanceof Date) || isNaN(d.getTime())) return "—";
+      if (!(d instanceof Date) || isNaN(d.getTime())) return "?";
 
       const yyyy = d.getUTCFullYear();
       const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
@@ -2337,9 +3342,9 @@
             Mancha probabilística
           </div>
           <div style="font-size:12px; line-height:1.4;">
-            <b>Confidence:</b> ${p.confidence ?? "—"}<br>
-            <b>Count:</b> ${p.count ?? "—"}<br>
-            <b>Relative density:</b> ${p.relative_density ?? "—"}
+            <b>Confidence:</b> ${p.confidence ?? "?"}<br>
+            <b>Count:</b> ${p.count ?? "?"}<br>
+            <b>Relative density:</b> ${p.relative_density ?? "?"}
           </div>
         </div>
       `;
@@ -2348,14 +3353,14 @@
     function ampTooltip(feature) {
       const p = feature?.properties || {};
       const nome = getAmpFeatureName(feature);
-      const categoria = p.iucn_cat || p.IUCN_CAT || "—";
-      const designacao = p.designacao || p.DESIG || p.designacao_eng || p.DESIG_ENG || "—";
+      const categoria = p.iucn_cat || p.IUCN_CAT || "?";
+      const designacao = p.designacao || p.DESIG || p.designacao_eng || p.DESIG_ENG || "?";
       return `
         <div style="min-width:220px;">
           <div style="font-weight:700; font-size:13px; margin-bottom:4px;">${nome}</div>
           <div style="font-size:12px; line-height:1.4;">
-            <b>Categoria IUCN:</b> ${categoria}<br>
-            <b>Designação:</b> ${designacao}
+            <b>Categoría UICN:</b> ${categoria}<br>
+            <b>Designación:</b> ${designacao}
           </div>
         </div>
       `;
@@ -2371,7 +3376,7 @@
 
     function getAmpFeatureName(feature) {
       const p = feature?.properties || {};
-      return p.amp_nome || p.NAME || p.name || p.NOME || "AMP sem nome";
+      return p.amp_nome || p.NAME || p.name || p.NOME || "AMP sin nombre";
     }
 
     function extractHitAmpNames(summary, alertPayload, ampsHitGeo = null) {
@@ -2401,17 +3406,17 @@
 
       const level = payload?.alert_level || "sem_intersecao";
       box.className = `alert-box level-${level}`;
-      title.textContent = payload?.alert_title || "Sem alerta";
-      message.textContent = payload?.alert_message || "Sem informações adicionais.";
+      title.textContent = payload?.alert_title || "Sin alerta";
+      message.textContent = payload?.alert_message || "Sin información adicional.";
     }
 
     function fillSummary(summary) {
-      document.getElementById("sumStatus").textContent = summary?.status ?? "—";
-      document.getElementById("sumT0").textContent = summary?.t0_observado ?? "—";
-      document.getElementById("sumTf").textContent = summary?.t_final_simulado ?? "—";
-      document.getElementById("sumAmpHit").textContent = summary?.amp_intersecta === true ? "Sim" : "Não";
-      document.getElementById("sumNAmp").textContent = summary?.n_amps_intersectadas ?? "—";
-      document.getElementById("sumFirstHit").textContent = summary?.primeira_interseccao_utc ?? "—";
+      document.getElementById("sumEstado").textContent = summary?.status ?? "?";
+      document.getElementById("sumT0").textContent = summary?.t0_observado ?? "?";
+      document.getElementById("sumTf").textContent = summary?.t_final_simulado ?? "?";
+      document.getElementById("sumAmpHit").textContent = summary?.amp_intersecta === true ? "Sí" : "No";
+      document.getElementById("sumNAmp").textContent = summary?.n_amps_intersectadas ?? "?";
+      document.getElementById("sumFirstHit").textContent = summary?.primeira_interseccao_utc ?? "?";
     }
 
     function isFiniteNumber(v) {
@@ -2424,17 +3429,17 @@
       return Number.isFinite(n) ? n : null;
     }
 
-    
+
     function humanizeEvidenceBand(v) {
       const key = String(v || "").trim().toLowerCase();
       const labels = {
-        muito_forte: "Evidência muito forte",
-        forte: "Evidência forte",
-        moderada: "Evidência moderada",
-        fraca: "Evidência fraca",
-        muito_fraca: "Evidência muito fraca"
+        muito_forte: "Evidencia muy fuerte",
+        forte: "Evidencia fuerte",
+        moderada: "Evidencia moderada",
+        fraca: "Evidencia débil",
+        muito_fraca: "Evidencia muy débil"
       };
-      return labels[key] || (key ? key.replace(/_/g, " ") : "—");
+      return labels[key] || (key ? key.replace(/_/g, " ") : "?");
     }
 
     function humanizeEnum(v) {
@@ -2442,30 +3447,30 @@
       const labels = {
         human_confirmed: "Confirmado por humano",
         human_reviewed: "Revisado por humano",
-        machine_only: "Somente máquina",
-        vessel: "Navio",
-        infrastructure: "Infraestrutura",
+        machine_only: "Solo máquina",
+        vessel: "Buque",
+        infrastructure: "Infraestructura",
         natural: "Natural",
-        unknown: "Desconhecido",
-        other: "Outro",
-        confirmed_oil: "Óleo confirmado",
-        likely_oil: "Provável óleo",
-        uncertain: "Incerto",
-        likely_non_oil: "Provável não óleo",
-        non_oil: "Não óleo"
+        unknown: "Desconocido",
+        other: "Otro",
+        confirmed_oil: "Petróleo confirmado",
+        likely_oil: "Probable petróleo",
+        uncertain: "Incierto",
+        likely_non_oil: "Probablemente no petróleo",
+        non_oil: "No petróleo"
       };
-      return labels[key] || (key ? key.replace(/_/g, " ") : "—");
+      return labels[key] || (key ? key.replace(/_/g, " ") : "?");
     }
 
     function formatPctValue(v, fractionDigits = 0) {
       const n = parseNumericMaybe(v);
-      if (!Number.isFinite(n)) return "—";
+      if (!Number.isFinite(n)) return "?";
       return `${n.toFixed(fractionDigits)}%`;
     }
 
     function formatScoreValue(v) {
       const n = parseNumericMaybe(v);
-      if (!Number.isFinite(n)) return "—";
+      if (!Number.isFinite(n)) return "?";
       return n.toFixed(3);
     }
 
@@ -2577,27 +3582,27 @@
       const classReasons = Array.isArray(details?.classification?.reasons) ? details.classification.reasons : [];
       const contextReasons = Array.isArray(details?.context?.reasons) ? details.context.reasons : [];
 
-      classReasons.forEach(r => pushUnique(humanizeEnum(r) === "—" ? r : humanizeEnum(r)));
+      classReasons.forEach(r => pushUnique(humanizeEnum(r) === "?" ? r : humanizeEnum(r)));
       contextReasons.forEach(r => pushUnique(r));
 
       if (Number(comps.morphology_score) > 0) {
-        pushUnique("A morfologia do slick é compatível com uma feição potencialmente oleosa.");
+        pushUnique("La morfología del slick es compatible con una posible formación oleosa.");
       } else if (Number(comps.morphology_score) < 0) {
-        pushUnique("A morfologia do slick reduz a força da evidência.");
+        pushUnique("La morfología del slick reduce la fuerza de la evidencia.");
       }
 
       if (Number(comps.structure_score) > 0) {
-        pushUnique("A geometria do caso é consistente e possui estrutura suficiente para análise.");
+        pushUnique("La geometría del caso es coherente y tiene estructura suficiente para el análisis.");
       }
 
       if (Number(comps.classification_score) > 0 && cls.machine_confidence != null) {
-        pushUnique(`A confiança da máquina reforça a detecção (${formatPctValue((Number(cls.machine_confidence) <= 1 ? Number(cls.machine_confidence) * 100 : Number(cls.machine_confidence)), 1)}).`);
+        pushUnique(`La confianza de la máquina refuerza la detección (${formatPctValue((Number(cls.machine_confidence) <= 1 ? Number(cls.machine_confidence) * 100 : Number(cls.machine_confidence)), 1)}).`);
       }
 
       if (Number(comps.context_score) > 0 && cls.source_context) {
-        pushUnique(`O contexto associado ao caso favorece a hipótese de óleo (${humanizeEnum(cls.source_context)}).`);
+        pushUnique(`El contexto asociado al caso favorece la hipótesis de petróleo (${humanizeEnum(cls.source_context)}).`);
       } else if (Number(comps.context_score) < 0 && cls.source_context) {
-        pushUnique(`O contexto associado ao caso enfraquece a hipótese de óleo (${humanizeEnum(cls.source_context)}).`);
+        pushUnique(`El contexto asociado al caso debilita la hipótesis de petróleo (${humanizeEnum(cls.source_context)}).`);
       }
 
       if (!items.length && cls.evidence_explanation) {
@@ -2607,26 +3612,181 @@
       return items;
     }
 
+    function formatCalcNumber(value, digits = 2) {
+      const n = Number(value);
+      if (!Number.isFinite(n)) return "?";
+      return n > 0 ? `+${n.toFixed(digits)}` : n.toFixed(digits);
+    }
+
+    function getEvidenceImpact(value) {
+      const n = Number(value);
+
+      if (!Number.isFinite(n) || n === 0) {
+        return {
+          key: "neutral",
+          label: "Neutro",
+          explanation: "No altera el índice de evidencia."
+        };
+      }
+
+      if (n > 0) {
+        return {
+          key: "favors",
+          label: "Favorece",
+          explanation: "Aumenta la fuerza de la evidencia del caso."
+        };
+      }
+
+      return {
+        key: "against",
+        label: "Desfavorece",
+        explanation: "Reduce la fuerza de la evidencia del caso."
+      };
+    }
+
+    function getComponentReason(cls, componentKey) {
+      const details = cls?.component_details || {};
+
+      if (componentKey === "classification") {
+        const reasons = Array.isArray(details?.classification?.reasons) ? details.classification.reasons : [];
+        if (reasons.length) return reasons.map(humanizeEnum).join("; ");
+        return "Componente asociado a la clasificación automática y/o revisión disponible.";
+      }
+
+      if (componentKey === "context") {
+        const reasons = Array.isArray(details?.context?.reasons) ? details.context.reasons : [];
+        if (reasons.length) return reasons.join("; ");
+        return "Componente asociado al contexto de fuente, entorno u origen probable.";
+      }
+
+      if (componentKey === "morphology") {
+        return "Componente asociado a la forma, geometría y compatibilidad morfológica del slick.";
+      }
+
+      if (componentKey === "structure") {
+        return "Componente asociado a la consistencia estructural y suficiencia geométrica del caso.";
+      }
+
+      return "Componente utilizado en el cálculo del índice de evidencia.";
+    }
+
+    function fillEvidenceCalculation(cls) {
+      const totalEl = document.getElementById("evidenceCalcTotal");
+      const gridEl = document.getElementById("evidenceCalcGrid");
+      const noteEl = document.getElementById("evidenceCalcNote");
+
+      if (!totalEl || !gridEl) return;
+
+      const comps = cls?.evidence_components || {};
+
+      const rows = [
+        {
+          key: "classification",
+          label: "Clasificación",
+          symbol: "Cclasificación",
+          value: Number(comps.classification_score ?? 0),
+          weight: 4
+        },
+        {
+          key: "context",
+          label: "Contexto",
+          symbol: "Ccontexto",
+          value: Number(comps.context_score ?? 0),
+          weight: 3
+        },
+        {
+          key: "morphology",
+          label: "Morfología",
+          symbol: "Cmorfología",
+          value: Number(comps.morphology_score ?? 0),
+          weight: 2
+        },
+        {
+          key: "structure",
+          label: "Estructura",
+          symbol: "Cestructura",
+          value: Number(comps.structure_score ?? 0),
+          weight: 1
+        }
+      ].map((row) => {
+        const safeValue = Number.isFinite(row.value) ? row.value : 0;
+        const contribution = safeValue * row.weight;
+        const impact = getEvidenceImpact(contribution);
+
+        return {
+          ...row,
+          value: safeValue,
+          contribution,
+          impact,
+          reason: getComponentReason(cls, row.key)
+        };
+      });
+
+      const calculatedTotal = rows.reduce((acc, row) => acc + row.contribution, 0);
+      const reportedTotal = parseNumericMaybe(cls?.score_total);
+      const finalTotal = Number.isFinite(reportedTotal) ? reportedTotal : calculatedTotal;
+
+      totalEl.textContent = formatCalcNumber(finalTotal, 2);
+
+      gridEl.innerHTML = rows.map((row) => `
+        <div class="evidence-calc-row ${row.impact.key}">
+          <div class="evidence-calc-name">
+            <strong>${row.label}</strong>
+            <span>${row.symbol}: ${row.reason}</span>
+          </div>
+
+          <div class="evidence-calc-mini">
+            <span>Peso</span>
+            <strong>${row.weight}</strong>
+          </div>
+
+          <div class="evidence-calc-mini">
+            <span>Valor</span>
+            <strong>${formatCalcNumber(row.value, 2)}</strong>
+          </div>
+
+          <div class="evidence-calc-mini">
+            <span>Contrib.</span>
+            <strong>${formatCalcNumber(row.contribution, 2)}</strong>
+          </div>
+
+          <div class="evidence-calc-impact ${row.impact.key}">
+            ${row.impact.label}
+          </div>
+        </div>
+      `).join("");
+
+      if (noteEl) {
+        const favors = rows.filter(row => row.contribution > 0).map(row => row.label);
+        const against = rows.filter(row => row.contribution < 0).map(row => row.label);
+
+        const favorsText = favors.length ? `Favorece: ${favors.join(", ")}.` : "Ningún componente favorece directamente.";
+        const againstText = against.length ? `Desfavorece: ${against.join(", ")}.` : "Ningún componente desfavorece directamente.";
+
+        noteEl.textContent = `${favorsText} ${againstText}`;
+      }
+    }
+
     function fillClassification(summary = {}, alertPayload = {}, manifest = {}, catalogItem = {}) {
       const cls = resolveClassificationData(summary, alertPayload, manifest, catalogItem);
-      const evidenceLevel = String(cls.evidence_level || "—").toUpperCase();
+      const evidenceLevel = String(cls.evidence_level || "?").toUpperCase();
 
-      document.getElementById("clsDisplayConfidence").textContent = evidenceLevel || "—";
+      document.getElementById("clsDisplayConfidence").textContent = evidenceLevel || "?";
       document.getElementById("clsConfidenceBand").textContent =
         cls.evidence_label || humanizeEvidenceBand(cls.evidence_band);
       document.getElementById("clsReviewLevel").textContent = humanizeEnum(cls.review_level);
       document.getElementById("clsSourceContext").textContent = humanizeEnum(cls.source_context);
-      document.getElementById("clsOilStatus").textContent = humanizeEnum(cls.oil_status);
-      document.getElementById("clsHumanLabel").textContent = cls.human_label || "—";
+      document.getElementById("clsOilEstado").textContent = humanizeEnum(cls.oil_status);
+      document.getElementById("clsHumanLabel").textContent = cls.human_label || "?";
 
       const machinePct = (() => {
         const n = parseNumericMaybe(cls.machine_confidence);
-        if (!Number.isFinite(n)) return "—";
+        if (!Number.isFinite(n)) return "?";
         return n <= 1 ? `${(n * 100).toFixed(1)}%` : `${n.toFixed(1)}%`;
       })();
       const slickPct = (() => {
         const n = parseNumericMaybe(cls.slick_confidence);
-        if (!Number.isFinite(n)) return "—";
+        if (!Number.isFinite(n)) return "?";
         return n <= 1 ? `${(n * 100).toFixed(1)}%` : `${n.toFixed(1)}%`;
       })();
 
@@ -2634,7 +3794,7 @@
       document.getElementById("clsSourceScore").textContent = formatScoreValue(cls.source_score);
       document.getElementById("clsSlickConfidence").textContent = slickPct;
       document.getElementById("clsConfidenceExplanation").textContent =
-        cls.evidence_explanation || "Sem explicação adicional para o índice de evidência deste caso.";
+        cls.evidence_explanation || "Sin explicación adicional para el índice de evidencia de este caso.";
 
       const steps = Array.from(document.querySelectorAll("#clsEvidenceScale .evidence-step"));
       const stepOrder = ["E1", "E2", "E3", "E4", "E5"];
@@ -2643,12 +3803,14 @@
         el.classList.toggle("active", idx <= activeIndex && activeIndex >= 0);
       });
 
+      fillEvidenceCalculation(cls);
+
       const evidenceItems = buildEvidenceListItems(cls);
       const listEl = document.getElementById("clsEvidenceList");
       listEl.innerHTML = "";
       if (!evidenceItems.length) {
         const li = document.createElement("li");
-        li.textContent = "Sem evidências textuais adicionais para este caso.";
+        li.textContent = "Sin evidencias textuales adicionales para este caso.";
         listEl.appendChild(li);
       } else {
         evidenceItems.forEach(txt => {
@@ -2665,13 +3827,13 @@
       const level = String(cls.evidence_level || "").trim().toUpperCase();
       if (level) parts.push(level);
       const band = cls.evidence_label || humanizeEvidenceBand(cls.evidence_band);
-      if (band && band !== "—") parts.push(band);
+      if (band && band !== "?") parts.push(band);
       const source = cls.human_label || humanizeEnum(cls.source_context);
-      if (source && source !== "—") parts.push(source);
-      return parts.join(" — ");
+      if (source && source !== "?") parts.push(source);
+      return parts.join(" ? ");
     }
 
-    
+
     function initLegendCardToggle() {
       const card = document.getElementById("legendCard");
       const header = document.getElementById("legendCardHeader");
@@ -2703,80 +3865,125 @@ function clamp(value, min, max) {
     function makeTemporalFloatingPanelDraggable() {
       const panel = document.getElementById("temporalFloatingPanel");
       const handle = document.getElementById("temporalFloatingHandle");
+      const minimizeBtn = document.getElementById("temporalFloatingMinimize");
       const mapWrap = document.getElementById("map-wrap");
       if (!panel || !handle || !mapWrap) return;
       if (panel.dataset.dragReady === "1") return;
       panel.dataset.dragReady = "1";
 
       let dragging = false;
+      let moved = false;
       let offsetX = 0;
       let offsetY = 0;
+      let startX = 0;
+      let startY = 0;
+      let restoreRect = null;
+
+      const setPanelPosition = (left, top) => {
+        const wrapRect = mapWrap.getBoundingClientRect();
+        const panelRect = panel.getBoundingClientRect();
+        const safeLeft = clamp(left, 0, Math.max(0, wrapRect.width - panelRect.width));
+        const safeTop = clamp(top, 0, Math.max(0, wrapRect.height - panelRect.height));
+
+        // Usa !important porque há media queries responsivas que tamb�m usam !important.
+        panel.style.setProperty("left", `${safeLeft}px`, "important");
+        panel.style.setProperty("top", `${safeTop}px`, "important");
+        panel.style.setProperty("right", "auto", "important");
+        panel.style.setProperty("bottom", "auto", "important");
+      };
+
+      const clampPanelInsideMap = () => {
+        const wrapRect = mapWrap.getBoundingClientRect();
+        const panelRect = panel.getBoundingClientRect();
+        setPanelPosition(panelRect.left - wrapRect.left, panelRect.top - wrapRect.top);
+      };
+
+      const setMinimized = (minimized) => {
+        const wrapRect = mapWrap.getBoundingClientRect();
+        const currentRect = panel.getBoundingClientRect();
+        const currentLeft = currentRect.left - wrapRect.left;
+        const currentTop = currentRect.top - wrapRect.top;
+
+        if (minimized) {
+          restoreRect = { left: currentLeft, top: currentTop };
+          panel.classList.add("temporal-minimized");
+          panel.setAttribute("aria-label", "Control temporal minimizado");
+          if (minimizeBtn) {
+            minimizeBtn.textContent = "+";
+            minimizeBtn.setAttribute("aria-label", "Restaurar control temporal");
+            minimizeBtn.setAttribute("title", "Restaurar control temporal");
+          }
+        } else {
+          panel.classList.remove("temporal-minimized");
+          panel.setAttribute("aria-label", "Controles de la animación temporal");
+          if (minimizeBtn) {
+            minimizeBtn.textContent = "-";
+            minimizeBtn.setAttribute("aria-label", "Minimizar control temporal");
+            minimizeBtn.setAttribute("title", "Minimizar control temporal");
+          }
+          if (restoreRect) {
+            setPanelPosition(restoreRect.left, restoreRect.top);
+          }
+        }
+
+        // Aguarda o navegador aplicar o novo tamanho antes de travar a posição dentro do mapa.
+        requestAnimationFrame(clampPanelInsideMap);
+      };
 
       const onPointerMove = (ev) => {
         if (!dragging) return;
         const wrapRect = mapWrap.getBoundingClientRect();
-        const panelRect = panel.getBoundingClientRect();
+        const dx = Math.abs(ev.clientX - startX);
+        const dy = Math.abs(ev.clientY - startY);
+        if (dx > 3 || dy > 3) moved = true;
 
-        let left = ev.clientX - wrapRect.left - offsetX;
-        let top = ev.clientY - wrapRect.top - offsetY;
-
-        left = Math.max(0, Math.min(left, wrapRect.width - panelRect.width));
-        top = Math.max(0, Math.min(top, wrapRect.height - panelRect.height));
-
-        panel.style.left = `${left}px`;
-        panel.style.top = `${top}px`;
-        panel.style.right = "auto";
-        panel.style.bottom = "auto";
+        setPanelPosition(ev.clientX - wrapRect.left - offsetX, ev.clientY - wrapRect.top - offsetY);
       };
 
       const stopDragging = () => {
+        if (!dragging) return;
         dragging = false;
         panel.classList.remove("dragging");
         window.removeEventListener("pointermove", onPointerMove);
         window.removeEventListener("pointerup", stopDragging);
+        requestAnimationFrame(clampPanelInsideMap);
       };
 
-      handle.addEventListener("pointerdown", (ev) => {
+      const startDragging = (ev) => {
+        if (ev.button !== undefined && ev.button !== 0) return;
         const panelRect = panel.getBoundingClientRect();
         dragging = true;
+        moved = false;
+        startX = ev.clientX;
+        startY = ev.clientY;
         offsetX = ev.clientX - panelRect.left;
         offsetY = ev.clientY - panelRect.top;
         panel.classList.add("dragging");
+        handle.setPointerCapture?.(ev.pointerId);
         window.addEventListener("pointermove", onPointerMove);
         window.addEventListener("pointerup", stopDragging);
+      };
+
+      handle.addEventListener("pointerdown", startDragging);
+
+      if (minimizeBtn) {
+        minimizeBtn.addEventListener("click", (ev) => {
+          ev.preventDefault();
+          ev.stopPropagation();
+          if (moved) return;
+          setMinimized(!panel.classList.contains("temporal-minimized"));
+        });
+      }
+
+      // Duplo clique no botão minimizado tamb�m restaura, mesmo se o usuário não acertar o ícone.
+      panel.addEventListener("dblclick", (ev) => {
+        if (!panel.classList.contains("temporal-minimized")) return;
+        ev.preventDefault();
+        setMinimized(false);
       });
 
-      requestAnimationFrame(() => {
-        const wrapRect = mapWrap.getBoundingClientRect();
-        const panelRect = panel.getBoundingClientRect();
-
-        let left = panelRect.left - wrapRect.left;
-        let top = panelRect.top - wrapRect.top;
-
-        left = Math.max(0, Math.min(left, wrapRect.width - panelRect.width));
-        top = Math.max(0, Math.min(top, wrapRect.height - panelRect.height));
-
-        panel.style.left = `${left}px`;
-        panel.style.top = `${top}px`;
-        panel.style.right = "auto";
-        panel.style.bottom = "auto";
-      });
-
-      window.addEventListener("resize", () => {
-        const wrapRect = mapWrap.getBoundingClientRect();
-        const panelRect = panel.getBoundingClientRect();
-
-        let left = panelRect.left - wrapRect.left;
-        let top = panelRect.top - wrapRect.top;
-
-        left = Math.max(0, Math.min(left, wrapRect.width - panelRect.width));
-        top = Math.max(0, Math.min(top, wrapRect.height - panelRect.height));
-
-        panel.style.left = `${left}px`;
-        panel.style.top = `${top}px`;
-        panel.style.right = "auto";
-        panel.style.bottom = "auto";
-      });
+      requestAnimationFrame(clampPanelInsideMap);
+      window.addEventListener("resize", () => requestAnimationFrame(clampPanelInsideMap));
     }
 
     function syncTemporalFloatingControls() {
@@ -2785,21 +3992,21 @@ function clamp(value, min, max) {
       if (floatingRoot.dataset.syncReady === "1") return;
       floatingRoot.dataset.syncReady = "1";
 
-      const btnPlay = document.getElementById("btnPlay");
-      const btnPause = document.getElementById("btnPause");
+      const btnReproducir = document.getElementById("btnReproducir");
+      const btnPausa = document.getElementById("btnPausa");
       const speed = document.getElementById("speed");
       const timeSlider = document.getElementById("timeSlider");
       const tsLabel = document.getElementById("tsLabel");
 
-      const btnPlayFloating = document.getElementById("btnPlayFloating");
-      const btnPauseFloating = document.getElementById("btnPauseFloating");
+      const btnReproducirFloating = document.getElementById("btnReproducirFloating");
+      const btnPausaFloating = document.getElementById("btnPausaFloating");
       const speedFloating = document.getElementById("speedFloating");
       const timeSliderFloating = document.getElementById("timeSliderFloating");
       const tsLabelFloating = document.getElementById("tsLabelFloating");
 
-      if (!btnPlayFloating || !btnPauseFloating || !speedFloating || !timeSliderFloating || !tsLabelFloating) return;
+      if (!btnReproducirFloating || !btnPausaFloating || !speedFloating || !timeSliderFloating || !tsLabelFloating) return;
 
-      const usingFloatingAsPrimary = !btnPlay || !btnPause || !speed || !timeSlider || !tsLabel;
+      const usingFloatingAsPrimary = !btnReproducir || !btnPausa || !speed || !timeSlider || !tsLabel;
 
       const copyFromBaseToFloating = () => {
         const sourceSpeed = speed || speedFloating;
@@ -2811,7 +4018,7 @@ function clamp(value, min, max) {
         timeSliderFloating.max = sourceSlider.max;
         timeSliderFloating.step = sourceSlider.step;
         timeSliderFloating.value = sourceSlider.value;
-        tsLabelFloating.textContent = sourceTsLabel.textContent || "—";
+        tsLabelFloating.textContent = sourceTsLabel.textContent || "?";
       };
 
       if (!usingFloatingAsPrimary) {
@@ -2821,8 +4028,8 @@ function clamp(value, min, max) {
           copyFromBaseToFloating();
         };
 
-        btnPlayFloating.addEventListener("click", () => clickProxy(btnPlay));
-        btnPauseFloating.addEventListener("click", () => clickProxy(btnPause));
+        btnReproducirFloating.addEventListener("click", () => clickProxy(btnReproducir));
+        btnPausaFloating.addEventListener("click", () => clickProxy(btnPausa));
 
         speedFloating.addEventListener("change", () => {
           speed.value = speedFloating.value;
@@ -3025,7 +4232,7 @@ function clamp(value, min, max) {
       const statsMap = new Map((Array.isArray(dateStats) ? dateStats : []).map(item => [String(item.date_key), item]));
       const m = /^(\d{4})-(\d{2})$/.exec(String(activeMonthKey || ""));
       if (!m) {
-        calendarMonthLabel.textContent = "Sem datas";
+        calendarMonthLabel.textContent = "Sin fechas";
         calendarDaysGrid.innerHTML = "";
         calendarSelectedInfo.textContent = "";
         return;
@@ -3056,7 +4263,7 @@ function clamp(value, min, max) {
         btn.innerHTML = `<span class="day-number">${day}</span>${stat ? '<span class="day-meta-dot"></span>' : ''}`;
 
         if (stat) {
-          btn.title = `${stat.date_label} · ${stat.total_cases} caso(s) no total · ${stat.scenes_count} cena(s) · pico de ${stat.max_cases_per_scene} caso(s) em uma cena`;
+          btn.title = `${stat.date_label} — ${stat.total_cases} caso(s) en total — ${stat.scenes_count} escena(s) — pico de ${stat.max_cases_per_scene} caso(s) en una escena`;
           btn.addEventListener("click", () => onSelectDate(dateKey));
         } else {
           btn.disabled = true;
@@ -3067,9 +4274,9 @@ function clamp(value, min, max) {
 
       const selectedStat = statsMap.get(String(selectedDateKey || ""));
       if (selectedStat) {
-        calendarSelectedInfo.textContent = `${selectedStat.date_label} · ${selectedStat.total_cases} caso(s) distribuído(s) em ${selectedStat.scenes_count} cena(s). Maior concentração em uma cena: ${selectedStat.max_cases_per_scene}.`;
+        calendarSelectedInfo.textContent = `${selectedStat.date_label} — ${selectedStat.total_cases} caso(s) distribuido(s) en ${selectedStat.scenes_count} escena(s). Mayor concentración en una escena: ${selectedStat.max_cases_per_scene}.`;
       } else {
-        calendarSelectedInfo.textContent = "Selecione um dia colorido para filtrar as cenas e os casos daquela data.";
+        calendarSelectedInfo.textContent = "Seleccione un día coloreado para filtrar las escenas y los casos de esa fecha.";
       }
     }
 
@@ -3317,7 +4524,7 @@ function clamp(value, min, max) {
           seen.add(key);
           out.push({
             scene_id: item.scene_id || "",
-            scene_label: item.scene_id || "Cena não informada",
+            scene_label: item.scene_id || "Escena não informada",
             count: filtered.filter(x => String(x.scene_id || "") === key).length
           });
         }
@@ -3353,7 +4560,7 @@ function clamp(value, min, max) {
         listEl.innerHTML = "";
 
         if (!items.length) {
-          listEl.innerHTML = '<div class="date-cases-empty">Nenhum caso disponível para esta data.</div>';
+          listEl.innerHTML = '<div class="date-cases-empty">Ningún caso disponible para esta fecha.</div>';
           return;
         }
 
@@ -3361,7 +4568,7 @@ function clamp(value, min, max) {
           const btn = document.createElement("button");
           btn.type = "button";
           const evClass = getEvidenceButtonClass(item);
-          const evidenceLevel = String(item?.evidence_level || "—").toUpperCase();
+          const evidenceLevel = String(item?.evidence_level || "?").toUpperCase();
           const evidenceLabel = item?.evidence_label || humanizeEvidenceBand(item?.evidence_band);
           const reviewLabel = humanizeEnum(item?.review_level);
           const sourceLabel = item?.human_label || humanizeEnum(item?.source_context);
@@ -3374,15 +4581,15 @@ function clamp(value, min, max) {
 
           btn.innerHTML = `
             <div class="date-case-top">
-              <div class="date-case-id">Caso ${item?.case_id || "—"}</div>
+              <div class="date-case-id">Caso ${item?.case_id || "?"}</div>
               <div class="date-case-evidence ${evClass}">${evidenceLevel}</div>
             </div>
             <div class="date-case-meta">
-              <span class="date-case-pill">${timeLabel || "—"}</span>
-              <span class="date-case-pill">${evidenceLabel || "Sem índice"}</span>
-              <span class="date-case-pill">${reviewLabel || "—"}</span>
+              <span class="date-case-pill">${timeLabel || "?"}</span>
+              <span class="date-case-pill">${evidenceLabel || "Sin índice"}</span>
+              <span class="date-case-pill">${reviewLabel || "?"}</span>
             </div>
-            <div class="date-case-sub">${sourceLabel && sourceLabel !== "—" ? sourceLabel : "Sem classificação complementar disponível."}</div>
+            <div class="date-case-sub">${sourceLabel && sourceLabel !== "?" ? sourceLabel : "Sin clasificación complementaria disponible."}</div>
           `;
 
           btn.addEventListener("click", () => {
@@ -3400,7 +4607,7 @@ function clamp(value, min, max) {
       async function updateCaseMapOnly({ dateKey, sceneId, caseId }) {
         if (!caseId) return;
 
-        setStatus("Atualizando caso no mapa...");
+        setEstado("Actualizando caso en el mapa...");
 
         activeCaseId = String(caseId || "");
         selectedCatalogItem = catalog.find(x => String(x.case_id) === String(activeCaseId)) || {};
@@ -3409,7 +4616,7 @@ function clamp(value, min, max) {
         if (sceneSelect) sceneSelect.value = String(sceneId || "");
         if (caseSelect) caseSelect.value = String(caseId || "");
 
-        document.getElementById("caseIdLabel").textContent = activeCaseId || "—";
+        document.getElementById("caseIdLabel").textContent = activeCaseId || "?";
         renderDateCaseButtons(String(dateKey || ""), activeCaseId);
 
         const manifest = await loadManifest(activeCaseId, casesIndex);
@@ -3533,20 +4740,10 @@ function clamp(value, min, max) {
         if (ui.tgSlick.checked) slickLayer.addTo(map);
         if (ui.tgSlickParts.checked) slickPartsLayer.addTo(map);
 
-        ampsGeo = featureCollection([]);
-        try {
-          ampsGeo = await fetchJSON(GLOBAL_AMPS_PATH);
-        } catch (err) {
-          console.warn("Falha ao carregar camada global de AMPs. Tentando fallback do caso...", err);
-          ampsGeo = paths.amps ? await fetchJSON(paths.amps) : (ampsHitGeo || featureCollection([]));
-        }
-
-        if ((!ampsGeo?.features?.length) && Array.isArray(ampsHitGeo?.features) && ampsHitGeo.features.length) {
-          ampsGeo = ampsHitGeo;
-        }
+        ampsGeo = await loadAmpsGeo(paths, ampsHitGeo);
 
         if (ui.ampsInfo) {
-          ui.ampsInfo.textContent = `AMPs: ${ampsGeo?.features?.length ?? 0}`;
+          ui.ampsInfo.textContent = `AMP: ${ampsGeo?.features?.length ?? 0}`;
         }
 
         ampsLayer = L.geoJSON(ampsGeo, {
@@ -3565,7 +4762,7 @@ function clamp(value, min, max) {
 
         oilTimesMs = buildUnifiedTimeline(summary, oilFrames.length);
         if (!oilTimesMs || oilTimesMs.length !== oilFrames.length) {
-          throw new Error("Não foi possível montar a linha do tempo unificada de t0 até tk para o OpenOil.");
+          throw new Error("No se ha podido construir la línea temporal unificada de t0 a tk para OpenOil.");
         }
 
         probFrames = [];
@@ -3580,7 +4777,7 @@ function clamp(value, min, max) {
             probTimesMs = buildUnifiedTimeline(summary, probFrames.length);
             hasProbFrames = Array.isArray(probFrames) && probFrames.length > 0;
           } catch (err) {
-            console.warn("Falha ao carregar probability_frames.json:", err);
+            console.warn("Error al cargar probability_frames.json:", err);
             hasProbFrames = false;
           }
         }
@@ -3604,11 +4801,11 @@ function clamp(value, min, max) {
 
         slider.max = String(oilFrames.length - 1);
         slider.value = "0";
-        tsLabel.textContent = "—";
+        tsLabel.textContent = "?";
 
         applyToggles();
         renderFrame();
-        setStatus(`Caso ${activeCaseId} atualizado no mapa.`);
+        setEstado(`Caso ${activeCaseId} actualizado en el mapa.`);
       }
 
       const initialSelection = chooseInitialSelection();
@@ -3791,8 +4988,8 @@ function clamp(value, min, max) {
         probLegend: document.getElementById("probLegend"),
         tgWind: document.getElementById("tgWind"),
         tgCurr: document.getElementById("tgCurr"),
-        btnPlay: document.getElementById("btnPlay") || document.getElementById("btnPlayFloating"),
-        btnPause: document.getElementById("btnPause") || document.getElementById("btnPauseFloating"),
+        btnReproducir: document.getElementById("btnReproducir") || document.getElementById("btnReproducirFloating"),
+        btnPausa: document.getElementById("btnPausa") || document.getElementById("btnPausaFloating"),
         speed: document.getElementById("speed") || document.getElementById("speedFloating"),
         sarOpacity: document.getElementById("sarOpacity"),
         sarOpacityLabel: document.getElementById("sarOpacityLabel"),
@@ -3811,7 +5008,7 @@ function clamp(value, min, max) {
       syncTemporalFloatingControls();
       makeTemporalFloatingPanelDraggable();
 
-      setStatus("Carregando bounds do SAR…");
+      setEstado("Cargando límites del SAR…");
       const bboxRaw = paths.sarBbox ? await fetchJSON(paths.sarBbox) : null;
       const bounds = bboxRaw ? parseBoundsFromT0BoundsJson(bboxRaw) : null;
       console.log("bboxRaw =", bboxRaw);
@@ -3820,13 +5017,45 @@ function clamp(value, min, max) {
       if (paths.sarPng) {
         const testImg = new Image();
         testImg.onload = () => console.log("SAR PNG carregou:", paths.sarPng, testImg.width, testImg.height);
-        testImg.onerror = (e) => console.error("Erro ao carregar SAR PNG:", paths.sarPng, e);
+        testImg.onerror = (e) => console.error("Error al cargar SAR PNG:", paths.sarPng, e);
         testImg.src = paths.sarPng;
       } else {
         console.warn("paths.sarPng está nulo ou vazio; overlay SAR não será criado.");
       }
 
       const map = L.map("map", { preferCanvas: true });
+
+      // Mantém o Leaflet responsivo quando o layout muda de desktop para mobile.
+      window.oceomLeafletMap = map;
+      const invalidateLeafletSize = () => {
+        requestAnimationFrame(() => {
+          try {
+            map.invalidateSize({ pan: false });
+          } catch (err) {
+            console.warn("No se ha podido recalcular el tamaño del mapa.", err);
+          }
+        });
+      };
+      setTimeout(invalidateLeafletSize, 80);
+      setTimeout(invalidateLeafletSize, 350);
+      if (!window.__oceomResponsiveResizeReady) {
+        window.__oceomResponsiveResizeReady = true;
+        window.addEventListener("resize", () => {
+          clearTimeout(window.__oceomResponsiveResizeTimer);
+          window.__oceomResponsiveResizeTimer = setTimeout(() => {
+            if (window.oceomLeafletMap) {
+              window.oceomLeafletMap.invalidateSize({ pan: false });
+            }
+          }, 160);
+        });
+        window.addEventListener("orientationchange", () => {
+          setTimeout(() => {
+            if (window.oceomLeafletMap) {
+              window.oceomLeafletMap.invalidateSize({ pan: false });
+            }
+          }, 300);
+        });
+      }
 
       const dark = L.tileLayer(
         "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",
@@ -3847,7 +5076,18 @@ function clamp(value, min, max) {
       map.getPane("ampsPane").style.zIndex = 450;
 
       map.createPane("probPane");
-      map.getPane("probPane").style.zIndex = 650;
+      map.getPane("probPane").style.zIndex = 610;
+
+      // Paines próprios para a animação temporal.
+      // No minimizável, os CanvasOverlay ficavam no overlayPane padrão;
+      // com o painel responsivo/minimizável, isso podia deixar os pontos
+      // visualmente atrás de outras camadas. Mantém os pontos acima
+      // da mancha probabilística e preserva a animação do guia correto.
+      map.createPane("trajectoryPane");
+      map.getPane("trajectoryPane").style.zIndex = 620;
+
+      map.createPane("oilPointsPane");
+      map.getPane("oilPointsPane").style.zIndex = 630;
 
       let sarOverlay = null;
       let sarBounds = null;
@@ -3862,7 +5102,7 @@ function clamp(value, min, max) {
         map.setView([-24, -44], 6);
       }
 
-      setStatus("Carregando slick observado…");
+      setEstado("Cargando slick observado…");
 
       const slickGeo = paths.slick ? await fetchJSON(paths.slick) : featureCollection([]);
       const slickPartsGeoRaw = paths.slickParts ? await fetchJSON(paths.slickParts) : featureCollection([]);
@@ -3897,24 +5137,14 @@ function clamp(value, min, max) {
         })
       }).addTo(map);
 
-      console.log("camadas desenhadas no Leaflet:", slickPartsLayer.getLayers().length);
+      console.log("capas dibujadas en Leaflet:", slickPartsLayer.getLayers().length);
 
-      setStatus("Carregando AMPs do Brasil…");
+      setEstado("Cargando AMP de Brasil…");
 
-      let ampsGeo = featureCollection([]);
-      try {
-        ampsGeo = await fetchJSON(GLOBAL_AMPS_PATH);
-      } catch (err) {
-        console.warn("Falha ao carregar camada global de AMPs. Tentando fallback do caso...", err);
-        ampsGeo = paths.amps ? await fetchJSON(paths.amps) : (ampsHitGeo || featureCollection([]));
-      }
-
-      if ((!ampsGeo?.features?.length) && Array.isArray(ampsHitGeo?.features) && ampsHitGeo.features.length) {
-        ampsGeo = ampsHitGeo;
-      }
+      let ampsGeo = await loadAmpsGeo(paths, ampsHitGeo);
 
       const ampsCount = ampsGeo?.features?.length ?? 0;
-      if (ui.ampsInfo) ui.ampsInfo.textContent = `AMPs: ${ampsCount}`;
+      if (ui.ampsInfo) ui.ampsInfo.textContent = `AMP: ${ampsCount}`;
 
       let ampsLayer = null;
       const ampLayersHit = [];
@@ -3935,7 +5165,7 @@ function clamp(value, min, max) {
         if (!ui.ampInfoPanel || !ui.ampInfoToggle) return;
         ampInfoMinimized = !!minimized;
         ui.ampInfoPanel.classList.toggle("minimized", ampInfoMinimized);
-        ui.ampInfoToggle.textContent = ampInfoMinimized ? "+" : "−";
+        ui.ampInfoToggle.textContent = ampInfoMinimized ? "+" : "-";
         ui.ampInfoToggle.setAttribute("aria-label", ampInfoMinimized ? "Maximizar painel" : "Minimizar painel");
         ui.ampInfoToggle.setAttribute("title", ampInfoMinimized ? "Maximizar painel" : "Minimizar painel");
       }
@@ -3946,13 +5176,13 @@ function clamp(value, min, max) {
         if (!Array.isArray(layers) || !layers.length || !ui.ampInfoTableBody || !ui.ampInfoTitle) return;
 
         const instante = fmtTime(currentDisplayDate);
-        ui.ampInfoTitle.textContent = layers.length === 1 ? "AMP atingida" : `AMPs atingidas (${layers.length})`;
+        ui.ampInfoTitle.textContent = layers.length === 1 ? "AMP alcanzada" : `AMP alcanzadas (${layers.length})`;
 
         ui.ampInfoTableBody.innerHTML = layers.map((layer) => {
           const p = layer?.feature?.properties || {};
           const nome = getAmpFeatureName(layer.feature);
-          const categoria = p.iucn_cat || p.IUCN_CAT || "—";
-          const designacao = p.designacao || p.DESIG || p.designacao_eng || p.DESIG_ENG || "—";
+          const categoria = p.iucn_cat || p.IUCN_CAT || "?";
+          const designacao = p.designacao || p.DESIG || p.designacao_eng || p.DESIG_ENG || "?";
           const ampKey = normalizeTextValue(nome);
 
           return `
@@ -3993,42 +5223,94 @@ function clamp(value, min, max) {
         const mapWrap = document.getElementById("map-wrap");
         if (!panel || !handle || !mapWrap) return;
 
+        if (panel.dataset.dragReady === "1") return;
+        panel.dataset.dragReady = "1";
+
         let dragging = false;
+        let moved = false;
         let offsetX = 0;
         let offsetY = 0;
+        let startX = 0;
+        let startY = 0;
 
-        const onPointerMove = (ev) => {
-          if (!dragging) return;
+        const setPanelPosition = (left, top) => {
           const wrapRect = mapWrap.getBoundingClientRect();
           const panelRect = panel.getBoundingClientRect();
 
-          let left = ev.clientX - wrapRect.left - offsetX;
-          let top = ev.clientY - wrapRect.top - offsetY;
+          const safeLeft = Math.max(0, Math.min(left, wrapRect.width - panelRect.width));
+          const safeTop = Math.max(0, Math.min(top, wrapRect.height - panelRect.height));
 
-          left = Math.max(0, Math.min(left, wrapRect.width - panelRect.width));
-          top = Math.max(0, Math.min(top, wrapRect.height - panelRect.height));
+          panel.style.setProperty("left", `${safeLeft}px`, "important");
+          panel.style.setProperty("top", `${safeTop}px`, "important");
+          panel.style.setProperty("right", "auto", "important");
+          panel.style.setProperty("bottom", "auto", "important");
+        };
 
-          panel.style.left = `${left}px`;
-          panel.style.top = `${top}px`;
-          panel.style.right = "auto";
-          panel.style.bottom = "auto";
+        const onPointerMove = (ev) => {
+          if (!dragging) return;
+
+          const wrapRect = mapWrap.getBoundingClientRect();
+
+          const dx = Math.abs(ev.clientX - startX);
+          const dy = Math.abs(ev.clientY - startY);
+
+          if (dx > 3 || dy > 3) {
+            moved = true;
+          }
+
+          const left = ev.clientX - wrapRect.left - offsetX;
+          const top = ev.clientY - wrapRect.top - offsetY;
+
+          setPanelPosition(left, top);
         };
 
         const stopDragging = () => {
+          if (!dragging) return;
+
           dragging = false;
+          panel.classList.remove("dragging");
+
           window.removeEventListener("pointermove", onPointerMove);
           window.removeEventListener("pointerup", stopDragging);
+          window.removeEventListener("pointercancel", stopDragging);
         };
 
-        handle.addEventListener("pointerdown", (ev) => {
-          if (ev.target === ui.ampInfoToggle) return;
+        const startDragging = (ev) => {
+          if (ev.button !== undefined && ev.button !== 0) return;
+
+          const isToggle = ev.target === ui.ampInfoToggle;
+
+          /*
+            Quando NÃO está minimizado, o botão continua servindo apenas para minimizar/maximizar.
+            Quando está minimizado, o botão tamb�m pode ser usado para arrastar.
+          */
+          if (isToggle && !panel.classList.contains("minimized")) {
+            return;
+          }
+
           const panelRect = panel.getBoundingClientRect();
+
           dragging = true;
+          moved = false;
+          startX = ev.clientX;
+          startY = ev.clientY;
           offsetX = ev.clientX - panelRect.left;
           offsetY = ev.clientY - panelRect.top;
+
+          panel.classList.add("dragging");
+
+          ev.preventDefault();
+
+          try {
+            handle.setPointerCapture(ev.pointerId);
+          } catch (_) {}
+
           window.addEventListener("pointermove", onPointerMove);
           window.addEventListener("pointerup", stopDragging);
-        });
+          window.addEventListener("pointercancel", stopDragging);
+        };
+
+        handle.addEventListener("pointerdown", startDragging);
 
         const clearHoveredAmp = () => {
           if (pinnedAmpKey) {
@@ -4040,8 +5322,11 @@ function clamp(value, min, max) {
             }
             return;
           }
+
           if (!hoveredAmpKey) return;
+
           hoveredAmpKey = null;
+
           if (blinkTimer) {
             updateAmpBlinkState(true);
           } else {
@@ -4052,9 +5337,12 @@ function clamp(value, min, max) {
         ui.ampInfoTableBody?.addEventListener("mouseover", (ev) => {
           const row = ev.target.closest("tr[data-amp-key]");
           if (!row) return;
+
           const nextKey = row.dataset.ampKey || null;
           if (!nextKey || hoveredAmpKey === nextKey) return;
+
           hoveredAmpKey = nextKey;
+
           if (blinkTimer) {
             updateAmpBlinkState(true);
           } else {
@@ -4065,20 +5353,24 @@ function clamp(value, min, max) {
         ui.ampInfoTableBody?.addEventListener("mouseout", (ev) => {
           const row = ev.target.closest("tr[data-amp-key]");
           if (!row) return;
+
           const related = ev.relatedTarget;
           if (related && row.contains(related)) return;
+
           const stillInsideAnotherRow = related?.closest ? related.closest("tr[data-amp-key]") : null;
           if (stillInsideAnotherRow) return;
+
           clearHoveredAmp();
         });
 
         ui.ampInfoTableBody?.addEventListener("click", (ev) => {
           const row = ev.target.closest("tr[data-amp-key]");
           if (!row) return;
+
           const nextKey = row.dataset.ampKey || null;
           if (!nextKey) return;
 
-          pinnedAmpKey = (pinnedAmpKey === nextKey) ? null : nextKey;
+          pinnedAmpKey = pinnedAmpKey === nextKey ? null : nextKey;
           hoveredAmpKey = pinnedAmpKey;
 
           if (hoveredAmpKey) {
@@ -4093,7 +5385,18 @@ function clamp(value, min, max) {
 
         ui.ampInfoPanel?.addEventListener("mouseleave", clearHoveredAmp);
 
-        ui.ampInfoToggle?.addEventListener("click", () => {
+        ui.ampInfoToggle?.addEventListener("click", (ev) => {
+          /*
+            Se houve arraste, não abre/fecha o painel.
+            Isso evita que, ao soltar o botão depois de mover, ele maximize sem querer.
+          */
+          if (moved) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            moved = false;
+            return;
+          }
+
           hoveredAmpKey = null;
           pinnedAmpKey = null;
           setAmpInfoPanelVisible(true);
@@ -4268,7 +5571,7 @@ function clamp(value, min, max) {
         });
       }
 
-      setStatus("Carregando OpenOil…");
+      setEstado("Cargando OpenOil…");
       const oilPtsRaw = paths.oilPts ? await fetchJSON(paths.oilPts) : { frames: [] };
       let oilFrames = normalizeFrameList(oilPtsRaw, "frames");
       if (!oilFrames || oilFrames.length === 0) {
@@ -4277,10 +5580,10 @@ function clamp(value, min, max) {
 
       let oilTimesMs = buildUnifiedTimeline(summary, oilFrames.length);
       if (!oilTimesMs || oilTimesMs.length !== oilFrames.length) {
-        throw new Error("Não foi possível montar a linha do tempo unificada de t0 até tk para o OpenOil.");
+        throw new Error("No se ha podido construir la línea temporal unificada de t0 a tk para OpenOil.");
       }
 
-      setStatus("Carregando mancha probabilística…");
+      setEstado("Cargando mancha probabilística…");
       let probFrames = [];
       let probTimesMs = [];
       let hasProbFrames = false;
@@ -4292,7 +5595,7 @@ function clamp(value, min, max) {
           probTimesMs = buildUnifiedTimeline(summary, probFrames.length);
           hasProbFrames = Array.isArray(probFrames) && probFrames.length > 0;
         } catch (err) {
-          console.warn("Falha ao carregar probability_frames.json:", err);
+          console.warn("Error al cargar probability_frames.json:", err);
           hasProbFrames = false;
         }
       }
@@ -4303,7 +5606,7 @@ function clamp(value, min, max) {
         ui.tgProb.checked = false;
       }
 
-      setStatus("Carregando vento/correntes…");
+      setEstado("Cargando viento/corrientes…");
       const windRaw = paths.wind ? await fetchJSON(paths.wind).catch(() => null) : null;
       const currRaw = paths.curr ? await fetchJSON(paths.curr).catch(() => null) : null;
 
@@ -4323,18 +5626,18 @@ function clamp(value, min, max) {
         if (!ui.tgOilPts.checked) return;
         const fr = oilFrames[currentOilIndex];
         if (!fr) return;
-        drawPoints(ctx, map, normalizeOilPoints(fr), { radius: 2, alpha: 0.28, maxPoints: 6000 });
-      }).addTo(map);
+        drawPoints(ctx, map, normalizeOilPoints(fr), { radius: 2.4, alpha: 0.42, maxPoints: 6000 });
+      }, { pane: "oilPointsPane" }).addTo(map);
 
       const trajCanvas = new CanvasOverlay((ctx, map) => {
         if (!ui.tgTrajFull.checked) return;
         drawTrajectoryTrail(ctx, map, oilFrames, currentOilIndex, {
-          alpha: 0.36,
+          alpha: 0.38,
           color: "#d9d9d9",
           lineWidth: 1.0,
           maxSegments: 80000
         });
-      }).addTo(map);
+      }, { pane: "trajectoryPane" }).addTo(map);
 
       let currentProbFeatures = [];
       const probLayer = L.geoJSON(featureCollection([]), {
@@ -4441,9 +5744,9 @@ function clamp(value, min, max) {
         if (map.hasLayer(ampsLayer)) ampsLayer.bringToFront();
         if (hasProbFrames && map.hasLayer(probLayer)) probLayer.bringToFront();
 
-        oilCanvas.redraw();
-        trajCanvas.redraw();
         renderProbabilityFrame();
+        trajCanvas.redraw();
+        oilCanvas.redraw();
         windCanvas.redraw();
         currCanvas.redraw();
       }
@@ -4468,9 +5771,9 @@ function clamp(value, min, max) {
         if (map.hasLayer(ampsLayer)) ampsLayer.bringToFront();
         if (hasProbFrames && map.hasLayer(probLayer)) probLayer.bringToFront();
 
-        oilCanvas.redraw();
-        trajCanvas.redraw();
         renderProbabilityFrame();
+        trajCanvas.redraw();
+        oilCanvas.redraw();
         windCanvas.redraw();
         currCanvas.redraw();
       }
@@ -4580,7 +5883,7 @@ function clamp(value, min, max) {
       let playing = false;
       let timer = null;
 
-      function getPlaybackInterval() {
+      function getReproducirbackInterval() {
         const sp = parseInt(ui.speed.value, 10) || 1;
         return Math.max(60, Math.round(800 / sp));
       }
@@ -4602,7 +5905,7 @@ function clamp(value, min, max) {
             return;
           }
           renderFrame();
-        }, getPlaybackInterval());
+        }, getReproducirbackInterval());
       }
 
       function play() {
@@ -4611,8 +5914,8 @@ function clamp(value, min, max) {
         startTimer();
       }
 
-      ui.btnPlay.addEventListener("click", play);
-      ui.btnPause.addEventListener("click", stop);
+      ui.btnReproducir.addEventListener("click", play);
+      ui.btnPausa.addEventListener("click", stop);
 
       ui.speed.addEventListener("change", () => {
         if (playing) startTimer();
@@ -4627,7 +5930,7 @@ function clamp(value, min, max) {
       const slickPartsCountRaw = slickPartsGeoRaw?.features?.length || 0;
       const slickPartsCountFinal = slickPartsGeo?.features?.length || 0;
 
-      setStatus(
+      setEstado(
         `OK: caso ${activeCaseId}` +
         ` | slick_agregado=${slickAggCount}` +
         ` | slick_partes_raw=${slickPartsCountRaw}` +
@@ -4859,33 +6162,33 @@ function clamp(value, min, max) {
 
     main().catch(err => {
       console.error(err);
-      setStatus("ERRO: " + (err?.message ?? String(err)));
+      setEstado("ERRO: " + (err?.message ?? String(err)));
       alert("Erro ao iniciar o dashboard:\n\n" + (err?.message ?? String(err)));
     });
   </script>
 
- <button id="helpGuideBtn" type="button" aria-label="Abrir guia de ajuda" title="Abrir guia de ajuda">
+ <button id="helpGuideBtn" type="button" aria-label="Abrir guía de ayuda" title="Abrir guía de ayuda">
   <span class="helpGuideIcon">?</span>
-  <span>Ajuda</span>
+  <span>Ayuda</span>
 </button>
 
-<div id="firstVisitGuide" aria-hidden="true" role="dialog" aria-labelledby="guideWelcomeTitle">
+<div id="firstVisitGuide" aria-hidden="true" inert role="dialog" aria-labelledby="guideWelcomeTitle">
   <div class="guide-modal">
     <div class="guide-header">
-      <h2 id="guideWelcomeTitle">Seja bem-vindo(a)!</h2>
+      <h2 id="guideWelcomeTitle">¡Bienvenido/a!</h2>
       <p>
-        Este sistema está em fase de desenvolvimento e validação. As informações, produtos, mapas, simulações e alertas aqui disponibilizados possuem caráter preliminar e experimental, não devendo ser publicados, reproduzidos, compartilhados ou transmitidos sem autorização prévia.
+        Este sistema está en fase de desarrollo y validación. La información, los productos, mapas, simulaciones y alertas aquí disponibles tienen carácter preliminar y experimental, y no deben publicarse, reproducirse, compartirse ni transmitirse sin autorización previa.
       </p>
     </div>
 
     <div class="guide-body">
       <div class="guide-note">
-        O sistema ainda não possui aprovação oficial da comunidade técnica/científica competente, e seus resultados não devem ser utilizados como base única para tomada de decisão operacional, institucional ou pública.
+        El sistema aún no cuenta con aprobación oficial de la comunidad técnica/científica competente, y sus resultados no deben utilizarse como base única para la toma de decisiones operativas, institucionales o públicas.
       </div>
     </div>
 
     <div class="guide-actions">
-      <button id="guideSkipBtn" class="btn ghost" type="button">Pular guia</button>
+      <button id="guideSkipBtn" class="btn ghost" type="button">Saltar guía</button>
       <button id="guideContinueBtn" class="btn primary" type="button">Continuar</button>
     </div>
   </div>
@@ -4896,12 +6199,12 @@ function clamp(value, min, max) {
 </div>
 
 <div id="guideTooltip" class="guide-tooltip hidden" role="dialog" aria-live="polite">
-  <div class="guide-tooltip-title" id="guideTooltipTitle">Calendário de casos</div>
+  <div class="guide-tooltip-title" id="guideTooltipTitle">Calendario de casos</div>
   <div class="guide-tooltip-text" id="guideTooltipText">
-    Selecione pelo calendário os casos disponíveis.
+    Seleccione en el calendario los casos disponibles.
   </div>
   <div class="guide-tooltip-actions">
-    <button id="guideTooltipClose" class="btn primary" type="button">Entendi</button>
+    <button id="guideTooltipClose" class="btn primary" type="button">Entendido</button>
   </div>
 </div>
 
@@ -4927,14 +6230,23 @@ function clamp(value, min, max) {
   let guideScrollLock = false;
 
   function openGuide() {
+    firstVisitGuide.removeAttribute("inert");
     firstVisitGuide.classList.add("visible");
     firstVisitGuide.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
   }
 
   function closeGuide() {
+    // Antes de ocultar o modal, remove o foco de botões internos.
+    // Isso evita o aviso: "Blocked aria-hidden ... descendant retained focus".
+    if (firstVisitGuide.contains(document.activeElement)) {
+      document.activeElement.blur();
+      helpGuideBtn?.focus({ preventScroll: true });
+    }
+
     firstVisitGuide.classList.remove("visible");
     firstVisitGuide.setAttribute("aria-hidden", "true");
+    firstVisitGuide.setAttribute("inert", "");
     document.body.style.overflow = "";
   }
 
@@ -5021,8 +6333,8 @@ function clamp(value, min, max) {
     hideElementGuide();
     showGuideForSelector(
       ".date-calendar-card",
-      "Calendário de casos",
-      "Selecione pelo calendário os casos disponíveis."
+      "Calendario de casos",
+      "Seleccione en el calendario los casos disponibles."
     );
   }
 
@@ -5030,8 +6342,8 @@ function clamp(value, min, max) {
     hideElementGuide();
     showGuideForSelector(
       "#dateCasesCard",
-      "Casos da data selecionada",
-      "Depois de escolher uma data no calendário, os casos disponíveis daquele dia aparecem neste quadro."
+      "Casos de la fecha seleccionada",
+      "Después de elegir una fecha en el calendario, los casos disponibles de ese día aparecen en este cuadro."
     );
   }
 
@@ -5039,8 +6351,8 @@ function clamp(value, min, max) {
     hideElementGuide();
     showGuideForSelector(
       "#alertBox",
-      "Nível de alerta",
-      "Aqui o sistema mostra o status do alerta do caso selecionado, com a mensagem principal de risco ou situação."
+      "Nivel de alerta",
+      "Aquí el sistema muestra el estado de la alerta del caso seleccionado, con el mensaje principal de riesgo o situación."
     );
   }
 
@@ -5048,8 +6360,8 @@ function clamp(value, min, max) {
     hideElementGuide();
     showGuideForSelector(
       ".classification-card",
-      "Classificação do caso",
-      "Neste quadro você vê a força da evidência, a faixa de confiança e os principais indicadores usados na classificação."
+      "Clasificación del caso",
+      "En este cuadro se muestra la fuerza de la evidencia, el intervalo de confianza y los principales indicadores utilizados en la clasificación."
     );
   }
 
@@ -5057,17 +6369,17 @@ function clamp(value, min, max) {
     hideElementGuide();
     showGuideForSelector(
       "#mapLayersCard",
-      "Camadas do mapa",
-      "Neste bloco você controla as camadas exibidas no mapa, como SAR, slick observado, partes do slick e outras visualizações."
+      "Capas del mapa",
+      "En este bloque se controlan las capas mostradas en el mapa, como SAR, slick observado, partes del slick y otras visualizaciones."
     );
   }
 
-  function openPlaybackGuideStep() {
+  function openReproducirbackGuideStep() {
     hideElementGuide();
     showGuideForSelector(
       "#temporalFloatingPanel",
-      "Controle temporal",
-      "Aqui você controla a animação com play e pause, ajusta a velocidade e acompanha a evolução temporal da simulação."
+      "Control temporal",
+      "Aquí se controla la animación con reproducir y pausa, se ajusta la velocidad y se sigue la evolución temporal de la simulación."
     );
   }
 
@@ -5077,7 +6389,7 @@ function clamp(value, min, max) {
     openAlertGuideStep,
     openClassificationGuideStep,
     openMapLayersGuideStep,
-    openPlaybackGuideStep
+    openReproducirbackGuideStep
   ];
 
   function runGuideStep(index) {
@@ -5155,6 +6467,131 @@ function clamp(value, min, max) {
       runGuideStep(currentGuideStep);
     }
   }, true);
+})();
+</script>
+
+<script>
+(function enableResizableMainPanel() {
+  const app = document.getElementById("app");
+  const resizer = document.getElementById("panelResizer");
+  const panel = document.getElementById("panel");
+  const mapWrap = document.getElementById("map-wrap");
+
+  if (!app || !resizer || !panel || !mapWrap) return;
+  if (resizer.dataset.ready === "1") return;
+  resizer.dataset.ready = "1";
+
+  const desktopStorageKey = "oceom.panelWidth";
+  const mobileStorageKey = "oceom.mapHeightMobile";
+  const mobileQuery = window.matchMedia("(max-width: 980px)");
+
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+  const invalidateMap = () => {
+    window.clearTimeout(window.__oceomResizablePanelInvalidateTimer);
+    window.__oceomResizablePanelInvalidateTimer = window.setTimeout(() => {
+      try {
+        if (window.oceomLeafletMap) {
+          window.oceomLeafletMap.invalidateSize({ pan: false });
+          window.oceomLeafletMap.fire("resize");
+        }
+      } catch (err) {
+        console.warn("No se ha podido actualizar el tamaño del mapa después de redimensionar el panel.", err);
+      }
+    }, 40);
+  };
+
+  const applySavedSizes = () => {
+    const savedWidth = localStorage.getItem(desktopStorageKey);
+    const savedHeight = localStorage.getItem(mobileStorageKey);
+
+    if (savedWidth) {
+      app.style.setProperty("--panel-width", savedWidth);
+    }
+    if (savedHeight) {
+      app.style.setProperty("--map-height-mobile", savedHeight);
+    }
+
+    resizer.setAttribute("aria-orientation", mobileQuery.matches ? "horizontal" : "vertical");
+    invalidateMap();
+  };
+
+  const resizeDesktop = (clientX) => {
+    const rect = app.getBoundingClientRect();
+    const minPanel = 280;
+    const maxPanel = Math.max(minPanel, rect.width - 320);
+    const nextWidth = clamp(rect.right - clientX, minPanel, maxPanel);
+
+    const cssValue = `${Math.round(nextWidth)}px`;
+    app.style.setProperty("--panel-width", cssValue);
+    localStorage.setItem(desktopStorageKey, cssValue);
+    invalidateMap();
+  };
+
+  const resizeMobile = (clientY) => {
+    const rect = app.getBoundingClientRect();
+    const minMap = 220;
+    const minPanel = 220;
+    const maxMap = Math.max(minMap, rect.height - minPanel);
+    const nextHeight = clamp(clientY - rect.top, minMap, maxMap);
+
+    const cssValue = `${Math.round(nextHeight)}px`;
+    app.style.setProperty("--map-height-mobile", cssValue);
+    localStorage.setItem(mobileStorageKey, cssValue);
+    invalidateMap();
+  };
+
+  const stopDragging = (ev) => {
+    resizer.classList.remove("is-dragging");
+    document.body.classList.remove("panel-resizing", "panel-resizing-mobile");
+    window.removeEventListener("pointermove", onPointerMove);
+    window.removeEventListener("pointerup", stopDragging);
+    window.removeEventListener("pointercancel", stopDragging);
+    try {
+      if (ev && typeof ev.pointerId !== "undefined") {
+        resizer.releasePointerCapture(ev.pointerId);
+      }
+    } catch (_) {}
+    invalidateMap();
+  };
+
+  const onPointerMove = (ev) => {
+    ev.preventDefault();
+    if (mobileQuery.matches) {
+      resizeMobile(ev.clientY);
+    } else {
+      resizeDesktop(ev.clientX);
+    }
+  };
+
+  resizer.addEventListener("pointerdown", (ev) => {
+    ev.preventDefault();
+    resizer.classList.add("is-dragging");
+    document.body.classList.add(mobileQuery.matches ? "panel-resizing-mobile" : "panel-resizing");
+    try {
+      resizer.setPointerCapture(ev.pointerId);
+    } catch (_) {}
+    window.addEventListener("pointermove", onPointerMove, { passive: false });
+    window.addEventListener("pointerup", stopDragging);
+    window.addEventListener("pointercancel", stopDragging);
+  });
+
+  resizer.addEventListener("dblclick", () => {
+    if (mobileQuery.matches) {
+      app.style.setProperty("--map-height-mobile", "52dvh");
+      localStorage.removeItem(mobileStorageKey);
+    } else {
+      app.style.setProperty("--panel-width", "380px");
+      localStorage.removeItem(desktopStorageKey);
+    }
+    invalidateMap();
+  });
+
+  mobileQuery.addEventListener?.("change", applySavedSizes);
+  window.addEventListener("resize", applySavedSizes);
+  window.addEventListener("orientationchange", () => window.setTimeout(applySavedSizes, 250));
+
+  applySavedSizes();
 })();
 </script>
 </body>
